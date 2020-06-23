@@ -97,15 +97,15 @@ const PenulisOfTheWeek = styled.div`
   }
   > div > .nama_penulis {
     position: absolute;
-    width: 100%;
+    width: calc(100% - 40px);
     height: 90px;
     padding: 16px 28px;
     opacity: 0.6;
     background-color: #000;
     color: #fff;
     z-index: 6;
-    bottom: 0;
-    left: 0;
+    bottom: 20px;
+    left: 20px;
   }
   > div > ._utama {
     height: 120px;
