@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import Card from "../components/card";
 import CardBuku from "../components/card/cardBuku";
-import Button from "../components/button";
+import Button from "../components/button/mainButton";
 
 const TaglinesHomeWrap = styled.div`
   background-color: #fff;
@@ -54,15 +54,63 @@ const SectionTitle = styled.div`
 `;
 
 const SectionBukuTerlaris = styled.section`
-  margin-top: 213px;
-  margin-bottom: 90px;
+  padding-top: 213px;
+  padding-bottom: 90px;
 `;
 
-const DataBookButtonWrap = styled.div`
+const DataSectionButtonWrap = styled.div`
   padding-top: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const SectionPenulisOfTheWeek = styled.section`
+  padding-top: 90px;
+  padding-bottom: 90px;
+`;
+
+const PenulisOfTheWeek = styled.div`
+  display: grid;
+  grid-gap: 24px;
+  p {
+    margin-bottom: 10px;
+  }
+  p.nama {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  > .penulis_box {
+    padding: 20px;
+    background-color: #f5f6f8;
+    position: relative;
+    z-index: 5;
+  }
+  > .penulis_utama {
+    height: 540px;
+    grid-column: 1 / span 1;
+    grid-row: 1 / span 2;
+  }
+  > .penulis_1 {
+    grid-colum: 2 / span 1;
+    grid-row: 1 / span 1;
+  }
+  > div > .nama_penulis {
+    position: absolute;
+    width: 100%;
+    height: 90px;
+    padding: 16px 28px;
+    opacity: 0.6;
+    background-color: #000;
+    color: #fff;
+    z-index: 6;
+    bottom: 0;
+    left: 0;
+  }
+  > div > ._utama {
+    height: 120px;
+    padding: 28px;
+  }
 `;
 
 export default class Home extends Component {
@@ -146,11 +194,45 @@ export default class Home extends Component {
                 );
               })}
             </Row>
-            <DataBookButtonWrap>
+            <DataSectionButtonWrap>
               <Button title="Lihat Semua Kategori" />
-            </DataBookButtonWrap>
+            </DataSectionButtonWrap>
           </Container>
         </SectionBukuTerlaris>
+        <SectionPenulisOfTheWeek>
+          <Container>
+            <SectionTitle>
+              <h3>PENULIS OF THE WEEK</h3>
+              <span>Yuk kenal lebih jauh dengan penulis Favorit kalian</span>
+            </SectionTitle>
+            <PenulisOfTheWeek>
+              <div className="penulis_box penulis_utama">
+                1
+                <div className="nama_penulis _utama">
+                  <p className="nama">Marchella Febritisia Putri</p>
+                  <span>Kamu terlalu banyak bercanda</span>
+                </div>
+              </div>
+              <div className="penulis_box penulis_1">
+                2
+                <div className="nama_penulis">
+                  <p className="nama">Ayu Utami</p>
+                  <span>Saman</span>
+                </div>
+              </div>
+              <div className="penulis_box penulis_2">
+                3
+                <div className="nama_penulis">
+                  <p className="nama">Fiersa Besari</p>
+                  <span>Garis Waktu</span>
+                </div>
+              </div>
+            </PenulisOfTheWeek>
+            <DataSectionButtonWrap>
+              <Button title="Lihat Semua Kategori" />
+            </DataSectionButtonWrap>
+          </Container>
+        </SectionPenulisOfTheWeek>
       </>
     );
   }

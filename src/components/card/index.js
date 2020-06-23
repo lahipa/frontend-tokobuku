@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 //import CardContent from "./cardBuku";
 
@@ -45,7 +45,7 @@ export default function Card(props) {
   return (
     <CardWrap>
       <CardImagesWrap>
-        <img src={dataCard.images} />
+        <img src={dataCard.images} alt="" />
         {dataCard.isSale === 1 ? <div>Sale 50% off</div> : ""}
       </CardImagesWrap>
       <CardTitle>{dataCard.title}</CardTitle>

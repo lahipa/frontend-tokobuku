@@ -37,7 +37,7 @@ export default function CardBuku(props) {
   return (
     <CardBodyWrap>
       <p className="card-bookAuthor">Author by {dataCard.author}</p>
-      {dataCard.disc != 0 ? (
+      {dataCard.disc !== 0 ? (
         <p className="card-price-disc">{`Rp ${numeral(dataCard.price).format(
           "0,0"
         )}`}</p>
@@ -46,7 +46,7 @@ export default function CardBuku(props) {
           "0,0"
         )}`}</p>
       )}
-      {dataCard.disc != 0 ? (
+      {dataCard.disc !== 0 ? (
         <p className="card-price">{`Rp ${numeral(dataCard.price).format(
           "0,0"
         )}`}</p>

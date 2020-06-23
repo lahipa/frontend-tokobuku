@@ -60,7 +60,8 @@ const FooterBot = styled.div`
     flex-direction: row;
   }
   > div > *:first-child > * {
-    padding-right: 20px;
+    padding-right: 35px;
+    font-size: 26px;
   }
   > div > *:last-child {
     display: flex;
@@ -92,7 +93,7 @@ export default function Footer() {
             <InputGroup>
               <FormControl placeholder="Alamat E-mail" />
               <InputGroup.Append>
-                <Button variant="light">Submit</Button>
+                <Button variant="secondary">Submit</Button>
               </InputGroup.Append>
             </InputGroup>
           </FooterTopRight>
@@ -101,9 +102,9 @@ export default function Footer() {
       <FooterBot>
         <Container>
           <div>
-            <p>Facebook</p>
-            <p>Twitter</p>
-            <p>Instagram</p>
+            <i className="ion-social-facebook"></i>
+            <i className="ion-social-twitter"></i>
+            <i className="ion-social-instagram"></i>
           </div>
           <p>Copyright © 2020</p>
         </Container>

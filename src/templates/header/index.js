@@ -1,7 +1,10 @@
 import React from "react";
-import { Container, InputGroup, FormControl } from "react-bootstrap";
+import { Container, InputGroup, FormControl, Button } from "react-bootstrap";
 import styled from "styled-components";
 import MainMenu from "../../components/mainmenu";
+import CheckoutButton from "../../components/button/circleButton";
+
+import "../asset/ionicons/css/ionicons.min.css";
 
 const HeaderWrap = styled.div`
   background-color: #ffffff;
@@ -33,7 +36,8 @@ const HeaderSearch = styled.div`
 
 const HeaderCheckout = styled.div`
   flex: 0.5;
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
   position: relative;
 `;
 
@@ -48,14 +52,18 @@ export default function Header() {
             </h1>
           </Logo>
           <HeaderSearch>
-            <InputGroup className="mb-2">
+            <InputGroup>
               <FormControl id="inlineFormInputGroup" placeholder="Cari Buku" />
               <InputGroup.Append>
-                <InputGroup.Text> = </InputGroup.Text>
+                <Button variant="secondary">
+                  <i className="ion-ios-search-strong"></i>
+                </Button>
               </InputGroup.Append>
             </InputGroup>
           </HeaderSearch>
-          <HeaderCheckout>(i)</HeaderCheckout>
+          <HeaderCheckout>
+            <CheckoutButton title={<i className="icon ion-bag"></i>} />
+          </HeaderCheckout>
         </HeaderMainSection>
       </Container>
       <MainMenu />
