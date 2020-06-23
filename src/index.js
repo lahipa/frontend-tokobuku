@@ -1,13 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import { GlobalStyle } from "./templates/styles";
-
-import Header from "./templates/header";
 import App from "./App";
-import Footer from "./templates/footer";
-
 import { BrowserRouter } from "react-router-dom";
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
@@ -40,11 +35,10 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <GlobalStyle />
-      <Header />
+
       {/* <Provider store={store}> */}
       <App />
       {/* </Provider> */}
-      <Footer />
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")

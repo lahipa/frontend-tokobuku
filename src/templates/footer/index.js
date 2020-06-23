@@ -93,7 +93,7 @@ export default function Footer() {
             <InputGroup>
               <FormControl placeholder="Alamat E-mail" />
               <InputGroup.Append>
-                <Button variant="secondary">Submit</Button>
+                <Button variant="outline-light">Submit</Button>
               </InputGroup.Append>
             </InputGroup>
           </FooterTopRight>
