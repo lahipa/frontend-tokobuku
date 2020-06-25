@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, InputGroup, FormControl, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import MainMenu from "../../components/mainmenu";
 import CheckoutButton from "../../components/button/circleButton";
@@ -62,7 +63,9 @@ export default function Header() {
             </InputGroup>
           </HeaderSearch>
           <HeaderCheckout>
-            <CheckoutButton title={<i className="icon ion-bag"></i>} />
+            <Link to="/register">
+              <CheckoutButton title={<i className="icon ion-bag"></i>} />
+            </Link>
           </HeaderCheckout>
         </HeaderMainSection>
       </Container>

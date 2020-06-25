@@ -42,11 +42,17 @@ const CardTitle = styled.p`
 export default function Card(props) {
   const { dataCard } = props;
 
+  console.log(dataCard, "ini data card");
+
   return (
     <CardWrap>
       <CardImagesWrap>
-        <img src={dataCard.images} alt="" />
-        {dataCard.isSale === 1 ? <div>Sale 50% off</div> : ""}
+        <img
+          src="https://ashmagautam.files.wordpress.com/2013/11/mcj038257400001.jpg"
+          alt=""
+          style={{ width: "100%" }}
+        />
+        {dataCard.isSale === "1" ? <div>Sale 50% off</div> : ""}
       </CardImagesWrap>
       <CardTitle>{dataCard.title}</CardTitle>
     </CardWrap>

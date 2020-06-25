@@ -1,17 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import MainButton from "../components/button/mainButton";
 import styled from "styled-components";
+import Layout from "../templates/layout";
 
-const LoginRegisterFormWrap = styled.section`
+import { connect } from "react-redux";
+import { addUser } from "../store/actions/users";
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    register: (data) => dispatch(addUser(data)),
+  };
+};
+
+export const LoginRegisterFormWrap = styled.section`
   padding-top: 35px;
   margin-bottom: 120px;
   display: grid;
   justify-content: center;
 `;
 
-const LoginRegisterFormTitle = styled.div`
+export const LoginRegisterFormTitle = styled.div`
   padding-top: 35px;
   display: flex;
   justify-content: center;
@@ -29,7 +39,7 @@ const LoginRegisterFormTitle = styled.div`
   }
 `;
 
-const FormContainer = styled.div`
+export const FormContainer = styled.div`
   width: 460px;
   padding: 30px 40px;
   border-radius: 8px;
@@ -52,7 +62,7 @@ const FormContainer = styled.div`
   }
 `;
 
-const FormPolicyWrap = styled.div`
+export const FormPolicyWrap = styled.div`
   width: 344px;
   margin-top: 18px;
   margin-bottom: 44px;
@@ -61,10 +71,21 @@ const FormPolicyWrap = styled.div`
   letter-spacing: 0.38px;
   color: #aaabab;
 `;
+const Register = (props) => {
+  const [data, setData] = useState({});
+  console.log(data);
 
-export default function Register(props) {
+  const onSubmitRegistrasi = (e) => {
+    e.preventDefault();
+    props.register(data);
+  };
+
+  const handleRegistrasi = (e, formName) => {
+    setData({ ...data, [formName]: e.target.value });
+  };
+
   return (
-    <>
+    <Layout>
       <LoginRegisterFormTitle>
         <div>
           <p>
@@ -77,27 +98,45 @@ export default function Register(props) {
         <FormContainer>
           <h3>Sign up</h3>
           <span>
-            atau <Link to="/">sign in</Link>
+            atau <Link to="/login">sign in</Link>
           </span>
-          <Form>
+          <Form onSubmit={(e) => onSubmitRegistrasi(e)}>
             <Form.Group>
-              <Form.Control type="text" placeholder="Nama Depan" />
+              <Form.Control
+                type="text"
+                placeholder="Nama Depan"
+                onChange={(e) => handleRegistrasi(e, "firstName")}
+              />
             </Form.Group>
             <Form.Group>
-              <Form.Control type="text" placeholder="Nama Belakang" />
+              <Form.Control
+                type="text"
+                placeholder="Nama Belakang"
+                onChange={(e) => handleRegistrasi(e, "lastName")}
+              />
             </Form.Group>
             <Form.Group>
-              <Form.Control type="email" placeholder="Email" />
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                onChange={(e) => handleRegistrasi(e, "email")}
+              />
             </Form.Group>
             <Form.Group>
-              <Form.Control type="password" placeholder="Password" />
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                onChange={(e) => handleRegistrasi(e, "password")}
+              />
             </Form.Group>
             <FormPolicyWrap>
-              This page is protected by reCAPTCHA, and subject to the Google
+              This page is protected by reCAPTCHA, and subject to the Google{" "}
               <Link>Privacy Policy</Link> and <Link>Terms of service</Link>.
             </FormPolicyWrap>
             <Form.Group>
-              <MainButton title="Sign Up" style={{ width: "100%" }} />
+              <Button type="submit" variant="primary" block>
+                Sign Up
+              </Button>
             </Form.Group>
             <Form.Group>
               <Button variant="outline-secondary" block>
@@ -107,6 +146,8 @@ export default function Register(props) {
           </Form>
         </FormContainer>
       </LoginRegisterFormWrap>
-    </>
+    </Layout>
   );
-}
+};
+
+export default connect(null, mapDispatchToProps)(Register);

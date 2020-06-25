@@ -18,6 +18,10 @@ const Button = styled.button`
 `;
 
 export default function MainButton(props) {
-  const { title, style } = props;
-  return <Button style={style}>{title}</Button>;
+  const { title, style, type } = props;
+  return (
+    <Button style={style} type={type}>
+      {title}
+    </Button>
+  );
 }

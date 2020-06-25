@@ -1,15 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { GlobalStyle } from "./templates/styles";
+import { GlobalStyle } from "./templates/layout/styles";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
+import books from "./store/reducers/book";
+
 const rootReducer = combineReducers({
-  //bookReducer: books,
+  bookReducer: books,
   //electronicReducer: electronics
 });
 
@@ -36,9 +38,9 @@ ReactDOM.render(
     <BrowserRouter>
       <GlobalStyle />
 
-      {/* <Provider store={store}> */}
-      <App />
-      {/* </Provider> */}
+      <Provider store={store}>
+        <App />
+      </Provider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
