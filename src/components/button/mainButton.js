@@ -6,6 +6,7 @@ const Button = styled.button`
   padding: 0 35px;
   display: flex;
   align-items: center;
+  justify-content: center;
   border-radius: 8px;
   background-color: #f6663f;
   color: #f5f6f8;
@@ -17,6 +18,10 @@ const Button = styled.button`
 `;
 
 export default function MainButton(props) {
-  const { title } = props;
-  return <Button>{title}</Button>;
+  const { title, style, type } = props;
+  return (
+    <Button style={style} type={type}>
+      {title}
+    </Button>
+  );
 }

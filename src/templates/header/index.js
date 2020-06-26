@@ -1,10 +1,17 @@
 import React from "react";
 import { Container, InputGroup, FormControl, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import MainMenu from "../../components/mainmenu";
 import CheckoutButton from "../../components/button/circleButton";
 
-import "../asset/ionicons/css/ionicons.min.css";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => {
+  return {
+    items: state.cartReducer.addedItems,
+  };
+};
 
 const HeaderWrap = styled.div`
   background-color: #ffffff;
@@ -20,11 +27,15 @@ const HeaderMainSection = styled.div`
 const Logo = styled.div`
   flex: 3;
   position: relative;
-  > h1 {
+  > *:hover {
+    text-decoration: none;
+  }
+  > * > h1 {
     margin: 0;
     font-size: 50px;
+    color: #888;
   }
-  > h1 > b {
+  > * > h1 > b {
     color: #f6663f;
   }
 `;
@@ -39,17 +50,35 @@ const HeaderCheckout = styled.div`
   display: flex;
   justify-content: flex-end;
   position: relative;
+  > .items__selected {
+    display: block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    top: -5px;
+    right: 0;
+    background-color: red;
+    color: #fff;
+  }
 `;
 
-export default function Header() {
+const Header = (props) => {
+  const { items } = props;
+
   return (
     <HeaderWrap>
       <Container>
         <HeaderMainSection>
           <Logo>
-            <h1>
-              <b>Cil</b>sy
-            </h1>
+            <Link to="/">
+              <h1>
+                <b>Cil</b>sy
+              </h1>
+            </Link>
           </Logo>
           <HeaderSearch>
             <InputGroup>
@@ -62,7 +91,10 @@ export default function Header() {
             </InputGroup>
           </HeaderSearch>
           <HeaderCheckout>
-            <CheckoutButton title={<i className="icon ion-bag"></i>} />
+            {items.length ? <span class="items__selected">{items.length}</span> : ""}
+            <Link to="/checkout" style={{ textAlign: "center" }}>
+              <CheckoutButton title={<i className="icon ion-bag"></i>} />
+            </Link>
           </HeaderCheckout>
         </HeaderMainSection>
       </Container>
@@ -70,3 +102,5 @@ export default function Header() {
     </HeaderWrap>
   );
 }
+
+export default connect(mapStateToProps, null)(Header);
