@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
 
 import Home from "./pages/home";
-import BukuBaru from "./pages/bukuBaru";
+import SemuaBuku from "./pages/listAllBook";
+import BukuBaru from "./pages/listNewBook";
+import DetailBuku from "./pages/detailBook";
 import Register from "./pages/register";
 import Login from "./pages/login";
 
@@ -14,6 +16,8 @@ class App extends Component {
       <>
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route exact path="/semua-buku" component={SemuaBuku} />
+          <Route exact path="/rincian-buku/:id" component={DetailBuku} />
           <Route path="/buku-baru" component={BukuBaru} />
           <Route path="/register" component={Register} />
           <Route path="/login" component={Login} />

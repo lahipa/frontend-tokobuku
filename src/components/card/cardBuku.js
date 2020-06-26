@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import numeral from "numeral";
 
@@ -37,7 +38,7 @@ export default function CardBuku(props) {
   return (
     <CardBodyWrap>
       <p className="card-bookAuthor">Author by {dataCard.author}</p>
-      {dataCard.disc !== 0 ? (
+      {dataCard.isSale === 1 ? (
         <p className="card-price-disc">{`Rp ${numeral(dataCard.price).format(
           "0,0"
         )}`}</p>
@@ -46,13 +47,19 @@ export default function CardBuku(props) {
           "0,0"
         )}`}</p>
       )}
-      {dataCard.disc !== 0 ? (
+      {dataCard.isSale === 1 ? (
         <p className="card-price">{`Rp ${numeral(dataCard.price).format(
           "0,0"
         )}`}</p>
       ) : (
         ""
       )}
+      <Link
+        className="btn btn-primary btn-sm btn-block"
+        to={`/rincian-buku/${dataCard._id}`}
+      >
+        Lihat Buku
+      </Link>
     </CardBodyWrap>
   );
 }

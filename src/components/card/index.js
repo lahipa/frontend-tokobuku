@@ -42,8 +42,6 @@ const CardTitle = styled.p`
 export default function Card(props) {
   const { dataCard } = props;
 
-  console.log(dataCard, "ini data card");
-
   return (
     <CardWrap>
       <CardImagesWrap>

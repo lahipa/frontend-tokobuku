@@ -41,11 +41,11 @@ export default function MainMenu() {
     <MainNavWrap>
       <Container>
         <MainNav>
-          <Link to="/">Semua Koleksi</Link>
+          <Link to="/semua-buku">Semua Koleksi</Link>
           <Link to="/buku-baru">Buku Baru</Link>
-          <Link to="/">Buku Pilihan</Link>
-          <Link to="/">National Beset Seller</Link>
-          <Link to="/">Buku Import</Link>
+          <Link to="/buku-pilihan">Buku Pilihan</Link>
+          <Link to="/buku-best-seller">National Beset Seller</Link>
+          <Link to="/buku-import">Buku Import</Link>
         </MainNav>
         <Link to="#">SALE</Link>
       </Container>

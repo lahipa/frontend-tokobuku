@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Layout from "../../templates/layout/adminlayout";
 import { Container, Col, Card, Form, Button } from "react-bootstrap";
 import styled from "styled-components";
-
+import TableDataShow from "../components/books";
 import { connect } from "react-redux";
 import {
   getListBook,
@@ -48,10 +48,7 @@ const SectionDivTitle = styled.h3`
 
 const AdminDashboard = (props) => {
   const [data, setData] = useState({});
-  const [edit, setEdit] = useState(false);
   const { books } = props;
-
-  console.log(data);
 
   useEffect(() => {
     props.getBook();
@@ -62,148 +59,20 @@ const AdminDashboard = (props) => {
     props.addBook(data);
   };
 
-  const handleUpdate = (id) => {
-    props.updateBook(id, data);
-    setEdit(false);
-  };
-
-  const handleForm = (e, formName) => {
-    setData({ ...data, [formName]: e.target.value });
+  const handleUpdate = (id, updateData) => {
+    props.updateBook(id, updateData);
   };
 
   const handleDelete = (id) => {
     props.deleteBook(id);
   };
 
-  const ShowBookData = () => {
-    let i = 1;
-
-    if (books.length === 0) {
-      return (
-        <tr>
-          <td
-            colspan="6"
-            style={{
-              height: "80px",
-              textAlign: "center",
-              verticalAlign: "middle",
-            }}
-          >
-            <h5 style={{ fontSize: "16px", color: "#888" }}>
-              <i>Belum ada data tersimpan!</i>
-            </h5>
-          </td>
-        </tr>
-      );
-    }
-
-    return (
-      books &&
-      books.map((val) => {
-        return (
-          <tr>
-            <td style={{ verticalAlign: "middle" }}>{i++}</td>
-            <td style={{ verticalAlign: "middle" }}>
-              {edit ? (
-                <>
-                  <Form.Control
-                    value={val.title}
-                    onChange={(e) => handleForm(e, "title")}
-                  />
-                </>
-              ) : (
-                val.title
-              )}
-            </td>
-            <td style={{ verticalAlign: "middle" }}>
-              {edit ? (
-                <>
-                  <Form.Control
-                    value={val.author}
-                    onChange={(e) => handleForm(e, "author")}
-                  />
-                </>
-              ) : (
-                val.author
-              )}
-            </td>
-            <td style={{ verticalAlign: "middle" }}>
-              {edit ? (
-                <>
-                  <Form.Control
-                    value={val.synopsis}
-                    onChange={(e) => handleForm(e, "synopsis")}
-                  />
-                </>
-              ) : (
-                val.synopsis
-              )}
-            </td>
-            <td style={{ verticalAlign: "middle" }}>
-              {edit ? (
-                <>
-                  <Form.Control
-                    value={val.price}
-                    onChange={(e) => handleForm(e, "price")}
-                  />
-                </>
-              ) : (
-                val.price
-              )}
-            </td>
-            <td style={{ verticalAlign: "middle" }}>
-              {edit ? (
-                <>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => handleUpdate(val._id)}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => {
-                      setEdit(false);
-                      setData({
-                        title: val.title,
-                        author: val.author,
-                        price: val.price,
-                        isSale: val.isSale,
-                        synopsis: val.synopsis,
-                      });
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => setEdit(true)}
-                    style={{ marginRight: "5px" }}
-                  >
-                    <i className="ion-edit"></i>
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleDelete(val._id)}
-                  >
-                    <i className="ion-android-delete"></i>
-                  </Button>
-                </>
-              )}
-            </td>
-          </tr>
-        );
-      })
-    );
+  const handleForm = (e, formName) => {
+    setData({ ...data, [formName]: e.target.value });
+    console.log(data, "From dashboard");
   };
 
+  let i = 1;
   return (
     <Layout>
       <SectionDiv>
@@ -218,6 +87,7 @@ const AdminDashboard = (props) => {
                 <Form.Group>
                   <Form.Control
                     type="text"
+                    size="sm"
                     placeholder="Judul Buku"
                     onChange={(e) => handleForm(e, "title")}
                   />
@@ -226,13 +96,15 @@ const AdminDashboard = (props) => {
                   <Form.Group as={Col}>
                     <Form.Control
                       type="text"
+                      size="sm"
                       placeholder="Penulis"
-                      onChange={(e) => handleForm(e, "author")}
+                      onChange={(e) => handleForm(e, "authorName")}
                     />
                   </Form.Group>
                   <Form.Group as={Col} md="3">
                     <Form.Control
                       type="text"
+                      size="sm"
                       placeholder="Harga"
                       onChange={(e) => handleForm(e, "price")}
                     />
@@ -240,18 +112,21 @@ const AdminDashboard = (props) => {
                   <Form.Group as={Col} md="2">
                     <Form.Control
                       as="select"
-                      onChange={(e) => handleForm(e, "isSale")}
+                      size="sm"
+                      onChange={(e) => handleForm(e, "bookStatus")}
                     >
-                      <option value="0">No</option>
-                      <option value="1">Yes</option>
+                      <option>Status</option>
+                      <option value="FOR_SELL">For Sell</option>
+                      <option value="OUT_OF_STOCK">Out Of Stock</option>
                     </Form.Control>
                   </Form.Group>
                 </Form.Row>
                 <Form.Group>
                   <Form.Control
                     as="textarea"
-                    rows="3"
-                    placeholder="Harga"
+                    rows="2"
+                    size="sm"
+                    placeholder="Synopsis"
                     onChange={(e) => handleForm(e, "synopsis")}
                   />
                 </Form.Group>
@@ -264,11 +139,14 @@ const AdminDashboard = (props) => {
                   <Button
                     variant="primary"
                     type="submit"
-                    style={{ marginRight: "10px" }}
+                    size="sm"
+                    style={{ marginRight: "5px" }}
                   >
                     Save
                   </Button>
-                  <Button variant="secondary">Reset</Button>
+                  <Button variant="secondary" type="reset" size="sm">
+                    Reset
+                  </Button>
                 </Form.Group>
               </Form>
             </Card.Body>
@@ -278,13 +156,41 @@ const AdminDashboard = (props) => {
                   <th>No.</th>
                   <th>Judul Buku</th>
                   <th>Author</th>
-                  <th>Synopsis</th>
+                  <th style={{ width: "400px" }}>Synopsis</th>
+                  <th>Sale</th>
                   <th>Harga</th>
-                  <th>#</th>
+                  <th style={{ width: "100px" }}>#</th>
                 </tr>
               </thead>
               <tbody>
-                <ShowBookData />
+                {books.length === 0 ? (
+                  <tr>
+                    <td
+                      colspan="6"
+                      style={{
+                        height: "80px",
+                        textAlign: "center",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      <h5 style={{ fontSize: "16px", color: "#888" }}>
+                        <i>Belum ada data tersimpan!</i>
+                      </h5>
+                    </td>
+                  </tr>
+                ) : (
+                  books &&
+                  books.map((val) => {
+                    return (
+                      <TableDataShow
+                        no={i++}
+                        booksData={val}
+                        doUpdate={handleUpdate}
+                        doDelete={handleDelete}
+                      />
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </Card>

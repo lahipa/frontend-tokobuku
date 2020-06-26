@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import styled from "styled-components";
-
 import Layout from "../templates/layout";
 import Card from "../components/card";
 import CardBuku from "../components/card/cardBuku";
@@ -136,8 +135,6 @@ const Home = (props) => {
     props.getBook();
   }, []);
 
-  console.log(books, "ini data buku from home");
-
   return (
     <Layout>
       <TaglinesHomeWrap>
@@ -164,7 +161,7 @@ const Home = (props) => {
           </SectionTitle>
           <Row>
             {books &&
-              books.map((val) => {
+              books.slice(0, 4).map((val) => {
                 console.log(val, "ini vaal");
                 return (
                   <Col lg={3}>

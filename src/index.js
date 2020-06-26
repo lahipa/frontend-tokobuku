@@ -9,13 +9,14 @@ import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
 import books from "./store/reducers/book";
+import users from "./store/reducers/user";
 
 const rootReducer = combineReducers({
   bookReducer: books,
-  //electronicReducer: electronics
+  userReducer: users,
 });
 
-const logger = (store) => {
+/* const logger = (store) => {
   return (next) => {
     return (action) => {
       console.log("[Middleware] Dispatching", action);
@@ -24,13 +25,14 @@ const logger = (store) => {
       return result;
     };
   };
-};
+}; */
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(logger, thunk))
+  //composeEnhancers(applyMiddleware(logger, thunk))
+  composeEnhancers(applyMiddleware(thunk))
 );
 
 ReactDOM.render(

@@ -1,9 +1,13 @@
-import * as actionsTypes from "./actionTypes";
+import * as actionsTypes from "../books/actionTypes";
 import axios from "axios";
-import { ENDPOINT, api_key } from "../../../utils/globals";
+import { ENDPOINTOBSTORE, access_token } from "../../../utils/globals";
 
 export const getListBook = () => {
-  const request = axios.get(`${ENDPOINT}/${api_key}/books`);
+  const request = axios.get(`${ENDPOINTOBSTORE}/book/findAll`, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
 
   return (dispatch) => {
     request.then((response) => {
@@ -17,7 +21,11 @@ export const getListBook = () => {
 };
 
 export const getBookById = (id) => {
-  const request = axios.get(`${ENDPOINT}/${api_key}/books/${id}`);
+  const request = axios.get(`${ENDPOINTOBSTORE}/book/findById/${id}`, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
 
   return (dispatch) => {
     request.then((response) => {
@@ -29,8 +37,12 @@ export const getBookById = (id) => {
   };
 };
 
-export const updateBook = (id, data) => {
-  const request = axios.put(`${ENDPOINT}/${api_key}/books/${id}`, data);
+export const updateBook = (data) => {
+  const request = axios.post(`${ENDPOINTOBSTORE}/book/update`, data, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
 
   return (dispatch) => {
     request.then((response) => {
@@ -46,7 +58,11 @@ export const updateBook = (id, data) => {
 };
 
 export const deleteBook = (id) => {
-  const request = axios.delete(`${ENDPOINT}/${api_key}/books/${id}`);
+  const request = axios.delete(`${ENDPOINTOBSTORE}/book/deleteById/${id}`, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
 
   return (dispatch) => {
     request.then((response) => {
@@ -56,20 +72,6 @@ export const deleteBook = (id) => {
         payload: response.data,
       });
       return dispatch(getListBook());
-    });
-  };
-};
-
-export const addBook = (data) => {
-  const request = axios.post(`${ENDPOINT}/${api_key}/books`, data);
-
-  return (dispatch) => {
-    request.then((response) => {
-      console.log(response);
-      dispatch({
-        type: actionsTypes.ADD_BOOK,
-        payload: response.data,
-      });
     });
   };
 };

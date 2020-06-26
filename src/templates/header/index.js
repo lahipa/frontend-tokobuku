@@ -21,11 +21,15 @@ const HeaderMainSection = styled.div`
 const Logo = styled.div`
   flex: 3;
   position: relative;
-  > h1 {
+  > *:hover {
+    text-decoration: none;
+  }
+  > * > h1 {
     margin: 0;
     font-size: 50px;
+    color: #888;
   }
-  > h1 > b {
+  > * > h1 > b {
     color: #f6663f;
   }
 `;
@@ -48,9 +52,11 @@ export default function Header() {
       <Container>
         <HeaderMainSection>
           <Logo>
-            <h1>
-              <b>Cil</b>sy
-            </h1>
+            <Link to="/">
+              <h1>
+                <b>Cil</b>sy
+              </h1>
+            </Link>
           </Logo>
           <HeaderSearch>
             <InputGroup>
