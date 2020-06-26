@@ -61,8 +61,12 @@ const CardTitle = styled.p`
 `;
 
 export default function CardBuku(props) {
-  const { dataCard } = props;
+  const { dataCard, doAddToCart } = props;
   //console.log(dataCardContent);
+
+  const handleAddToCart = (id) => {
+    doAddToCart(id);
+  };
 
   return (
     <CardWrap>
@@ -92,12 +96,26 @@ export default function CardBuku(props) {
       ) : (
           ""
         )}
-      <Link
-        className="btn btn-primary btn-sm btn-block"
-        to={`/rincian-buku/${dataCard._id}`}
-      >
-        Lihat Buku
-      </Link>
+      <div className="row">
+        <div className="col-md-6" style={{ padding: "0 5px" }}>
+          <Link
+            className="btn btn-primary btn-sm btn-block"
+            to={`/rincian-buku/${dataCard.id}`}
+          >
+            Lihat Buku
+        </Link>
+        </div>
+        <div className="col-md-6" style={{ padding: "0 5px" }}>
+          <Link
+            className="btn btn-warning btn-sm btn-block"
+            onClick={() => { handleAddToCart(dataCard.id) }}
+          >
+            Add Cart
+        </Link>
+        </div>
+      </div>
+
+
     </CardWrap>
   );
 }

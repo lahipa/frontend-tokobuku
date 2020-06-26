@@ -47,7 +47,7 @@ export default function MainMenu() {
           <Link to="/buku-best-seller">National Beset Seller</Link>
           <Link to="/buku-import">Buku Import</Link>
         </MainNav>
-        <Link to="#">SALE</Link>
+        <Link to="/register">REGISTER</Link>
       </Container>
     </MainNavWrap>
   );

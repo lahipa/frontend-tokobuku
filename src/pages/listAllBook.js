@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Container, Row, Col, Alert } from "react-bootstrap";
 import styled from "styled-components";
 import Layout from "../templates/layout";
-import Card from "../components/card";
 import CardBuku from "../components/card/cardBuku";
 
 import { connect } from "react-redux";
@@ -73,7 +72,6 @@ const Index = (props) => {
               books.map((val) => {
                 return (
                   <Col lg={3} className="mb-4">
-                    <Card dataCard={val} />
                     <CardBuku dataCard={val} />
                   </Col>
                 );

@@ -2,22 +2,25 @@ import React, { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import styled from "styled-components";
 import Layout from "../templates/layout";
-import Card from "../components/card";
 import CardBuku from "../components/card/cardBuku";
+import CardBukuAlt from "../components/card/cardBukuAlt";
 import Button from "../components/button/mainButton";
 
 import { connect } from "react-redux";
 import { getListBook } from "../store/actions/books";
+import { addToCart } from '../store/actions/cart'
 
 const mapStateToProps = (state) => {
   return {
     books: state.bookReducer.books,
+    items: state.cartReducer.items,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getBook: () => dispatch(getListBook()),
+    addToCart: (id) => { dispatch(addToCart(id)) },
   };
 };
 
@@ -129,11 +132,15 @@ const PenulisOfTheWeek = styled.div`
 `;
 
 const Home = (props) => {
-  const { books } = props;
+  const { books, items } = props;
 
   useEffect(() => {
     props.getBook();
   }, []);
+
+  const handleAddCart = (id) => {
+    props.addToCart(id);
+  };
 
   return (
     <Layout>
@@ -161,12 +168,19 @@ const Home = (props) => {
           </SectionTitle>
           <Row>
             {books &&
-              books.slice(0, 4).map((val) => {
+              books.slice(0, 2).map((val) => {
                 console.log(val, "ini vaal");
                 return (
                   <Col lg={3}>
-                    <Card dataCard={val} />
                     <CardBuku dataCard={val} />
+                  </Col>
+                );
+              })}
+            {items &&
+              items.slice(0, 2).map((val) => {
+                return (
+                  <Col lg={3}>
+                    <CardBukuAlt dataCard={val} doAddToCart={handleAddCart} />
                   </Col>
                 );
               })}

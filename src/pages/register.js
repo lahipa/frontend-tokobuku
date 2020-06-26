@@ -76,7 +76,7 @@ const Register = (props) => {
   console.log(data);
 
   const onSubmitRegistrasi = (e) => {
-    e.preventDefault();
+    //e.preventDefault();
     props.register(data);
   };
 

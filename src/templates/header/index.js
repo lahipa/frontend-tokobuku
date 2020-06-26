@@ -5,7 +5,13 @@ import styled from "styled-components";
 import MainMenu from "../../components/mainmenu";
 import CheckoutButton from "../../components/button/circleButton";
 
-import "../asset/ionicons/css/ionicons.min.css";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => {
+  return {
+    items: state.cartReducer.addedItems,
+  };
+};
 
 const HeaderWrap = styled.div`
   background-color: #ffffff;
@@ -44,9 +50,25 @@ const HeaderCheckout = styled.div`
   display: flex;
   justify-content: flex-end;
   position: relative;
+  > .items__selected {
+    display: block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    top: -5px;
+    right: 0;
+    background-color: red;
+    color: #fff;
+  }
 `;
 
-export default function Header() {
+const Header = (props) => {
+  const { items } = props;
+
   return (
     <HeaderWrap>
       <Container>
@@ -69,7 +91,8 @@ export default function Header() {
             </InputGroup>
           </HeaderSearch>
           <HeaderCheckout>
-            <Link to="/register">
+            {items.length ? <span class="items__selected">{items.length}</span> : ""}
+            <Link to="/checkout" style={{ textAlign: "center" }}>
               <CheckoutButton title={<i className="icon ion-bag"></i>} />
             </Link>
           </HeaderCheckout>
@@ -79,3 +102,5 @@ export default function Header() {
     </HeaderWrap>
   );
 }
+
+export default connect(mapStateToProps, null)(Header);

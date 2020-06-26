@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./templates/asset/ionicons/css/ionicons.min.css";
 import { GlobalStyle } from "./templates/layout/styles";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
@@ -10,10 +11,12 @@ import thunk from "redux-thunk";
 
 import books from "./store/reducers/book";
 import users from "./store/reducers/user";
+import carts from "./store/reducers/cart";
 
 const rootReducer = combineReducers({
   bookReducer: books,
   userReducer: users,
+  cartReducer: carts,
 });
 
 /* const logger = (store) => {

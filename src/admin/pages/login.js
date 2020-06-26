@@ -1,7 +1,21 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import styled from "styled-components";
+import { connect } from "react-redux";
+import { getListUser } from "../../store/actions/users";
+
+const mapStateToProps = (state) => {
+  return {
+    users: state.userReducer.users,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getUser: () => dispatch(getListUser()),
+  };
+};
 
 const AdminLoginWrap = styled.div`
   padding-top: 35px;
@@ -20,16 +34,46 @@ const FormLoginContainer = styled.div`
 `;
 
 const AdminLogin = (props) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { users } = props;
+
+  useEffect(() => {
+    props.getUser();
+  }, []);
+
+  const onSubmitLogin = (e) => {
+    //e.preventDefault();
+    users &&
+      users.map((val) => {
+        if (email === val.email && password === val.password) {
+          alert("Berhasil login");
+          document.getElementById("login").action = "/imcoolmaster/dashboard";
+        } else {
+          alert("Damm! kamu gagal login");
+        }
+      });
+  };
+
   return (
     <>
       <AdminLoginWrap>
         <FormLoginContainer>
-          <Form action="/imcoolmaster/dashboard">
+          <Form id="login" onSubmit={(e) => onSubmitLogin(e)}>
             <Form.Group>
-              <Form.Control type="email" placeholder="Email" />
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </Form.Group>
             <Form.Group>
-              <Form.Control type="password" placeholder="Password" />
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </Form.Group>
             <Form.Group>
               <Button type="submit" variant="primary" block>
@@ -43,4 +87,4 @@ const AdminLogin = (props) => {
   );
 };
 
-export default connect(null, null)(AdminLogin);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminLogin);
