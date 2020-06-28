@@ -34,7 +34,6 @@ export const updateBook = (id, data) => {
 
   return (dispatch) => {
     request.then((response) => {
-      console.log(response);
       dispatch({
         type: actionsTypes.UPDATE_BOOK,
         payload: response.data,
@@ -50,7 +49,6 @@ export const deleteBook = (id) => {
 
   return (dispatch) => {
     request.then((response) => {
-      console.log(response);
       dispatch({
         type: actionsTypes.GET_BOOK_BY_ID,
         payload: response.data,
@@ -65,7 +63,6 @@ export const addBook = (data) => {
 
   return (dispatch) => {
     request.then((response) => {
-      console.log(response);
       dispatch({
         type: actionsTypes.ADD_BOOK,
         payload: response.data,

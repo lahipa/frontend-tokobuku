@@ -1,7 +1,9 @@
 import * as actionTypes from "../actions/cart/actionTypes";
 
 const initialState = {
-  items: [
+  addedItems: [],
+  total: 0,
+  /* items: [
     {
       id: "5ef4b46b9a729803e8b2b5f5",
       title: "Catherine House",
@@ -22,11 +24,29 @@ const initialState = {
     },
   ],
   addedItems: [],
-  total: 0,
+  total: 0, */
 };
 
 const cart = (state = initialState, action) => {
-  let addedItem = state.items.find((item) => item.id === action.id);
+  switch (action.type) {
+    case actionTypes.GET_LIST_CART:
+      return {
+        ...state,
+        addedItems: action.payload,
+      };
+    case actionTypes.UPDATE_ON_CART:
+      return {
+        ...state,
+      };
+    case actionTypes.DELETE_FROM_CART:
+      return {
+        ...state,
+      };
+    default:
+      console.log(initialState, "Call data from cartReducer");
+      return initialState;
+  }
+  /* let addedItem = state.items.find((item) => item.id === action.id);
 
   switch (action.type) {
     case actionTypes.ADD_TO_CART: //INSIDE HOME COMPONENT
@@ -92,7 +112,7 @@ const cart = (state = initialState, action) => {
       return state;
   }
 
-  /*
+  
   if (action.type === ADD_SHIPPING) {
     return {
       ...state,

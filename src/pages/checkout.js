@@ -6,9 +6,10 @@ import styled from "styled-components";
 import numeral from "numeral";
 
 import {
-  removeItem,
-  addQuantity,
-  subtractQuantity,
+  getListCart,
+  addToCart,
+  updateOnCart,
+  deleteFromCart,
 } from "../store/actions/cart";
 import { connect } from "react-redux";
 
@@ -21,16 +22,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    removeItem: (id) => {
-      dispatch(removeItem(id));
-    },
-    addQuantity: (id) => {
-      dispatch(addQuantity(id));
-    },
-    subtractQuantity: (id) => {
-      dispatch(subtractQuantity(id));
-    },
-  };
+    addItem: (id) => {dispatch(addToCart(id))},
+    getItems: (id) => {dispatch(deleteFromCart(id))},
+    removeItem: (id) => {dispatch(deleteFromCart(id))},
+    updateOnCart: (id) => {dispatch(updateOnCart(id))}
 };
 
 const SectionContent = styled.section`

@@ -4,6 +4,7 @@ import { Container, Col, Card, Form, Button } from "react-bootstrap";
 import styled from "styled-components";
 import TableDataShow from "../components/books";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 import {
   getListBook,
   addBook,
@@ -47,6 +48,10 @@ const SectionDivTitle = styled.h3`
 `;
 
 const AdminDashboard = (props) => {
+  const token = window.localStorage.getItem("token")
+    ? window.localStorage.getItem("token")
+    : null;
+
   const [data, setData] = useState({});
   const { books } = props;
 
@@ -58,7 +63,6 @@ const AdminDashboard = (props) => {
     //e.preventDefault();
     props.addBook(data);
   };
-
   const handleUpdate = (id, updateData) => {
     props.updateBook(id, updateData);
   };
@@ -71,6 +75,10 @@ const AdminDashboard = (props) => {
     setData({ ...data, [formName]: e.target.value });
     console.log(data, "From dashboard");
   };
+
+  if (token == null) {
+    return <Redirect to="/imcoolmaster" />;
+  }
 
   let i = 1;
   return (

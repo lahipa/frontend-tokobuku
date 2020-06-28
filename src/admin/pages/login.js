@@ -4,6 +4,7 @@ import { Form, Button } from "react-bootstrap";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { getListUser } from "../../store/actions/users";
+import { validate } from "numeral";
 
 const mapStateToProps = (state) => {
   return {
@@ -45,15 +46,26 @@ const AdminLogin = (props) => {
 
   const onSubmitLogin = (e) => {
     //e.preventDefault();
-    users &&
-      users.map((val) => {
-        if (email === val.email && password === val.password) {
-          alert("Berhasil login");
-          document.getElementById("login").action = "/imcoolmaster/dashboard";
-        } else {
-          alert("Damm! kamu gagal login");
-        }
-      });
+    // if (users.lenght !== 0) {
+    //   users &&
+    //     users.map((val) => {
+    //       if (email === val.email && password === val.password) {
+    //         alert("Berhasil login");
+    //         document.getElementById("login").action = "/imcoolmaster/dashboard";
+    //       } else {
+    //         alert("Damm! kamu gagal login");
+    //       }
+    //     });
+    // } else {
+    //   alert("Damm! kamu gagal login");
+    // }
+    if (email == "email@gmail.com" && password == "123456") {
+      alert("Berhasil login");
+      document.getElementById("login").action = "/imcoolmaster/dashboard";
+      window.localStorage.setItem("token", "blablabalblabal");
+    } else {
+      alert("anda gagal login");
+    }
   };
 
   return (

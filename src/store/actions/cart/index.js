@@ -1,1 +1,1 @@
-export { addToCart, removeItem, subtractQuantity, addQuantity } from "./cart";
+export { addToCart, deleteFromCart, updateOnCart } from "./cart";

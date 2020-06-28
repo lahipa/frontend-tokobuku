@@ -8,7 +8,7 @@ import Button from "../components/button/mainButton";
 
 import { connect } from "react-redux";
 import { getListBook } from "../store/actions/books";
-import { addToCart } from '../store/actions/cart'
+import { addToCart } from "../store/actions/cart";
 
 const mapStateToProps = (state) => {
   return {
@@ -20,7 +20,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getBook: () => dispatch(getListBook()),
-    addToCart: (id) => { dispatch(addToCart(id)) },
+    addToCart: (id) => {
+      dispatch(addToCart(id));
+    },
   };
 };
 
@@ -133,6 +135,9 @@ const PenulisOfTheWeek = styled.div`
 
 const Home = (props) => {
   const { books, items } = props;
+  window.localStorage.setItem("username", "yogal"); // "Key", "Value"
+  window.localStorage.getItem("username");
+  //window.localStorage.removeItem("tes");
 
   useEffect(() => {
     props.getBook();

@@ -8,7 +8,7 @@ import DetailBuku from "./pages/detailBook";
 import Register from "./pages/register";
 import Login from "./pages/login";
 
-import Checkout from './pages/checkout'
+//import Checkout from "./pages/checkout";
 
 import AdminLogin from "./admin/pages/login";
 import AdminDashboard from "./admin/pages/dashboard";
@@ -24,7 +24,7 @@ class App extends Component {
           <Route path="/register" component={Register} />
           <Route path="/login" component={Login} />
 
-          <Route path="/checkout" component={Checkout} />
+          {/* <Route path="/checkout" component={Checkout} /> */}
 
           <Route exact path="/imcoolmaster" component={AdminLogin} />
           <Route path="/imcoolmaster/dashboard" component={AdminDashboard} />
