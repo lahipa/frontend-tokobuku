@@ -54,7 +54,7 @@ const DetailBook = (props) => {
                 {`Rp ${numeral(book.price).format("0,0")}`}
               </h4>
               <h5 className="my-3 text-dark text-left">
-                Author: {book.authorName}
+                Author: {book.author}
               </h5>
               <h6 className="text-left">Book Synopsis :</h6>
               <p className="text-black-50 text-justify">{book.synopsis}</p>

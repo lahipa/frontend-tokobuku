@@ -1,5 +1,8 @@
-export const ENDPOINT = "https://crudcrud.com/api";
-export const api_key = "d8808af2fae44037a8ea4a067d22c953";
+export const ENDPOINT = "http://localhost:4000";
+export const api_key = "";
+
+/* export const ENDPOINT = "https://crudcrud.com/api";
+export const api_key = "609ad2af74344a45ac4ac6135a199eb3"; */
 
 /* export const ENDPOINTOBSTORE = "https://obstore.herokuapp.com/api/rest";
 export const access_token =

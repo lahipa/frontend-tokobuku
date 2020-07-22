@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import numeral from "numeral";
@@ -61,8 +61,22 @@ const CardTitle = styled.p`
 `;
 
 export default function CardBuku(props) {
-  const { dataCard } = props;
+  const { dataCard, doAddToCart } = props;
+  const [data, setData] = useState({});
   //console.log(dataCardContent);
+
+  useEffect(() => {
+    setData({
+      id: dataCard._id,
+      title: dataCard.title,
+      price: dataCard.price,
+    });
+  }, []);
+
+  const handleAddToCart = () => {
+    console.log(data, "data added to cart");
+    doAddToCart(data);
+  };
 
   return (
     <CardWrap>
@@ -72,32 +86,46 @@ export default function CardBuku(props) {
           alt=""
           style={{ width: "100%" }}
         />
-        {dataCard.isSale === "1" ? <div>Sale 50% off</div> : ""}
+        {dataCard.isSale ? <div>Sale 50% off</div> : ""}
       </CardImagesWrap>
       <CardTitle>{dataCard.title}</CardTitle>
-      <p className="card-bookAuthor">Author by {dataCard.authorName}</p>
+      <p className="card-bookAuthor">Author by {dataCard.author}</p>
       {dataCard.isSale === 1 ? (
         <p className="card-price-disc">{`Rp ${numeral(dataCard.price).format(
           "0,0"
         )}`}</p>
       ) : (
-          <p className="card-price">{`Rp ${numeral(dataCard.price).format(
-            "0,0"
-          )}`}</p>
-        )}
+        <p className="card-price">{`Rp ${numeral(dataCard.price).format(
+          "0,0"
+        )}`}</p>
+      )}
       {dataCard.isSale === 1 ? (
         <p className="card-price">{`Rp ${numeral(dataCard.price).format(
           "0,0"
         )}`}</p>
       ) : (
-          ""
-        )}
-      <Link
-        className="btn btn-primary btn-sm btn-block"
-        to={`/rincian-buku/${dataCard._id}`}
-      >
-        Lihat Buku
-      </Link>
+        ""
+      )}
+      <div className="row">
+        <div className="col-md-6" style={{ padding: "0 5px" }}>
+          <Link
+            className="btn btn-primary btn-sm btn-block"
+            to={`/rincian-buku/${dataCard._id}`}
+          >
+            Lihat Buku
+          </Link>
+        </div>
+        <div className="col-md-6" style={{ padding: "0 5px" }}>
+          <Link
+            className="btn btn-warning btn-sm btn-block"
+            onClick={() => {
+              handleAddToCart();
+            }}
+          >
+            Add Cart
+          </Link>
+        </div>
+      </div>
     </CardWrap>
   );
 }

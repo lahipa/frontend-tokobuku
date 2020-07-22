@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Alert, Button } from "react-bootstrap";
 import Layout from "../templates/layout";
 import CardListItem from "../components/card/cardListItemCheckout";
@@ -22,10 +22,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addItem: (id) => {dispatch(addToCart(id))},
-    getItems: (id) => {dispatch(deleteFromCart(id))},
-    removeItem: (id) => {dispatch(deleteFromCart(id))},
-    updateOnCart: (id) => {dispatch(updateOnCart(id))}
+    addItem: (data) => dispatch(addToCart(data)),
+    getListItem: () => dispatch(getListCart()),
+    removeItem: (id) => dispatch(deleteFromCart(id)),
+    updateOnCart: (id, data) => dispatch(updateOnCart(id, data)),
+  };
 };
 
 const SectionContent = styled.section`
@@ -71,6 +72,10 @@ const ListPriceComponentItem = styled.div`
 
 const Checkout = (props) => {
   const { items, total } = props;
+
+  useEffect(() => {
+    props.getListItem();
+  }, []);
 
   const handleAdd = (id) => {
     props.addQuantity(id);
