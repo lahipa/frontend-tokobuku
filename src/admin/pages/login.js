@@ -59,6 +59,7 @@ const AdminLogin = (props) => {
     // } else {
     //   alert("Damm! kamu gagal login");
     // }
+
     if (email === "email@gmail.com" && password === "123456") {
       window.localStorage.setItem("token", "blablabalblabal");
       return <Redirect to="/imcoolmaster/dashboard" />;

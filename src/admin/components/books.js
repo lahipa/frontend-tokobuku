@@ -5,15 +5,15 @@ import { withRouter } from "react-router-dom";
 const Books = ({ no, booksData, doUpdate, doDelete }) => {
   const [data, setData] = useState({});
   const [edit, setEdit] = useState(false);
-  const bookStatus = booksData.bookStatus === "FOR_SELL" ? "info" : "warning";
+  const book_status = booksData.book_status === "FOR_SELL" ? "info" : "warning";
 
   useEffect(() => {
     setData({
       title: booksData.title,
-      authorName: booksData.authorName,
+      author: booksData.author,
       synopsis: booksData.synopsis,
       price: booksData.price,
-      bookStatus: booksData.bookStatus,
+      book_status: booksData.book_status,
     });
   }, []);
 
@@ -50,12 +50,12 @@ const Books = ({ no, booksData, doUpdate, doDelete }) => {
         {edit ? (
           <>
             <Form.Control
-              value={data.authorName}
-              onChange={(e) => handleForm(e, "authorName")}
+              value={data.author}
+              onChange={(e) => handleForm(e, "author")}
             />
           </>
         ) : (
-          booksData.authorName
+          booksData.author
         )}
       </td>
       <td style={edit ? { verticalAlign: "top" } : { verticalAlign: "middle" }}>
@@ -77,17 +77,17 @@ const Books = ({ no, booksData, doUpdate, doDelete }) => {
           <>
             <Form.Control
               as="select"
-              value={data.bookStatus}
-              onChange={(e) => handleForm(e, "bookStatus")}
+              value={data.book_status}
+              onChange={(e) => handleForm(e, "book_status")}
             >
               <option value="FOR_SELL">For Sell</option>
-              <option value="OUT_OF_STOCK">Out Of Stock</option>
+              <option value="NOT_FOR_SELL">Not for Sell</option>
             </Form.Control>
           </>
-        ) : booksData.bookStatus === "FOR_SELL" ? (
+        ) : booksData.book_status === "FOR_SELL" ? (
           "For Sell"
         ) : (
-          "Out Of Stock"
+          "Not for Sell"
         )}
       </td>
       <td style={edit ? { verticalAlign: "top" } : { verticalAlign: "middle" }}>
@@ -109,7 +109,7 @@ const Books = ({ no, booksData, doUpdate, doDelete }) => {
               variant="warning"
               size="sm"
               style={{ marginRight: "5px" }}
-              onClick={() => handleUpdate(booksData._id)}
+              onClick={() => handleUpdate(booksData.id)}
             >
               <i className="ion-checkmark"></i>
             </Button>
@@ -120,9 +120,9 @@ const Books = ({ no, booksData, doUpdate, doDelete }) => {
                 setEdit(false);
                 setData({
                   title: booksData.title,
-                  authorName: booksData.authorName,
+                  author: booksData.author,
                   price: booksData.price,
-                  bookStatus: booksData.bookStatus,
+                  book_status: booksData.book_status,
                   synopsis: booksData.synopsis,
                 });
               }}
@@ -143,7 +143,7 @@ const Books = ({ no, booksData, doUpdate, doDelete }) => {
             <Button
               variant="danger"
               size="sm"
-              onClick={() => handleDelete(booksData._id)}
+              onClick={() => handleDelete(booksData.id)}
             >
               <i className="ion-android-delete"></i>
             </Button>
