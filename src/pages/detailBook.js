@@ -30,11 +30,14 @@ const DetailBook = (props) => {
   useEffect(() => {
     props.getBookId(match.params.id);
   }, []);
-  console.log(book, "Detail book");
+
   return (
     <Layout>
       <SectionContent>
         <Container>
+          <div>
+            <h4>{book.title}</h4>
+          </div>
           <div className="row">
             <div className="col-md-8">
               <img
@@ -51,11 +54,14 @@ const DetailBook = (props) => {
                 className="my-2 font-weight-bold"
                 style={{ color: "#8052ff" }}
               >
-                {`Rp ${numeral(book.price).format("0,0")}`}
+                {`Rp ${numeral(book.harga).format("0,0")}`}
               </h4>
               <h5 className="my-3 text-dark text-left">
                 Author: {book.author}
               </h5>
+              <p className="text-black-50 text-justify">
+                {book.kategori && book.kategori.name}
+              </p>
               <h6 className="text-left">Book Synopsis :</h6>
               <p className="text-black-50 text-justify">{book.synopsis}</p>
             </div>

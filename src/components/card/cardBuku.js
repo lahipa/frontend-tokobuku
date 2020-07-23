@@ -91,16 +91,16 @@ export default function CardBuku(props) {
       <CardTitle>{dataCard.title}</CardTitle>
       <p className="card-bookAuthor">Author by {dataCard.author}</p>
       {dataCard.isSale === 1 ? (
-        <p className="card-price-disc">{`Rp ${numeral(dataCard.price).format(
+        <p className="card-price-disc">{`Rp ${numeral(dataCard.harga).format(
           "0,0"
         )}`}</p>
       ) : (
-        <p className="card-price">{`Rp ${numeral(dataCard.price).format(
+        <p className="card-price">{`Rp ${numeral(dataCard.harga).format(
           "0,0"
         )}`}</p>
       )}
       {dataCard.isSale === 1 ? (
-        <p className="card-price">{`Rp ${numeral(dataCard.price).format(
+        <p className="card-price">{`Rp ${numeral(dataCard.harga).format(
           "0,0"
         )}`}</p>
       ) : (
@@ -110,7 +110,7 @@ export default function CardBuku(props) {
         <div className="col-md-6" style={{ padding: "0 5px" }}>
           <Link
             className="btn btn-primary btn-sm btn-block"
-            to={`/rincian-buku/${dataCard._id}`}
+            to={`/rincian-buku/${dataCard.id}`}
           >
             Lihat Buku
           </Link>

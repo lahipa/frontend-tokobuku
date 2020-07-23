@@ -165,8 +165,8 @@ const Home = (props) => {
             </span>
           </SectionTitle>
           <Row>
-            {books["data"] &&
-              books["data"].slice(0, 2).map((val) => {
+            {books.rows &&
+              books.rows.slice(0, 4).map((val) => {
                 return (
                   <Col lg={3}>
                     <CardBuku dataCard={val} doAddToCart={handleAddCart} />

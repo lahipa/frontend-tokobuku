@@ -10,7 +10,7 @@ export const getListBook = () => {
       console.log(response, "Respon getBook from actions");
       return dispatch({
         type: actionsTypes.GET_BOOK,
-        payload: response.data,
+        payload: response.data.data,
       });
     });
   };
@@ -23,7 +23,7 @@ export const getBookById = (id) => {
     request.then((response) => {
       return dispatch({
         type: actionsTypes.GET_BOOK_BY_ID,
-        payload: response.data,
+        payload: response.data.data,
       });
     });
   };
