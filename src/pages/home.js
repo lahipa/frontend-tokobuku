@@ -3,7 +3,6 @@ import { Container, Row, Col } from "react-bootstrap";
 import styled from "styled-components";
 import Layout from "../templates/layout";
 import CardBuku from "../components/card/cardBuku";
-import CardBukuAlt from "../components/card/cardBukuAlt";
 import Button from "../components/button/mainButton";
 
 import { connect } from "react-redux";
@@ -13,16 +12,13 @@ import { addToCart } from "../store/actions/cart";
 const mapStateToProps = (state) => {
   return {
     books: state.bookReducer.books,
-    items: state.cartReducer.items,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getBook: () => dispatch(getListBook()),
-    addToCart: (id) => {
-      dispatch(addToCart(id));
-    },
+    addItem: (data) => dispatch(addToCart(data)),
   };
 };
 
@@ -112,7 +108,7 @@ const PenulisOfTheWeek = styled.div`
     grid-row: 1 / span 2;
   }
   > .penulis_1 {
-    grid-colum: 2 / span 1;
+    grid-column: 2 / span 1;
     grid-row: 1 / span 1;
   }
   > div > .nama_penulis {
@@ -134,17 +130,14 @@ const PenulisOfTheWeek = styled.div`
 `;
 
 const Home = (props) => {
-  const { books, items } = props;
-  window.localStorage.setItem("username", "yogal"); // "Key", "Value"
-  window.localStorage.getItem("username");
-  //window.localStorage.removeItem("tes");
+  const { books } = props;
 
   useEffect(() => {
     props.getBook();
   }, []);
 
-  const handleAddCart = (id) => {
-    props.addToCart(id);
+  const handleAddCart = (data) => {
+    props.addItem(data);
   };
 
   return (
@@ -168,24 +161,15 @@ const Home = (props) => {
           <SectionTitle>
             <h3>Buku Terlaris 2020</h3>
             <span>
-              Temukan Buku Terlaris di Tahun 2020 dengan harga Terbaik
+              Temukan Buku Terlaris di Tahun 2020 dengan harga Terbaik{" "}
             </span>
           </SectionTitle>
           <Row>
-            {books &&
-              books.slice(0, 2).map((val) => {
-                console.log(val, "ini vaal");
+            {books.rows &&
+              books.rows.slice(0, 4).map((val) => {
                 return (
                   <Col lg={3}>
-                    <CardBuku dataCard={val} />
-                  </Col>
-                );
-              })}
-            {items &&
-              items.slice(0, 2).map((val) => {
-                return (
-                  <Col lg={3}>
-                    <CardBukuAlt dataCard={val} doAddToCart={handleAddCart} />
+                    <CardBuku dataCard={val} doAddToCart={handleAddCart} />
                   </Col>
                 );
               })}

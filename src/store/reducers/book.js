@@ -26,7 +26,6 @@ const books = (state = initialState, action) => {
         ...state,
       };
     default:
-      console.log(initialState, "Call data from bookReducer")
       return initialState;
   }
 };

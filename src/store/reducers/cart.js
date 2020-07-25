@@ -43,7 +43,6 @@ const cart = (state = initialState, action) => {
         ...state,
       };
     default:
-      console.log(initialState, "Call data from cartReducer");
       return initialState;
   }
   /* let addedItem = state.items.find((item) => item.id === action.id);

@@ -100,35 +100,6 @@ const AdminDashboard = (props) => {
                     onChange={(e) => handleForm(e, "title")}
                   />
                 </Form.Group>
-                <Form.Row>
-                  <Form.Group as={Col}>
-                    <Form.Control
-                      type="text"
-                      size="sm"
-                      placeholder="Penulis"
-                      onChange={(e) => handleForm(e, "authorName")}
-                    />
-                  </Form.Group>
-                  <Form.Group as={Col} md="3">
-                    <Form.Control
-                      type="text"
-                      size="sm"
-                      placeholder="Harga"
-                      onChange={(e) => handleForm(e, "price")}
-                    />
-                  </Form.Group>
-                  <Form.Group as={Col} md="2">
-                    <Form.Control
-                      as="select"
-                      size="sm"
-                      onChange={(e) => handleForm(e, "bookStatus")}
-                    >
-                      <option>Status</option>
-                      <option value="FOR_SELL">For Sell</option>
-                      <option value="OUT_OF_STOCK">Out Of Stock</option>
-                    </Form.Control>
-                  </Form.Group>
-                </Form.Row>
                 <Form.Group>
                   <Form.Control
                     as="textarea"
@@ -138,6 +109,44 @@ const AdminDashboard = (props) => {
                     onChange={(e) => handleForm(e, "synopsis")}
                   />
                 </Form.Group>
+                <Form.Row>
+                  <Form.Group as={Col} md="3">
+                    <Form.Control
+                      type="text"
+                      size="sm"
+                      placeholder="Harga"
+                      onChange={(e) => handleForm(e, "price")}
+                    />
+                  </Form.Group>
+                  <Form.Group as={Col} md="4">
+                    <Form.Control
+                      type="text"
+                      size="sm"
+                      placeholder="Penulis"
+                      onChange={(e) => handleForm(e, "author")}
+                    />
+                  </Form.Group>
+                  <Form.Group as={Col} md="3">
+                    <Form.Control
+                      type="text"
+                      size="sm"
+                      placeholder="ISBN"
+                      onChange={(e) => handleForm(e, "isbn_no")}
+                    />
+                  </Form.Group>
+                  <Form.Group as={Col} md="2">
+                    <Form.Control
+                      as="select"
+                      size="sm"
+                      onChange={(e) => handleForm(e, "book_status")}
+                    >
+                      <option>Status</option>
+                      <option value="FOR_SELL">For Sell</option>
+                      <option value="NOT_FOR_SELL">Not for Sell</option>
+                    </Form.Control>
+                  </Form.Group>
+                </Form.Row>
+
                 <Form.Group>
                   {/* <input
                     type="hidden"
@@ -171,7 +180,7 @@ const AdminDashboard = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {books.length === 0 ? (
+                {books["data"] && books["data"].length === 0 ? (
                   <tr>
                     <td
                       colspan="6"
@@ -187,8 +196,8 @@ const AdminDashboard = (props) => {
                     </td>
                   </tr>
                 ) : (
-                  books &&
-                  books.map((val) => {
+                  books["data"] &&
+                  books["data"].map((val) => {
                     return (
                       <TableDataShow
                         no={i++}
