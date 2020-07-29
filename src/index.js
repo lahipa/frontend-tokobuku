@@ -19,7 +19,7 @@ const rootReducer = combineReducers({
   cartReducer: carts,
 });
 
-/* const logger = (store) => {
+const logger = (store) => {
   return (next) => {
     return (action) => {
       console.log("[Middleware] Dispatching", action);
@@ -28,14 +28,13 @@ const rootReducer = combineReducers({
       return result;
     };
   };
-}; */
+};
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
   rootReducer,
-  //composeEnhancers(applyMiddleware(logger, thunk))
-  composeEnhancers(applyMiddleware(thunk))
+  composeEnhancers(applyMiddleware(logger, thunk))
 );
 
 ReactDOM.render(

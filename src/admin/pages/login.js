@@ -3,18 +3,18 @@ import { Redirect } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { getListUser } from "../../store/actions/users";
+import { loginUser } from "../../store/actions/users";
 import { validate } from "numeral";
 
 const mapStateToProps = (state) => {
   return {
-    users: state.userReducer.users,
+    user: state.userReducer.users,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getUser: () => dispatch(getListUser()),
+    login: (data) => dispatch(loginUser(data)),
   };
 };
 
@@ -35,38 +35,30 @@ const FormLoginContainer = styled.div`
 `;
 
 const AdminLogin = (props) => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const { users } = props;
 
   useEffect(() => {
-    props.getUser();
+    //props.getUser();
+    console.log(props.user, "data user?");
   }, []);
 
   const onSubmitLogin = (e) => {
-    //e.preventDefault();
-    // if (users.lenght !== 0) {
-    //   users &&
-    //     users.map((val) => {
-    //       if (email === val.email && password === val.password) {
-    //         alert("Berhasil login");
-    //         document.getElementById("login").action = "/imcoolmaster/dashboard";
-    //       } else {
-    //         alert("Damm! kamu gagal login");
-    //       }
-    //     });
-    // } else {
-    //   alert("Damm! kamu gagal login");
-    // }
+    e.preventDefault();
+    props.login({
+      username,
+      password,
+    });
 
-    if (email === "email@gmail.com" && password === "123456") {
+    /* if (email === "email@gmail.com" && password === "123456") {
       window.localStorage.setItem("token", "blablabalblabal");
       return <Redirect to="/imcoolmaster/dashboard" />;
       //document.getElementById("login").action = "/imcoolmaster/dashboard";
     } else {
       alert("anda gagal login");
-    }
+    } */
   };
 
   return (
@@ -76,9 +68,9 @@ const AdminLogin = (props) => {
           <Form id="login" onSubmit={(e) => onSubmitLogin(e)}>
             <Form.Group>
               <Form.Control
-                type="email"
-                placeholder="Email"
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                placeholder="Username"
+                onChange={(e) => setUsername(e.target.value)}
               />
             </Form.Group>
             <Form.Group>

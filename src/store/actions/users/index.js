@@ -1,2 +1,7 @@
-export { getListUser, getUserById, addUser, updateUser } from //deleteUser,
-"./user";
+export {
+  getListUser,
+  getUserById,
+  addUser,
+  updateUser,
+  loginUser, //deleteUser,
+} from "./user";
