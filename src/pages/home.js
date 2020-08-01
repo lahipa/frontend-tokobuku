@@ -168,7 +168,7 @@ const Home = (props) => {
             {books.rows &&
               books.rows.slice(0, 4).map((val) => {
                 return (
-                  <Col lg={3}>
+                  <Col lg={3} key={val.id}>
                     <CardBuku dataCard={val} doAddToCart={handleAddCart} />
                   </Col>
                 );

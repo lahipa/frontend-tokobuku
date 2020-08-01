@@ -1,9 +1,9 @@
 import * as actionsTypes from "./actionTypes";
 import axios from "axios";
-import { ENDPOINT, api_key } from "../../../utils/globals";
+import { ENDPOINT } from "../../../utils/globals";
 
 export const getListCart = () => {
-  const request = axios.get(`${ENDPOINT}/${api_key}/carts`);
+  const request = axios.get(`${ENDPOINT}/carts`);
 
   return (dispatch) => {
     request.then((response) => {
@@ -17,7 +17,7 @@ export const getListCart = () => {
 };
 
 export const addToCart = (data) => {
-  const request = axios.post(`${ENDPOINT}/${api_key}/carts`, data);
+  const request = axios.post(`${ENDPOINT}/carts`, data);
 
   return (dispatch) => {
     request.then((response) => {
@@ -31,7 +31,7 @@ export const addToCart = (data) => {
 };
 
 export const deleteFromCart = (id) => {
-  const request = axios.delete(`${ENDPOINT}/${api_key}/carts/${id}`);
+  const request = axios.delete(`${ENDPOINT}/carts/${id}`);
 
   return (dispatch) => {
     request.then((response) => {
@@ -45,7 +45,7 @@ export const deleteFromCart = (id) => {
 };
 
 export const updateOnCart = (id, data) => {
-  const request = axios.put(`${ENDPOINT}/${api_key}/carts/${id}`, data);
+  const request = axios.put(`${ENDPOINT}/carts/${id}`, data);
 
   return (dispatch) => {
     request.then((response) => {

@@ -1,5 +1,8 @@
 export const ENDPOINT = "http://localhost:4000";
 export const api_key = "";
+export const dataLogin = window.localStorage.getItem
+  ? JSON.parse(window.localStorage.getItem("dataLogin"))
+  : "";
 
 /* export const ENDPOINT = "https://crudcrud.com/api";
 export const api_key = "609ad2af74344a45ac4ac6135a199eb3"; */

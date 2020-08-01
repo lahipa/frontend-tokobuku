@@ -9,11 +9,13 @@ import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
+import categories from "./store/reducers/category";
 import books from "./store/reducers/book";
 import users from "./store/reducers/user";
 import carts from "./store/reducers/cart";
 
 const rootReducer = combineReducers({
+  categoryReducer: categories,
   bookReducer: books,
   userReducer: users,
   cartReducer: carts,

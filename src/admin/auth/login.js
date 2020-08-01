@@ -3,12 +3,14 @@ import { Redirect } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import styled from "styled-components";
 import { connect } from "react-redux";
+import { dataLogin } from "../../utils/globals";
 import { loginUser } from "../../store/actions/users";
 import { validate } from "numeral";
 
 const mapStateToProps = (state) => {
   return {
-    user: state.userReducer.users,
+    user: state.userReducer.user,
+    isLogin: state.userReducer.isLogin,
   };
 };
 
@@ -37,32 +39,36 @@ const FormLoginContainer = styled.div`
 const AdminLogin = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [goto, setGoto] = useState(false);
+  const { user, isLogin } = props;
+  props.login({
+    username,
+    password,
+  });
 
-  const { users } = props;
-
-  useEffect(() => {
-    //props.getUser();
-    console.log(props.user, "data user?");
-  }, []);
+  // useEffect(() => {
+  //   if (dataLogin || dataLogin.role == "admin") {
+  //       window.location.href = "/imcoolmaster/dashboard";
+  //   }
+  // }, []);
 
   const onSubmitLogin = (e) => {
     e.preventDefault();
-    props.login({
-      username,
-      password,
-    });
-
-    /* if (email === "email@gmail.com" && password === "123456") {
-      window.localStorage.setItem("token", "blablabalblabal");
-      return <Redirect to="/imcoolmaster/dashboard" />;
-      //document.getElementById("login").action = "/imcoolmaster/dashboard";
-    } else {
-      alert("anda gagal login");
-    } */
+    console.log(isLogin);
   };
+
+  if (isLogin && user.role === "admin") {
+    setGoto(true);
+  }
+
+  // if (isLogin && user.role === "admin") {
+  //   console.log(isLogin, "ini status login");
+  //   return <Redirect to="/imcoolmaster/dashboard" />;
+  // }
 
   return (
     <>
+      {goto ? <Redirect to="/imcoolmaster/dashboard" /> : ""}
       <AdminLoginWrap>
         <FormLoginContainer>
           <Form id="login" onSubmit={(e) => onSubmitLogin(e)}>

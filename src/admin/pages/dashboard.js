@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../templates/layout/adminlayout";
 import { Container, Col, Card, Form, Button } from "react-bootstrap";
-import styled from "styled-components";
+import { SectionDiv, SectionDivTitle } from "./styles";
 import TableDataShow from "../components/books";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
+import { dataLogin } from "../../utils/globals";
 import {
   getListBook,
   addBook,
@@ -27,31 +28,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const SectionDiv = styled.section`
-  padding-top: 40px;
-  padding-bottom: 90px;
-`;
-
-const SectionDivTitle = styled.h3`
-  margin: 0;
-  margin-bottom: 15px;
-  font-size: 22px;
-  font-weight: bold;
-  line-height: 1.5;
-  > span {
-    display: block;
-    font-size: 14px;
-    font-weight: normal;
-    color: #888;
-    line-height: 1.5;
-  }
-`;
-
 const AdminDashboard = (props) => {
-  const token = window.localStorage.getItem("token")
-    ? window.localStorage.getItem("token")
-    : null;
-
   const [data, setData] = useState({});
   const { books } = props;
 
@@ -59,10 +36,14 @@ const AdminDashboard = (props) => {
     props.getBook();
   }, []);
 
-  const handleSubmit = (e) => {
-    //e.preventDefault();
+  if (!dataLogin) {
+    return <Redirect to="/imcoolmaster" />;
+  }
+
+  const handleSubmit = () => {
     props.addBook(data);
   };
+
   const handleUpdate = (id, updateData) => {
     props.updateBook(id, updateData);
   };
@@ -73,12 +54,8 @@ const AdminDashboard = (props) => {
 
   const handleForm = (e, formName) => {
     setData({ ...data, [formName]: e.target.value });
-    console.log(data, "From dashboard");
+    //console.log(data, "From dashboard");
   };
-
-  if (token == null) {
-    return <Redirect to="/imcoolmaster" />;
-  }
 
   let i = 1;
   return (
@@ -180,7 +157,7 @@ const AdminDashboard = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {books["data"] && books["data"].length === 0 ? (
+                {books.rows && books.rows.length === 0 ? (
                   <tr>
                     <td
                       colspan="6"
@@ -196,11 +173,12 @@ const AdminDashboard = (props) => {
                     </td>
                   </tr>
                 ) : (
-                  books["data"] &&
-                  books["data"].map((val) => {
+                  books.rows &&
+                  books.rows.map((val) => {
                     return (
                       <TableDataShow
                         no={i++}
+                        key={val.id}
                         booksData={val}
                         doUpdate={handleUpdate}
                         doDelete={handleDelete}

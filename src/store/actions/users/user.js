@@ -1,13 +1,12 @@
 import * as actionsTypes from "./actionTypes";
 import axios from "axios";
-import { ENDPOINT, api_key } from "../../../utils/globals";
+import { ENDPOINT } from "../../../utils/globals";
 
 export const getListUser = () => {
-  const request = axios.get(`${ENDPOINT}/${api_key}/users`);
+  const request = axios.get(`${ENDPOINT}/users`);
 
   return (dispatch) => {
     request.then((response) => {
-      console.log(response);
       return dispatch({
         type: actionsTypes.GET_USER,
         payload: response.data,
@@ -17,7 +16,7 @@ export const getListUser = () => {
 };
 
 export const getUserById = (id) => {
-  const request = axios.get(`${ENDPOINT}/${api_key}/users/${id}`);
+  const request = axios.get(`${ENDPOINT}/users/${id}`);
 
   return (dispatch) => {
     request.then((response) => {
@@ -30,11 +29,10 @@ export const getUserById = (id) => {
 };
 
 export const updateUser = (id, data) => {
-  const request = axios.put(`${ENDPOINT}/${api_key}/users/${id}`, data);
+  const request = axios.put(`${ENDPOINT}/users/${id}`, data);
 
   return (dispatch) => {
     request.then((response) => {
-      console.log(response);
       dispatch({
         type: actionsTypes.UPDATE_USER,
         payload: response.data,
@@ -46,11 +44,10 @@ export const updateUser = (id, data) => {
 };
 
 /* export const deleteUser = (id) => {
-  const request = axios.delete(`${ENDPOINT}/${api_key}/users/${id}`);
+  const request = axios.delete(`${ENDPOINT}/users/${id}`);
 
   return (dispatch) => {
     request.then((response) => {
-      console.log(response);
       dispatch({
         type: actionsTypes.GET_USER_BY_ID,
         payload: response.data,
@@ -60,17 +57,20 @@ export const updateUser = (id, data) => {
   };
 }; */
 
-export const addUser = (data) => {
-  const request = axios.post(`${ENDPOINT}/${api_key}/users`, data);
+export const registerUser = (data) => {
+  return async (dispatch) => {
+    try {
+      console.log(data, "ini data dari user register");
+      const request = await axios.post(`${ENDPOINT}/users/register`, data);
 
-  return (dispatch) => {
-    request.then((response) => {
-      console.log(response);
-      dispatch({
+      return dispatch({
         type: actionsTypes.ADD_USER,
-        payload: response.data,
+        payload: request.data.data,
       });
-    });
+    } catch (err) {
+      console.log(err.response.data.message);
+      return err.response.data.message;
+    }
   };
 };
 
@@ -80,7 +80,6 @@ export const addUser = (data) => {
 
   return (dispatch) => {
     request.then((response) => {
-      //console.log(response, "response login");
 
       dispatch({
         type: actionsTypes.LOGIN_USER,
@@ -105,17 +104,19 @@ export const loginUser = (data) => {
       return dispatch(
         {
           type: actionsTypes.LOGIN_USER,
-          payload: request.data,
+          payload: request.data.data.user,
+          isLogin: true,
         },
 
         //console.log(request.data.data, "data user")
         window.localStorage.setItem(
-          "userData",
+          "dataLogin",
           JSON.stringify(request.data.data)
         )
       );
     } catch (err) {
-      console.log(err);
+      console.log(err.response.data.message);
+      return err.response.data.message;
     }
   };
 };

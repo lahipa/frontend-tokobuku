@@ -117,6 +117,7 @@ export default function CardBuku(props) {
         </div>
         <div className="col-md-6" style={{ padding: "0 5px" }}>
           <Link
+            to="#"
             className="btn btn-warning btn-sm btn-block"
             onClick={() => {
               handleAddToCart();

@@ -1,6 +1,7 @@
 import * as actionTypes from "../actions/users/actionTypes";
 
 const initialState = {
+  isLogin: false,
   users: [],
   user: {},
 };
@@ -25,7 +26,9 @@ const users = (state = initialState, action) => {
       return {
         ...state,
         user: action.payload,
+        isLogin: action.isLogin,
       };
+
     /* case actionTypes.DELETE_USER:
       return {
         ...state,

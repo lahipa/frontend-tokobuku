@@ -2,16 +2,17 @@ import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
 
 import Home from "./pages/home";
+import Login from "./auth/login";
+import Register from "./auth/register";
 import SemuaBuku from "./pages/listAllBook";
 import BukuBaru from "./pages/listNewBook";
 import DetailBuku from "./pages/detailBook";
-import Register from "./pages/register";
-import Login from "./pages/login";
-
 import Checkout from "./pages/checkout";
 
-import AdminLogin from "./admin/pages/login";
+import AdminLogin from "./admin/auth/login";
 import AdminDashboard from "./admin/pages/dashboard";
+import AdminBookCategory from "./admin/pages/bookCategory";
+
 class App extends Component {
   render() {
     return (
@@ -28,6 +29,7 @@ class App extends Component {
 
           <Route exact path="/imcoolmaster" component={AdminLogin} />
           <Route path="/imcoolmaster/dashboard" component={AdminDashboard} />
+          <Route path="/imcoolmaster/category" component={AdminBookCategory} />
         </Switch>
       </>
     );
