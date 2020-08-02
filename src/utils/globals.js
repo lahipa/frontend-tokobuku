@@ -1,6 +1,6 @@
 export const ENDPOINT = "http://localhost:4000";
 export const api_key = "";
-export const dataLogin = window.localStorage.getItem
+export const dataLogin = window.localStorage.getItem("dataLogin")
   ? JSON.parse(window.localStorage.getItem("dataLogin"))
   : "";
 

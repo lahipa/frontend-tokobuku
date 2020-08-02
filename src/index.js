@@ -1,7 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./templates/asset/ionicons/css/ionicons.min.css";
 import { GlobalStyle } from "./templates/layout/styles";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";

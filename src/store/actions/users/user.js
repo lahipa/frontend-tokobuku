@@ -75,24 +75,25 @@ export const registerUser = (data) => {
 };
 
 // Promise Aproach
-/* export const loginUser = (data) => {
-  const request = axios.post(`${ENDPOINT}/users/login`, data);
+// export const loginUser = (data) => {
+//   const request = axios.post(`${ENDPOINT}/users/login`, data);
 
-  return (dispatch) => {
-    request.then((response) => {
+//   return (dispatch) => {
+//     request.then((response) => {
 
-      dispatch({
-        type: actionsTypes.LOGIN_USER,
-        payload: response.data,
-      });
+//       dispatch({
+//         type: actionsTypes.LOGIN_USER,
+//         payload: response.data,
 
-      window.localStorage.setItem(
-        "userData",
-        JSON.stringify(response.data.data)
-      );
-    });
-  };
-}; */
+//       });
+
+//       window.localStorage.setItem(
+//         "userData",
+//         JSON.stringify(response.data.data)
+//       );
+//     });
+//   };
+// };
 
 // Async Await Aproach
 export const loginUser = (data) => {
@@ -104,7 +105,7 @@ export const loginUser = (data) => {
       return dispatch(
         {
           type: actionsTypes.LOGIN_USER,
-          payload: request.data.data.user,
+          payload: request.data.data,
           isLogin: true,
         },
 
@@ -115,8 +116,7 @@ export const loginUser = (data) => {
         )
       );
     } catch (err) {
-      console.log(err.response.data.message);
-      return err.response.data.message;
+      return err.response;
     }
   };
 };

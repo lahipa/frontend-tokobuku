@@ -12,6 +12,14 @@ const categories = (state = initialState, action) => {
         ...state,
         categories: action.payload,
       };
+    case actionsTypes.UPDATE_KATEGORI:
+      return {
+        ...state,
+      };
+    case actionsTypes.DELETE_KATEGORI:
+      return {
+        ...state,
+      };
     default:
       return initialState;
   }

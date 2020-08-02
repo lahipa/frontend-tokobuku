@@ -25,7 +25,7 @@ const users = (state = initialState, action) => {
     case actionTypes.LOGIN_USER:
       return {
         ...state,
-        user: action.payload,
+        user: action.payload.user,
         isLogin: action.isLogin,
       };
 

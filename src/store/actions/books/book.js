@@ -66,19 +66,43 @@ export const deleteBook = (id) => {
 };
 
 export const addBook = (data) => {
-  const request = axios.post(`${ENDPOINT}/books`, data, {
-    headers: {
-      Authorization: dataLogin.token,
-    },
-  });
-
-  return (dispatch) => {
-    request.then((response) => {
-      dispatch({
-        type: actionsTypes.ADD_BOOK,
-        payload: response.data.data,
+  return async (dispatch) => {
+    try {
+      const request = await axios.post(`${ENDPOINT}/books`, data, {
+        headers: {
+          Authorization: dataLogin.token,
+        },
       });
-      return dispatch(getListBook());
-    });
+
+      return dispatch(
+        {
+          type: actionsTypes.ADD_BOOK,
+          payload: request.data.data,
+        },
+
+        dispatch(getListBook())
+      );
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
   };
 };
+
+// export const addBook = (data) => {
+//   const request = axios.post(`${ENDPOINT}/books`, data, {
+//     headers: {
+//       Authorization: dataLogin.token,
+//     },
+//   });
+
+//   return (dispatch) => {
+//     request.then((response) => {
+//       dispatch({
+//         type: actionsTypes.ADD_BOOK,
+//         payload: response.data.data,
+//       });
+//       //return dispatch(getListBook());
+//     });
+//   };
+// };

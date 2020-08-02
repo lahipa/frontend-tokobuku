@@ -2,7 +2,7 @@ import React from "react";
 import { Container, InputGroup, FormControl, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import MainMenu from "../../components/mainmenu";
+import MenuNavigation from "../../components/navigation";
 import CheckoutButton from "../../components/button/circleButton";
 
 import { connect } from "react-redux";
@@ -42,7 +42,7 @@ const Logo = styled.div`
 
 const HeaderSearch = styled.div`
   flex: 2;
-  postition: relative;
+  position: relative;
 `;
 
 const HeaderCheckout = styled.div`
@@ -91,16 +91,20 @@ const Header = (props) => {
             </InputGroup>
           </HeaderSearch>
           <HeaderCheckout>
-            {items.length ? <span class="items__selected">{items.length}</span> : ""}
+            {items.length ? (
+              <span class="items__selected">{items.length}</span>
+            ) : (
+              ""
+            )}
             <Link to="/checkout" style={{ textAlign: "center" }}>
               <CheckoutButton title={<i className="icon ion-bag"></i>} />
             </Link>
           </HeaderCheckout>
         </HeaderMainSection>
       </Container>
-      <MainMenu />
+      <MenuNavigation />
     </HeaderWrap>
   );
-}
+};
 
 export default connect(mapStateToProps, null)(Header);

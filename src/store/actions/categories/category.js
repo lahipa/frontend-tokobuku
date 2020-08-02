@@ -12,8 +12,57 @@ export const getListKategori = () => {
         payload: request.data.data,
       });
     } catch (err) {
-      console.log(err.response.data.message);
-      return err.response.data.message;
+      console.log(err.response);
+      return err.response;
+    }
+  };
+};
+
+export const updateKategori = (id, data) => {
+  return async (dispatch) => {
+    console.log(data, "ini data update");
+    try {
+      const request = await axios.put(`${ENDPOINT}/kategori/${id}`, data, {
+        headers: {
+          Authorization: dataLogin.token,
+        },
+      });
+
+      return dispatch(
+        {
+          type: actionsTypes.UPDATE_KATEGORI,
+          payload: request.data.data,
+        },
+
+        dispatch(getListKategori())
+      );
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
+  };
+};
+
+export const deleteKategori = (id) => {
+  return async (dispatch) => {
+    try {
+      const request = await axios.delete(`${ENDPOINT}/kategori/${id}`, {
+        headers: {
+          Authorization: dataLogin.token,
+        },
+      });
+
+      return dispatch(
+        {
+          type: actionsTypes.DELETE_KATEGORI,
+          payload: request.data.data,
+        },
+
+        dispatch(getListKategori())
+      );
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
     }
   };
 };
@@ -33,11 +82,11 @@ export const addKategori = (data) => {
           payload: request.data.data,
         },
 
-        getListKategori()
+        dispatch(getListKategori())
       );
     } catch (err) {
-      console.log(err.response.data.message);
-      return err.response.data.message;
+      console.log(err.response);
+      return err.response;
     }
   };
 };

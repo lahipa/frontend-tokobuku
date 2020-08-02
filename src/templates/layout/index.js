@@ -1,15 +1,15 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import Header from "../header";
 import Footer from "../footer";
 
-export default class Layout extends Component {
-  render() {
-    return (
-      <>
-        <Header />
-        {this.props.children}
-        <Footer />
-      </>
-    );
-  }
-}
+const Layout = (props) => {
+  return (
+    <Fragment>
+      <Header />
+      {props.children}
+      <Footer />
+    </Fragment>
+  );
+};
+
+export default Layout;
