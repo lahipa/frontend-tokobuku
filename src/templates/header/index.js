@@ -1,110 +1,195 @@
-import React from "react";
-import { Container, InputGroup, FormControl, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import MenuNavigation from "../../components/navigation";
-import CheckoutButton from "../../components/button/circleButton";
-
+import React, { Fragment, useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { ENDPOINT, dataLogin } from "../../utils/globals";
+import { Link } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  Container,
+  Toolbar,
+  Dialog,
+  Typography,
+  Menu,
+  MenuItem,
+  Button,
+  IconButton,
+  Badge,
+} from "@material-ui/core";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import LocalMall from "@material-ui/icons/LocalMall";
+import MenuNavigation from "../../components/navigation";
+import FormLogin from "../../auth/login";
+import FormRegister from "../../auth/register";
+import { handleLogout } from "../../auth/logout";
+import { getListCart } from "../../store/actions/cart";
 
 const mapStateToProps = (state) => {
   return {
-    items: state.cartReducer.addedItems,
+    carts: state.cartReducer.carts,
   };
 };
 
-const HeaderWrap = styled.div`
-  background-color: #ffffff;
-`;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getListCart: (uid) => dispatch(getListCart(uid)),
+  };
+};
 
-const HeaderMainSection = styled.div`
-  display: flex;
-  position: relative;
-  height: 100px;
-  align-items: center;
-`;
-
-const Logo = styled.div`
-  flex: 3;
-  position: relative;
-  > *:hover {
-    text-decoration: none;
-  }
-  > * > h1 {
-    margin: 0;
-    font-size: 50px;
-    color: #888;
-  }
-  > * > h1 > b {
-    color: #f6663f;
-  }
-`;
-
-const HeaderSearch = styled.div`
-  flex: 2;
-  position: relative;
-`;
-
-const HeaderCheckout = styled.div`
-  flex: 0.5;
-  display: flex;
-  justify-content: flex-end;
-  position: relative;
-  > .items__selected {
-    display: block;
-    width: 20px;
-    height: 20px;
-    line-height: 20px;
-    text-align: center;
-    font-size: 12px;
-    font-weight: bold;
-    position: absolute;
-    top: -5px;
-    right: 0;
-    background-color: red;
-    color: #fff;
-  }
-`;
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  margin: {
+    margin: theme.spacing(1),
+  },
+  container: {
+    display: "flex",
+    alignItems: "center",
+  },
+  toolbarLogo: {
+    flex: 1,
+    paddingLeft: theme.spacing(3),
+    "& img": {
+      height: "70px",
+      width: "auto",
+    },
+  },
+  toolbarButton: {
+    flex: 2,
+    paddingRight: theme.spacing(4),
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  toolbar: {
+    minHeight: 80,
+    padding: theme.spacing(2),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    backgroundColor: "#fff",
+  },
+}));
 
 const Header = (props) => {
-  const { items } = props;
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [authType, setAuthType] = useState("register");
+  const { carts, getListCart } = props;
+  const classes = useStyles();
+
+  useEffect(() => {
+    if (dataLogin) {
+      getListCart(dataLogin.user.uid);
+    }
+  }, []);
+
+  const handleMenu = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDialogOpen = (authType) => () => {
+    setOpen(true);
+    setAuthType(authType);
+  };
+
+  const handleDialogClose = () => {
+    setOpen(false);
+  };
+
+  let total = carts.reduce(
+    (prevValue, currentValue) => prevValue + currentValue.qty,
+    0
+  );
 
   return (
-    <HeaderWrap>
-      <Container>
-        <HeaderMainSection>
-          <Logo>
+    <Fragment>
+      <Toolbar className={classes.toolbar}>
+        <Container className={classes.container}>
+          <Toolbar className={classes.toolbarLogo}>
             <Link to="/">
-              <h1>
-                <b>Cil</b>sy
-              </h1>
+              <img src="/asset/310-bbc.png" />
             </Link>
-          </Logo>
-          <HeaderSearch>
-            <InputGroup>
-              <FormControl id="inlineFormInputGroup" placeholder="Cari Buku" />
-              <InputGroup.Append>
-                <Button variant="secondary">
-                  <i className="ion-ios-search-strong"></i>
-                </Button>
-              </InputGroup.Append>
-            </InputGroup>
-          </HeaderSearch>
-          <HeaderCheckout>
-            {items.length ? (
-              <span class="items__selected">{items.length}</span>
+          </Toolbar>
+          <Toolbar className={classes.toolbarButton}>
+            <div className={classes.margin}>
+              <IconButton
+                href={!dataLogin ? "#" : "/checkout"}
+                onClick={!dataLogin ? handleDialogOpen("login") : ""}
+              >
+                {carts.length ? (
+                  <Badge badgeContent={total} color="secondary">
+                    <LocalMall fontSize="large" />
+                  </Badge>
+                ) : (
+                  <LocalMall fontSize="large" />
+                )}
+              </IconButton>
+            </div>
+            {dataLogin ? (
+              <div className={classes.margin}>
+                <IconButton onClick={handleMenu}>
+                  <AccountCircle fontSize="large" />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </div>
             ) : (
-              ""
+              <div>
+                <Button
+                  size="small"
+                  className={classes.margin}
+                  aria-label="login"
+                  onClick={handleDialogOpen("login")}
+                >
+                  Login
+                </Button>
+                <Button
+                  size="small"
+                  className={classes.margin}
+                  aria-label="register"
+                  onClick={handleDialogOpen("register")}
+                >
+                  Daftar
+                </Button>
+              </div>
             )}
-            <Link to="/checkout" style={{ textAlign: "center" }}>
-              <CheckoutButton title={<i className="icon ion-bag"></i>} />
-            </Link>
-          </HeaderCheckout>
-        </HeaderMainSection>
-      </Container>
+          </Toolbar>
+        </Container>
+      </Toolbar>
       <MenuNavigation />
-    </HeaderWrap>
+
+      <Dialog
+        fullWidth
+        maxWidth={authType === "login" ? "xs" : "xs"}
+        open={open}
+        onClose={handleDialogClose}
+      >
+        {authType === "login" ? (
+          <>
+            <FormLogin
+              endpoint={ENDPOINT}
+              handleOpen={handleDialogOpen}
+              handleClose={handleDialogClose}
+            />
+          </>
+        ) : (
+          <>
+            <FormRegister
+              handleOpen={handleDialogOpen}
+              handleClose={handleDialogClose}
+            />
+          </>
+        )}
+      </Dialog>
+    </Fragment>
   );
 };
 
-export default connect(mapStateToProps, null)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

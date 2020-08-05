@@ -30,11 +30,18 @@ const AddBooks = (props) => {
   const [berat, setBerat] = useState("");
   const [synopsis, setSynopsis] = useState("");
 
-  const { classes, doAdd, open, handleClose } = props;
+  const { endpoint, classes, doAdd, open, handleClose } = props;
 
   const getCategory = async () => {
-    const request = await axios.get("http://localhost:4000/kategori");
-    setCategories(request.data.data);
+    try {
+      const request = await axios.get(`${endpoint}/kategori`);
+
+      if (request) {
+        setCategories(request.data.data);
+      }
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
   };
 
   useEffect(() => {

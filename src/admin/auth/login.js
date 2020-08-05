@@ -14,9 +14,10 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { useSnackbar } from "notistack";
 
 import { connect } from "react-redux";
-import { dataLogin } from "../../utils/globals";
+import { ENDPOINT, dataLogin } from "../../utils/globals";
 //import { loginUser } from "../../store/actions/users";
 
 // const mapStateToProps = (state) => {
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     height: "100vh",
   },
   image: {
-    backgroundImage: "url(https://source.unsplash.com/random)",
+    backgroundImage: "url(/asset/photo-1595834947380-92bba01187c6.jpeg)",
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "light"
@@ -71,6 +72,7 @@ const AdminLogin = (props) => {
   //const { user, isLogin } = props;
 
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const onSubmitLogin = async (e) => {
     e.preventDefault();
@@ -80,12 +82,14 @@ const AdminLogin = (props) => {
     // });
 
     try {
-      const request = await axios.post("http://localhost:4000/users/login", {
+      const request = await axios.post(`${ENDPOINT}/users/login`, {
         username,
         password,
       });
 
-      if (request.data.isLogin) {
+      if (request.data.role !== "admin") {
+        enqueueSnackbar("Akun belum terdaftar", { variant: "error" });
+      } else if (request.data.isLogin) {
         //toast.success(request.data.message, {position: toast.POSITION.TOP_CENTER});
         window.localStorage.setItem(
           "dataLogin",
@@ -93,14 +97,15 @@ const AdminLogin = (props) => {
         );
 
         setTimeout(function () {
+          enqueueSnackbar(request.data.message, { variant: "success" });
           window.location.href = "/imcoolmaster/dashboard";
-        }, 3000);
+        }, 500);
       } else {
         //toast.error(request.data.message, {position: toast.POSITION.TOP_CENTER});
-        alert(request.data.message);
+        enqueueSnackbar(request.data.message, { variant: "error" });
       }
     } catch (err) {
-      return err.response.data.message;
+      return enqueueSnackbar(err.response.data.message, { variant: "error" });
     }
   };
 

@@ -1,132 +1,103 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 import numeral from "numeral";
-
-const CardWrap = styled.div`
-  padding: 20px;
-  padding-bottom: 0;
-  height: 520px;
-  position: relative;
-  background-color: #f5f6f8;
-  > .card-bookAuthor {
-    margin-bottom: 15px;
-    text-align: center;
-    line-height: 1.36;
-    letter-spacing: 0.16px;
-    color: #000000;
-    opacity: 0.6;
-  }
-  > .card-price {
-    margin-bottom: 10px;
-    text-align: center;
-    color: #000;
-    font-weight: bold;
-  }
-  > .card-price-disc {
-    margin-bottom: 10px;
-    text-align: center;
-    text-decoration: line-through;
-    color: #898989;
-  }
-`;
-
-const CardImagesWrap = styled.div`
-  margin-bottom: 20px;
-  position: relative;
-  overflow: hidden;
-  height: 329px;
-  text-align: center;
-  background-color: #fff;
-  > div {
-    padding: 0 10px;
-    display: flex;
-    align-items: center;
-    position: absolute;
-    background-color: #c02b02;
-    color: #fff;
-    opacity: 0.9;
-    width: 100%;
-    height: 40px;
-    bottom: 0;
-  }
-`;
-
-const CardTitle = styled.p`
-  margin: 0;
-  text-align: center;
-  font-size: 16px;
-  color: #000;
-  font-weight: bold;
-`;
+import { ENDPOINT } from "../../utils/globals";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  Paper,
+  Card,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  CardActions,
+  CardActionArea,
+  Avatar,
+  Typography,
+  Button,
+  IconButton,
+} from "@material-ui/core";
+import LocalMall from "@material-ui/icons/LocalMall";
+import ShareIcon from "@material-ui/icons/Share";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+const useStyles = makeStyles((theme) => ({
+  media: {
+    height: 0,
+    paddingTop: "56.25%", // 16:9
+  },
+}));
 
 export default function CardBuku(props) {
-  const { dataCard, doAddToCart } = props;
+  const { dataCard, doAddToCart, dataLogin } = props;
   const [data, setData] = useState({});
   //console.log(dataCardContent);
 
+  const classes = useStyles();
+
   useEffect(() => {
-    setData({
-      id: dataCard._id,
-      title: dataCard.title,
-      price: dataCard.price,
-    });
+    if (dataLogin) {
+      setData({
+        user_id: dataLogin.user.uid,
+        buku_id: dataCard.id,
+        qty: 1,
+      });
+    }
   }, []);
 
   const handleAddToCart = () => {
-    console.log(data, "data added to cart");
     doAddToCart(data);
   };
 
+  let imageUrl = dataCard.image_url.replace("public/", "");
+
+  let title =
+    dataCard.title.length > 25
+      ? dataCard.title.substring(0, 25) + " ..."
+      : dataCard.title;
+
+  let content =
+    dataCard.synopsis.length > 100
+      ? dataCard.synopsis.substring(0, 100) + " ..."
+      : dataCard.synopsis;
+
+  let imgTitle = dataCard.title.replace(" ", "-");
+
   return (
-    <CardWrap>
-      <CardImagesWrap>
-        <img
-          src="https://ashmagautam.files.wordpress.com/2013/11/mcj038257400001.jpg"
-          alt=""
-          style={{ width: "100%" }}
-        />
-        {dataCard.isSale ? <div>Sale 50% off</div> : ""}
-      </CardImagesWrap>
-      <CardTitle>{dataCard.title}</CardTitle>
-      <p className="card-bookAuthor">Author by {dataCard.author}</p>
-      {dataCard.isSale === 1 ? (
-        <p className="card-price-disc">{`Rp ${numeral(dataCard.harga).format(
-          "0,0"
-        )}`}</p>
-      ) : (
-        <p className="card-price">{`Rp ${numeral(dataCard.harga).format(
-          "0,0"
-        )}`}</p>
-      )}
-      {dataCard.isSale === 1 ? (
-        <p className="card-price">{`Rp ${numeral(dataCard.harga).format(
-          "0,0"
-        )}`}</p>
-      ) : (
-        ""
-      )}
-      <div className="row">
-        <div className="col-md-6" style={{ padding: "0 5px" }}>
-          <Link
-            className="btn btn-primary btn-sm btn-block"
-            to={`/rincian-buku/${dataCard.id}`}
-          >
-            Lihat Buku
-          </Link>
-        </div>
-        <div className="col-md-6" style={{ padding: "0 5px" }}>
-          <Link
-            to="#"
-            className="btn btn-warning btn-sm btn-block"
-            onClick={() => {
-              handleAddToCart();
-            }}
-          >
-            Add Cart
-          </Link>
-        </div>
-      </div>
-    </CardWrap>
+    <Fragment>
+      <Card>
+        <CardActionArea>
+          <CardMedia
+            className={classes.media}
+            image={`${ENDPOINT}/${imageUrl}`}
+            title={imgTitle}
+          />
+          <CardContent>
+            <Typography gutterBottom component="h3">
+              {title}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              <b>{dataCard.author}</b>, {content}
+            </Typography>
+            <Typography>{`IDR ${numeral(dataCard.harga).format(
+              "0,0"
+            )}`}</Typography>
+          </CardContent>
+        </CardActionArea>
+        <CardActions>
+          <Button href={`/rincian-buku/${dataCard.id}`}>Detail</Button>
+          {dataLogin ? (
+            <Button
+              color="secondary"
+              onClick={() => {
+                handleAddToCart();
+              }}
+            >
+              Add to cart
+            </Button>
+          ) : (
+            <Button color="secondary">Add to cart</Button>
+          )}
+        </CardActions>
+      </Card>
+    </Fragment>
   );
 }

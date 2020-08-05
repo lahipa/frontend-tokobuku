@@ -20,7 +20,6 @@ export const getListKategori = () => {
 
 export const updateKategori = (id, data) => {
   return async (dispatch) => {
-    console.log(data, "ini data update");
     try {
       const request = await axios.put(`${ENDPOINT}/kategori/${id}`, data, {
         headers: {

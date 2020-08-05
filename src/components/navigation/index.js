@@ -1,54 +1,76 @@
-import React from "react";
-import { Container } from "react-bootstrap";
+import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import { makeStyles } from "@material-ui/core/styles";
+import { Container, Toolbar } from "@material-ui/core";
 
-const MainNavWrap = styled.div`
-  height: 40px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
-  background-color: #f5f6f8;
-  position: relative;
-  z-index: 10;
-`;
+const useStyles = makeStyles((theme) => ({
+  toolbar: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    //backgroundColor: "#fff",
+  },
+  toolbarSecondary: {
+    display: "inline-flex",
+    overflowX: "auto",
+    flexWrap: "wrap",
+    gap: "30px",
+    "& a": {
+      textDecoration: "none",
+      //color: "inherit",
+      padding: theme.spacing(1),
+      flexShrink: 0,
+    },
+  },
+  toolbarLink: {},
+}));
 
-const MainNav = styled.div`
-  display: inline-block;
-  margin: 0;
-  margin-right: 100px;
-  padding: 0;
-  > * {
-    margin: 0 10px;
-    color: #000;
-    text-transform: uppercase;
-  }
-  > *:first-child {
-    margin-left: 0;
-  }
-  > *:last-child {
-    margin-right: 0;
-  }
-  > *:hover {
-    text-decoration: none;
-    color: #888;
-  }
-`;
+const MainMenu = () => {
+  const classes = useStyles();
 
-export default function MainMenu() {
   return (
-    <MainNavWrap>
-      <Container>
-        <MainNav>
-          <Link to="/semua-buku">Semua Koleksi</Link>
-          <Link to="/buku-baru">Buku Baru</Link>
-          <Link to="/buku-pilihan">Buku Pilihan</Link>
-          <Link to="/buku-best-seller">National Beset Seller</Link>
-          <Link to="/buku-import">Buku Import</Link>
-        </MainNav>
-        <Link to="/register">REGISTER</Link>
-      </Container>
-    </MainNavWrap>
+    <Fragment>
+      <Toolbar variant="dense" className={classes.toolbar}>
+        <Container>
+          <Toolbar
+            component="nav"
+            variant="dense"
+            className={classes.toolbarSecondary}
+          >
+            {/* MuiButton-textPrimary */}
+            <Link
+              className={`MuiButtonBase-root MuiButton-root MuiButton-text `}
+              to="/semua-buku"
+            >
+              Semua Koleksi
+            </Link>
+            <Link
+              className={`MuiButtonBase-root MuiButton-root MuiButton-text `}
+              to="/buku-baru"
+            >
+              Buku Baru
+            </Link>
+            <Link
+              className={`MuiButtonBase-root MuiButton-root MuiButton-text `}
+              to="/buku-pilihan"
+            >
+              Buku Pilihan
+            </Link>
+            <Link
+              className={`MuiButtonBase-root MuiButton-root MuiButton-text `}
+              to="/buku-best-seller"
+            >
+              National Beset Seller
+            </Link>
+            <Link
+              className={`MuiButtonBase-root MuiButton-root MuiButton-text `}
+              to="/buku-import"
+            >
+              Buku Import
+            </Link>
+          </Toolbar>
+        </Container>
+      </Toolbar>
+    </Fragment>
   );
-}
+};
+
+export default MainMenu;

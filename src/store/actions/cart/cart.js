@@ -1,87 +1,97 @@
 import * as actionsTypes from "./actionTypes";
 import axios from "axios";
-import { ENDPOINT } from "../../../utils/globals";
+import { ENDPOINT, dataLogin } from "../../../utils/globals";
 
-export const getListCart = () => {
-  const request = axios.get(`${ENDPOINT}/carts`);
+export const getListCart = (uid) => {
+  return async (dispatch) => {
+    try {
+      const request = await axios.get(`${ENDPOINT}/cart/?uid=${uid}`, {
+        headers: {
+          Authorization: dataLogin.token,
+        },
+      });
 
-  return (dispatch) => {
-    request.then((response) => {
-      console.log(response, "Respon getListCart");
       return dispatch({
         type: actionsTypes.GET_LIST_CART,
-        payload: response.data,
+        payload: request.data.data,
       });
-    });
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
+  };
+};
+
+export const substractFromCart = (id, data) => {
+  return async (dispatch) => {
+    try {
+      const request = await axios.put(`${ENDPOINT}/cart/${id}`, data, {
+        headers: {
+          Authorization: dataLogin.token,
+        },
+      });
+
+      return dispatch(
+        {
+          type: actionsTypes.UPDATE_CART_LIST,
+          payload: request.data.data,
+        },
+
+        dispatch(getListCart(data.user_id))
+      );
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
+  };
+};
+
+export const removeFromCart = (id, uid) => {
+  return async (dispatch) => {
+    try {
+      const request = await axios.delete(`${ENDPOINT}/cart/${id}`, {
+        headers: {
+          Authorization: dataLogin.token,
+        },
+      });
+
+      return dispatch(
+        {
+          type: actionsTypes.REMOVE_FROM_CART,
+          payload: request.data.data,
+        },
+
+        dispatch(getListCart(uid))
+      );
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
   };
 };
 
 export const addToCart = (data) => {
-  const request = axios.post(`${ENDPOINT}/carts`, data);
+  console.log(data, "data from add action");
 
-  return (dispatch) => {
-    request.then((response) => {
-      console.log(response, "Response from add book to cart action");
-      dispatch({
-        type: actionsTypes.ADD_TO_CART,
-        payload: response.data,
-      });
-    });
-  };
-};
-
-export const deleteFromCart = (id) => {
-  const request = axios.delete(`${ENDPOINT}/carts/${id}`);
-
-  return (dispatch) => {
-    request.then((response) => {
-      dispatch({
-        type: actionsTypes.DELETE_FROM_CART,
-        payload: response.data,
-      });
-      return dispatch(getListCart());
-    });
-  };
-};
-
-export const updateOnCart = (id, data) => {
-  const request = axios.put(`${ENDPOINT}/carts/${id}`, data);
-
-  return (dispatch) => {
-    request.then((response) => {
-      dispatch({
-        type: actionsTypes.UPDATE_ON_CART,
-        payload: response.data,
+  return async (dispatch) => {
+    try {
+      const request = await axios.post(`${ENDPOINT}/cart/`, data, {
+        headers: {
+          Authorization: dataLogin.token,
+        },
       });
 
-      return dispatch(getListCart());
-    });
-  };
-};
+      return dispatch(
+        {
+          type: actionsTypes.ADD_TO_CART,
+          payload: request.data.data,
+        },
 
-/* export const addToCart = (id) => {
-  return {
-    type: actionsTypes.ADD_TO_CART,
-    id,
+        dispatch(getListCart(data.user_id))
+      );
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
   };
 };
-
-export const removeItem = (id) => {
-  return {
-    type: actionsTypes.REMOVE_ITEM,
-    id,
-  };
-};
-export const subtractQuantity = (id) => {
-  return {
-    type: actionsTypes.SUB_QUANTITY,
-    id,
-  };
-};
-//add qt action
-export const addQuantity = (id) => {
-  return {
-    type: actionsTypes.ADD_QUANTITY,
-    id,
-  };
-}; */

@@ -1,1 +1,6 @@
-export { getListCart, addToCart, deleteFromCart, updateOnCart } from "./cart";
+export {
+  getListCart,
+  addToCart,
+  substractFromCart,
+  removeFromCart,
+} from "./cart";

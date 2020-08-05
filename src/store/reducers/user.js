@@ -25,8 +25,12 @@ const users = (state = initialState, action) => {
     case actionTypes.LOGIN_USER:
       return {
         ...state,
-        user: action.payload.user,
-        isLogin: action.isLogin,
+        user: action.payload,
+      };
+    case actionTypes.ADD_USER:
+      return {
+        ...state,
+        user: action.payload,
       };
 
     /* case actionTypes.DELETE_USER:

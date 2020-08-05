@@ -19,7 +19,7 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import AddBook from "./create";
 import TableDataShow from "./components/listItemBooks";
-import { dataLogin } from "../../../utils/globals";
+import { ENDPOINT, dataLogin } from "../../../utils/globals";
 import {
   getListBook,
   addBook,
@@ -159,6 +159,7 @@ const Books = (props) => {
       </Fab>
 
       <AddBook
+        endpoint={ENDPOINT}
         classes={classes}
         doAdd={handleSubmit}
         open={open}

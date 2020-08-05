@@ -1,13 +1,13 @@
 import React from "react";
-import { Container } from "react-bootstrap";
-import Layout from "../templates/layout";
+import Layout from "../../templates/layout";
+import { Container } from "@material-ui/core";
 
 export default function index(props) {
   return (
     <Layout>
       <Container>
         <div style={{ height: "300px" }}>
-          <h1>Ini halaman buku baru</h1>
+          <h2>Ini halaman buku baru</h2>
         </div>
       </Container>
     </Layout>

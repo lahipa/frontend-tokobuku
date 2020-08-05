@@ -1,13 +1,15 @@
 import React, { Component, Fragment } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
-import Home from "./pages/home";
-import Login from "./auth/login";
-import Register from "./auth/register";
-import SemuaBuku from "./pages/listAllBook";
-import BukuBaru from "./pages/listNewBook";
-import DetailBuku from "./pages/detailBook";
-import Checkout from "./pages/checkout";
+import NotFound404 from "./notFound404";
+
+import Home from "./views/home";
+import Login from "./views/login";
+import Register from "./views/register";
+import SemuaBuku from "./views/allbook";
+import BukuBaru from "./views/newbook";
+import DetailBuku from "./views/book";
+import Checkout from "./views/checkout";
 
 import AdminLogin from "./admin/auth/login";
 import AdminDashboard from "./admin/views/dashboard";
@@ -46,6 +48,9 @@ class App extends Component {
           <Route path="/imcoolmaster/orders" component={AdminListOrders} />
           <Route path="/imcoolmaster/customers" component={Customers} />
           <Route path="/imcoolmaster/admins" component={Admins} />
+
+          <Route path="/404" component={NotFound404} />
+          <Redirect to="/404" />
         </Switch>
       </Fragment>
     );

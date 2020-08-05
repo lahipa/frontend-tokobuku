@@ -60,7 +60,6 @@ export const updateUser = (id, data) => {
 export const registerUser = (data) => {
   return async (dispatch) => {
     try {
-      console.log(data, "ini data dari user register");
       const request = await axios.post(`${ENDPOINT}/users/register`, data);
 
       return dispatch({

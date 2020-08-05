@@ -156,7 +156,6 @@ const AdminHeader = () => {
         open={open}
       >
         <div className={classes.toolbarIcon}>
-          <span>Toko Buku Cilsy</span>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
