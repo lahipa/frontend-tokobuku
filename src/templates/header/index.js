@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { ENDPOINT, dataLogin } from "../../utils/globals";
+import { dataLogin } from "../../utils/globals";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -8,6 +8,7 @@ import {
   Toolbar,
   Dialog,
   Typography,
+  Divider,
   Menu,
   MenuItem,
   Button,
@@ -16,6 +17,7 @@ import {
 } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import LocalMall from "@material-ui/icons/LocalMall";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 import MenuNavigation from "../../components/navigation";
 import FormLogin from "../../auth/login";
 import FormRegister from "../../auth/register";
@@ -40,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
   },
   margin: {
     margin: theme.spacing(1),
+  },
+  marginRight: {
+    marginRight: theme.spacing(3),
   },
   container: {
     display: "flex",
@@ -102,6 +107,8 @@ const Header = (props) => {
     0
   );
 
+  let firstWord;
+
   return (
     <Fragment>
       <Toolbar className={classes.toolbar}>
@@ -113,33 +120,47 @@ const Header = (props) => {
           </Toolbar>
           <Toolbar className={classes.toolbarButton}>
             <div className={classes.margin}>
-              <IconButton
-                href={!dataLogin ? "#" : "/checkout"}
-                onClick={!dataLogin ? handleDialogOpen("login") : ""}
-              >
-                {carts.length ? (
-                  <Badge badgeContent={total} color="secondary">
-                    <LocalMall fontSize="large" />
-                  </Badge>
-                ) : (
-                  <LocalMall fontSize="large" />
-                )}
-              </IconButton>
+              <Link to={!dataLogin ? "#" : "/checkout"}>
+                <IconButton
+                  onClick={!dataLogin ? handleDialogOpen("login") : ""}
+                >
+                  {carts.length ? (
+                    <Badge badgeContent={total} color="secondary">
+                      <LocalMall fontSize="" />
+                    </Badge>
+                  ) : (
+                    <LocalMall fontSize="" />
+                  )}
+                </IconButton>
+              </Link>
             </div>
             {dataLogin ? (
-              <div className={classes.margin}>
-                <IconButton onClick={handleMenu}>
-                  <AccountCircle fontSize="large" />
-                </IconButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                </Menu>
-              </div>
+              <>
+                <div className={classes.marginRight}>
+                  <IconButton>
+                    <Badge color="secondary">
+                      <NotificationsIcon fontSize="" />
+                    </Badge>
+                  </IconButton>
+                </div>
+                <Divider orientation="vertical" flexItem />
+                <div className={classes.margin}>
+                  <a onClick={handleMenu} style={{ cursor: "pointer" }}>
+                    <IconButton>
+                      <AccountCircle fontSize="" />
+                    </IconButton>
+                    <span>hi, {dataLogin.user.name.substring(0, 5)}</span>
+                  </a>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem onClick={handleClose}>My account</MenuItem>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  </Menu>
+                </div>
+              </>
             ) : (
               <div>
                 <Button
@@ -174,7 +195,6 @@ const Header = (props) => {
         {authType === "login" ? (
           <>
             <FormLogin
-              endpoint={ENDPOINT}
               handleOpen={handleDialogOpen}
               handleClose={handleDialogClose}
             />

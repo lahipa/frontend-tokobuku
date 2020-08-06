@@ -10,7 +10,7 @@ import {
   Typography,
   Icon,
 } from "@material-ui/core";
-//import Alert from "@material-ui/lab";
+import { Alert, AlertTitle } from "@material-ui/lab";
 import CardBuku from "../../components/card/cardBuku";
 import axios from "axios";
 import { connect } from "react-redux";
@@ -80,15 +80,15 @@ const AllBook = (props) => {
           <Grid container spacing={3}>
             {books.length === 0 ? (
               <Box>
-                <Paper severity="warning">
-                  <Typography>There is no data</Typography>
+                <Alert severity="info">
+                  <AlertTitle>Barang kosong?</AlertTitle>
                   <p style={{ lineHeight: "1.5" }}>
-                    Aww yeah, you successfully read this important alert
-                    message. This example text is going to run a bit longer so
-                    that you can see how spacing within an alert works with this
-                    kind of content.
+                    Maaf sekali jika kamu melihat halaman ini tidak ada buku
+                    yang tertampil, hal ini bukan karena kesalahan sistem hanya
+                    saja mungkin stok barang untuk penjualan online sedang
+                    kosong. Kunjungi kembali situs kami dilain waktu.
                   </p>
-                </Paper>
+                </Alert>
               </Box>
             ) : (
               books.rows &&

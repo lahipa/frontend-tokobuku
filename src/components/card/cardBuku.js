@@ -11,24 +11,33 @@ import {
   CardContent,
   CardActions,
   CardActionArea,
+  Dialog,
   Avatar,
   Typography,
   Button,
   IconButton,
 } from "@material-ui/core";
-import LocalMall from "@material-ui/icons/LocalMall";
-import ShareIcon from "@material-ui/icons/Share";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+
+import FormLogin from "../../auth/login";
+import FormRegister from "../../auth/register";
+
 const useStyles = makeStyles((theme) => ({
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9
   },
+  buttonLink: {
+    display: "flex",
+    flexDirection: "column",
+    textDecoration: "none",
+  },
 }));
 
 export default function CardBuku(props) {
-  const { dataCard, doAddToCart, dataLogin } = props;
   const [data, setData] = useState({});
+  const [open, setOpen] = useState(false);
+  const [authType, setAuthType] = useState("register");
+  const { dataCard, doAddToCart, dataLogin } = props;
   //console.log(dataCardContent);
 
   const classes = useStyles();
@@ -42,6 +51,15 @@ export default function CardBuku(props) {
       });
     }
   }, []);
+
+  const handleDialogOpen = (authType) => () => {
+    setOpen(true);
+    setAuthType(authType);
+  };
+
+  const handleDialogClose = () => {
+    setOpen(false);
+  };
 
   const handleAddToCart = () => {
     doAddToCart(data);
@@ -83,7 +101,12 @@ export default function CardBuku(props) {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button href={`/rincian-buku/${dataCard.id}`}>Detail</Button>
+          <Link
+            className={classes.buttonLink}
+            to={`/rincian-buku/${dataCard.id}`}
+          >
+            <Button>Detail</Button>
+          </Link>
           {dataLogin ? (
             <Button
               color="secondary"
@@ -94,7 +117,36 @@ export default function CardBuku(props) {
               Add to cart
             </Button>
           ) : (
-            <Button color="secondary">Add to cart</Button>
+            <>
+              <Button
+                color="secondary"
+                onClick={!dataLogin ? handleDialogOpen("login") : ""}
+              >
+                Add to cart
+              </Button>
+              <Dialog
+                fullWidth
+                maxWidth={authType === "login" ? "xs" : "xs"}
+                open={open}
+                onClose={handleDialogClose}
+              >
+                {authType === "login" ? (
+                  <>
+                    <FormLogin
+                      handleOpen={handleDialogOpen}
+                      handleClose={handleDialogClose}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <FormRegister
+                      handleOpen={handleDialogOpen}
+                      handleClose={handleDialogClose}
+                    />
+                  </>
+                )}
+              </Dialog>
+            </>
           )}
         </CardActions>
       </Card>

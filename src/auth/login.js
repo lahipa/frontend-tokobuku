@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
+import { ENDPOINT } from "../utils/globals";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = (props) => {
   const [data, setData] = useState({});
-  const { endpoint, handleOpen, handleClose } = props;
+  const { handleOpen, handleClose } = props;
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -51,7 +52,7 @@ const Login = (props) => {
   const onSubmitLogin = async (e) => {
     e.preventDefault();
     try {
-      const request = await axios.post(`${endpoint}/users/login`, data);
+      const request = await axios.post(`${ENDPOINT}/users/login`, data);
 
       if (request.data.isLogin) {
         window.localStorage.setItem(

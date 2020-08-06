@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Layout from "../../templates/layout";
 import { dataLogin } from "../../utils/globals";
 import { makeStyles } from "@material-ui/core/styles";
@@ -16,7 +16,7 @@ import {
   TableCell,
   Button,
 } from "@material-ui/core";
-
+import { Alert, AlertTitle } from "@material-ui/lab";
 import {
   substractFromCart,
   removeFromCart,
@@ -43,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column-reverse",
     justifyContent: "space-around",
+  },
+  buttonLink: {
+    display: "flex",
+    flexDirection: "column",
+    textDecoration: "none",
   },
 }));
 
@@ -101,7 +106,16 @@ const Checkout = (props) => {
             <Container>
               <Grid container spacing={3}>
                 <Grid item md={7}>
-                  {carts &&
+                  {!carts.length ? (
+                    <Alert severity="warning">
+                      <AlertTitle>Hai, keranjang kamu kosong</AlertTitle>
+                      Silahkan kembali ke halaman pilih buku atau ke{" "}
+                      <Link to="/">
+                        <strong>halaman home</strong>
+                      </Link>
+                    </Alert>
+                  ) : (
+                    carts &&
                     carts.map((val) => {
                       return (
                         <>
@@ -114,7 +128,8 @@ const Checkout = (props) => {
                           />
                         </>
                       );
-                    })}
+                    })
+                  )}
                 </Grid>
                 <Grid item md={4}>
                   <TableContainer component={Paper}>
@@ -188,14 +203,15 @@ const Checkout = (props) => {
                     </Table>
                   </TableContainer>
                   <Box pt={3} className={classes.actionCheckout}>
-                    <Button size="large" href="/">
-                      Kembali Belanja
-                    </Button>
+                    <Link className={classes.buttonLink} to="/semua-buku">
+                      <Button size="large">Kembali Belanja</Button>
+                    </Link>
                     <Button
                       variant="contained"
                       color="secondary"
                       size="large"
                       onClick={handleSubmitOrder}
+                      disabled={!carts.length ? true : false}
                     >
                       Checkout
                     </Button>

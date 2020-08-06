@@ -20,7 +20,6 @@ const cart = (state = initialState, action) => {
         ...state,
       };
     case actionTypes.ADD_TO_CART:
-      console.log(state, "state data");
       return {
         ...state,
       };
