@@ -21,8 +21,10 @@ const DetailBook = (props) => {
   const { book, match, getBookId } = props;
 
   useEffect(() => {
-    getBookId(match.params.id);
-  }, []);
+    if (match) {
+      getBookId(match.params.id);
+    }
+  }, [match]);
 
   return (
     <Layout>

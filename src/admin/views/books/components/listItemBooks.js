@@ -45,17 +45,19 @@ const Books = (props) => {
   };
 
   useEffect(() => {
-    setKategori(listData.kategori_id);
-    setTitle(listData.title);
-    setHarga(listData.harga);
-    setAuthor(listData.author);
-    setImage(listData.image_url);
-    setIsbn(listData.no_isbn);
-    setBerat(listData.berat);
-    setSynopsis(listData.synopsis);
+    if (listData) {
+      setKategori(listData.kategori_id);
+      setTitle(listData.title);
+      setHarga(listData.harga);
+      setAuthor(listData.author);
+      setImage(listData.image_url);
+      setIsbn(listData.no_isbn);
+      setBerat(listData.berat);
+      setSynopsis(listData.synopsis);
+    }
 
     getCategory();
-  }, []);
+  }, [listData]);
 
   const handleUpdate = (id) => {
     //e.preventDefault();

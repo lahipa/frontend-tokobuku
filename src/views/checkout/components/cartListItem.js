@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { Fragment } from "react";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -59,27 +59,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ListCart = (props) => {
-  const [data, setData] = useState({});
+  //const [data, setData] = useState({});
   const { listData, doAdd, doSubstract, doRemove } = props;
 
   const classes = useStyles();
 
-  useEffect(() => {
-    setData({
-      user_id: listData.user_id,
-      buku_id: listData.buku_id,
-      qty: 1,
-    });
-  }, []);
+  let obj = {
+    user_id: listData.user_id,
+    buku_id: listData.buku_id,
+    qty: 1,
+  };
 
   const handleAdd = () => {
     //console.log(data, "data add");
-    doAdd(data);
+    doAdd(obj);
   };
 
   const handleSubtract = (id) => {
     //console.log(data, "data substract");
-    doSubstract(id, data);
+    doSubstract(id, obj);
   };
 
   const handleRemove = (id) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 import { Link } from "react-router-dom";
 import numeral from "numeral";
 import { ENDPOINT } from "../../utils/globals";
@@ -34,23 +34,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CardBuku(props) {
-  const [data, setData] = useState({});
   const [open, setOpen] = useState(false);
   const [authType, setAuthType] = useState("register");
   const { dataCard, doAddToCart, dataLogin } = props;
   //console.log(dataCardContent);
 
   const classes = useStyles();
-
-  useEffect(() => {
-    if (dataLogin) {
-      setData({
-        user_id: dataLogin.user.uid,
-        buku_id: dataCard.id,
-        qty: 1,
-      });
-    }
-  }, []);
 
   const handleDialogOpen = (authType) => () => {
     setOpen(true);
@@ -62,7 +51,13 @@ export default function CardBuku(props) {
   };
 
   const handleAddToCart = () => {
-    doAddToCart(data);
+    let obj = {
+      user_id: dataLogin.user.uid,
+      buku_id: dataCard.id,
+      qty: 1,
+    };
+
+    doAddToCart(obj);
   };
 
   let imageUrl = dataCard.image_url.replace("public/", "");

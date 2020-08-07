@@ -17,15 +17,9 @@ import {
   Typography,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import AddCategory from "./create";
-import TableDataShow from "./components/listItemCategories";
+import TableDataShow from "./components/listItemOrder";
 import { dataLogin } from "../../../utils/globals";
-import {
-  getListKategori,
-  updateKategori,
-  deleteKategori,
-  addKategori,
-} from "../../../store/actions/categories";
+import { getAllListOrder, getOrderById } from "../../../store/actions/orders";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -49,66 +43,36 @@ const useStyles = makeStyles((theme) => ({
 
 const mapStateToProps = (state) => {
   return {
-    categories: state.categoryReducer.categories,
+    orders: state.orderReducer.orders,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getKategori: () => dispatch(getListKategori()),
-    updateKategori: (id, data) => dispatch(updateKategori(id, data)),
-    deleteKategori: (id) => dispatch(deleteKategori(id)),
-    addKategori: (data) => dispatch(addKategori(data)),
+    getListOrder: () => dispatch(getAllListOrder()),
   };
 };
 
-const Category = (props) => {
-  const [open, setOpen] = useState(false);
-  const {
-    categories,
-    getKategori,
-    updateKategori,
-    deleteKategori,
-    addKategori,
-  } = props;
+const Orders = (props) => {
+  const { match, orders, getListOrder } = props;
   const classes = useStyles();
 
   useEffect(() => {
-    getKategori();
+    getListOrder();
+    console.log(orders, "data orders");
   }, []);
 
   if (!dataLogin || dataLogin.user.role !== "admin") {
     return <Redirect to="/imcoolmaster" />;
   }
 
-  const handleSubmit = (data) => {
-    addKategori(data);
-  };
-
-  const handleUpdate = (id, updateData) => {
-    console.log(updateData, "parent data");
-    updateKategori(id, updateData);
-  };
-
-  const handleDelete = (id) => {
-    deleteKategori(id);
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   let i = 1;
   return (
     <Layout>
       <Box mb={4}>
-        <Typography variant="h5">Categories</Typography>
+        <Typography variant="h5">Orders</Typography>
         <Typography variant="subtitle">
-          Create, update, delete categories data.{" "}
+          Check and update orders data.{" "}
         </Typography>
       </Box>
       <Grid container spacing={3}>
@@ -118,12 +82,19 @@ const Category = (props) => {
               <TableHead>
                 <TableRow>
                   <TableCell>No.</TableCell>
-                  <TableCell>Category Name</TableCell>
+                  <TableCell>Customer Name</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell align="center">Total</TableCell>
+                  <TableCell align="right">Price</TableCell>
+                  <TableCell align="right">Disc</TableCell>
+                  <TableCell align="right">Summary</TableCell>
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
+              {console.log(orders, "cek ada ga?")}
+
               <TableBody>
-                {categories.rows && categories.rows.length === 0 ? (
+                {orders.rows && orders.rows.length === 0 ? (
                   <TableRow>
                     <TableCell align="center" colspan="7">
                       <h5 style={{ fontSize: "16px", color: "#888" }}>
@@ -132,15 +103,14 @@ const Category = (props) => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  categories.rows &&
-                  categories.rows.map((val) => {
+                  orders.rows &&
+                  orders.rows.map((val) => {
                     return (
                       <TableDataShow
                         no={i++}
                         key={val.id}
                         listData={val}
-                        doUpdate={handleUpdate}
-                        doDelete={handleDelete}
+                        //doUpdate={handleUpdate}
                         classes={classes}
                       />
                     );
@@ -151,22 +121,8 @@ const Category = (props) => {
           </TableContainer>
         </Grid>
       </Grid>
-      <Fab
-        color="secondary"
-        className={classes.fab}
-        aria-label="add"
-        onClick={handleOpen}
-      >
-        <AddIcon />
-      </Fab>
-      <AddCategory
-        classes={classes}
-        doAdd={handleSubmit}
-        open={open}
-        handleClose={handleClose}
-      />
     </Layout>
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Category);
+export default connect(mapStateToProps, mapDispatchToProps)(Orders);

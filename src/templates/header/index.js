@@ -82,6 +82,7 @@ const Header = (props) => {
   useEffect(() => {
     if (dataLogin) {
       getListCart(dataLogin.user.uid);
+      console.log("trigger");
     }
   }, []);
 
@@ -106,8 +107,6 @@ const Header = (props) => {
     (prevValue, currentValue) => prevValue + currentValue.qty,
     0
   );
-
-  let firstWord;
 
   return (
     <Fragment>

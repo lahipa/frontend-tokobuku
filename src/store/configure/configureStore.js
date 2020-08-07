@@ -1,14 +1,14 @@
 import { applyMiddleware, compose, createStore } from "redux";
-import thunkMiddleware from "redux-thunk";
-import monitorReducersEnhancer from "../../enhancers/monitorReducer";
-import loggerMiddleware from "../../middleware/logger";
+import thunk from "redux-thunk";
+import monitorReducer from "../../enhancers/monitorReducer";
+import logger from "../../middleware/logger";
 import rootReducer from "../reducers";
 
 const configureStore = (preloadedState) => {
-  const middlewares = [loggerMiddleware, thunkMiddleware];
+  const middlewares = [logger, thunk];
   const middlewareEnhancer = applyMiddleware(...middlewares);
 
-  const enhancers = [middlewareEnhancer, monitorReducersEnhancer];
+  const enhancers = [middlewareEnhancer, monitorReducer];
   const composedEnhancers = compose(...enhancers);
 
   const store = createStore(rootReducer, preloadedState, composedEnhancers);

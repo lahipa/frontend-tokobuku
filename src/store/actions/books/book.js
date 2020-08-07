@@ -36,14 +36,19 @@ export const updateBook = (id, data) => {
   });
 
   return (dispatch) => {
-    request.then((response) => {
-      dispatch({
-        type: actionsTypes.UPDATE_BOOK,
-        payload: response.data.data,
-      });
+    request
+      .then((response) => {
+        dispatch({
+          type: actionsTypes.UPDATE_BOOK,
+          payload: response.data.data,
+        });
 
-      return dispatch(getListBook());
-    });
+        return dispatch(getListBook());
+      })
+      .catch((err) => {
+        console.log(err.response);
+        return err.response;
+      });
   };
 };
 
@@ -55,54 +60,67 @@ export const deleteBook = (id) => {
   });
 
   return (dispatch) => {
-    request.then((response) => {
-      dispatch({
-        type: actionsTypes.GET_BOOK_BY_ID,
-        payload: response.data.data,
+    request
+      .then((response) => {
+        dispatch({
+          type: actionsTypes.GET_BOOK_BY_ID,
+          payload: response.data.data,
+        });
+        return dispatch(getListBook());
+      })
+      .catch((err) => {
+        console.log(err.response);
+        return err.response;
       });
-      return dispatch(getListBook());
-    });
   };
 };
 
 export const addBook = (data) => {
-  return async (dispatch) => {
-    try {
-      const request = await axios.post(`${ENDPOINT}/books`, data, {
-        headers: {
-          Authorization: dataLogin.token,
-        },
-      });
+  const request = axios.post(`${ENDPOINT}/books`, data, {
+    headers: {
+      Authorization: dataLogin.token,
+    },
+  });
 
-      return dispatch(
-        {
+  return (dispatch) => {
+    request
+      .then((response) => {
+        dispatch({
           type: actionsTypes.ADD_BOOK,
-          payload: request.data.data,
-        },
+          payload: response.data.data,
+        });
 
-        dispatch(getListBook())
-      );
-    } catch (err) {
-      console.log(err.response);
-      return err.response;
-    }
+        return dispatch(getListBook());
+      })
+      .catch((err) => {
+        console.log(err.response);
+        return err.response;
+      });
   };
 };
 
+// Async Await Approach
+// --
 // export const addBook = (data) => {
-//   const request = axios.post(`${ENDPOINT}/books`, data, {
-//     headers: {
-//       Authorization: dataLogin.token,
-//     },
-//   });
-
-//   return (dispatch) => {
-//     request.then((response) => {
-//       dispatch({
-//         type: actionsTypes.ADD_BOOK,
-//         payload: response.data.data,
+//   return async (dispatch) => {
+//     try {
+//       const request = await axios.post(`${ENDPOINT}/books`, data, {
+//         headers: {
+//           Authorization: dataLogin.token,
+//         },
 //       });
-//       //return dispatch(getListBook());
-//     });
+
+//       return dispatch(
+//         {
+//           type: actionsTypes.ADD_BOOK,
+//           payload: request.data.data,
+//         },
+
+//         dispatch(getListBook())
+//       );
+//     } catch (err) {
+//       console.log(err.response);
+//       return err.response;
+//     }
 //   };
 // };
