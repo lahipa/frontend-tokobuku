@@ -14,6 +14,9 @@ const Orders = (props) => {
       <TableRow key={key}>
         <TableCell>{no}</TableCell>
         <TableCell component="th" scope="row">
+          {listData.customers_detail.username}
+        </TableCell>
+        <TableCell component="th" scope="row">
           {listData.customers_detail.name}
         </TableCell>
         <TableCell>{listData.customers_detail.email}</TableCell>

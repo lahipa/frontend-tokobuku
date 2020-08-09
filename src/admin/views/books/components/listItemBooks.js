@@ -26,14 +26,15 @@ import EditRounded from "@material-ui/icons/EditRounded";
 
 const Books = (props) => {
   const [categories, setCategories] = useState([]);
-  const [kategori_id, setKategori] = useState("");
-  const [title, setTitle] = useState("");
-  const [harga, setHarga] = useState("");
-  const [author, setAuthor] = useState("");
+  const [data, setData] = useState({});
   const [image_url, setImage] = useState("");
-  const [no_isbn, setIsbn] = useState("");
-  const [berat, setBerat] = useState("");
-  const [synopsis, setSynopsis] = useState("");
+  // const [kategori_id, setKategori] = useState("");
+  // const [title, setTitle] = useState("");
+  // const [harga, setHarga] = useState("");
+  // const [author, setAuthor] = useState("");
+  // const [no_isbn, setIsbn] = useState("");
+  // const [berat, setBerat] = useState("");
+  // const [synopsis, setSynopsis] = useState("");
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
 
@@ -46,14 +47,16 @@ const Books = (props) => {
 
   useEffect(() => {
     if (listData) {
-      setKategori(listData.kategori_id);
-      setTitle(listData.title);
-      setHarga(listData.harga);
-      setAuthor(listData.author);
+      setData({
+        kategori_id: listData.kategori_id,
+        title: listData.title,
+        harga: listData.harga,
+        author: listData.author,
+        no_isbn: listData.no_isbn,
+        berat: listData.berat,
+        synopsis: listData.synopsis,
+      });
       setImage(listData.image_url);
-      setIsbn(listData.no_isbn);
-      setBerat(listData.berat);
-      setSynopsis(listData.synopsis);
     }
 
     getCategory();
@@ -62,14 +65,14 @@ const Books = (props) => {
   const handleUpdate = (id) => {
     //e.preventDefault();
     const formData = new FormData();
-    formData.append("kategori_id", kategori_id);
-    formData.append("title", title);
-    formData.append("harga", harga);
-    formData.append("author", author);
+    formData.append("kategori_id", data.kategori_id);
+    formData.append("title", data.title);
+    formData.append("harga", data.harga);
+    formData.append("author", data.author);
     formData.append("image_url", image_url);
-    formData.append("no_isbn", no_isbn);
-    formData.append("berat", berat);
-    formData.append("synopsis", synopsis);
+    formData.append("no_isbn", data.no_isbn);
+    formData.append("berat", data.berat);
+    formData.append("synopsis", data.synopsis);
 
     handleClose();
     setEdit(false);
@@ -88,10 +91,9 @@ const Books = (props) => {
     setOpen(false);
   };
 
-  // const handleForm = (e, formName) => {
-  //   setData({ ...data, [formName]: e.target.value });
-  //   console.log(data, "From dashboard");
-  // };
+  const handleForm = (e, formName) => {
+    setData({ ...data, [formName]: e.target.value });
+  };
 
   return (
     <Fragment>
@@ -136,8 +138,9 @@ const Books = (props) => {
                   <Select
                     labelId="select-category"
                     id="demo-simple-select"
-                    value={kategori_id}
-                    onChange={(e) => setKategori(e.target.value)}
+                    value={data.kategori_id}
+                    //onChange={(e) => setKategori(e.target.value)}
+                    onChange={(e) => handleForm(e, "kategori_id")}
                   >
                     <MenuItem>Pilih</MenuItem>
                     {categories.rows &&
@@ -156,8 +159,9 @@ const Books = (props) => {
                 <FormControl fullWidth margin="normal">
                   <InputLabel shrink>Title</InputLabel>
                   <Input
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={data.title}
+                    //onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => handleForm(e, "title")}
                     placeholder=""
                   />
                   <FormHelperText>Maksimum karakter 255</FormHelperText>
@@ -171,8 +175,8 @@ const Books = (props) => {
                     accept="image/*"
                     multiple
                     className={classes.inputFile}
-                    //value={image_url}
-                    onChange={(e) => setImage(e.target.value)}
+                    value=""
+                    onChange={(event) => setImage(event.target.files[0])}
                   />
                   <label htmlFor="upload-file">
                     <Button
@@ -192,8 +196,9 @@ const Books = (props) => {
                 <FormControl fullWidth margin="normal">
                   <InputLabel shrink>Harga</InputLabel>
                   <Input
-                    value={harga}
-                    onChange={(e) => setHarga(e.target.value)}
+                    value={data.harga}
+                    //onChange={(e) => setHarga(e.target.value)}
+                    onChange={(e) => handleForm(e, "harga")}
                     type="number"
                     placeholder=""
                     startAdornment={
@@ -207,8 +212,9 @@ const Books = (props) => {
                 <FormControl fullWidth margin="normal">
                   <InputLabel shrink>Penulis</InputLabel>
                   <Input
-                    value={author}
-                    onChange={(e) => setAuthor(e.target.value)}
+                    value={data.author}
+                    //onChange={(e) => setAuthor(e.target.value)}
+                    onChange={(e) => handleForm(e, "author")}
                     placeholder=""
                   />
                 </FormControl>
@@ -217,8 +223,9 @@ const Books = (props) => {
                 <FormControl fullWidth margin="normal">
                   <InputLabel shrink>No. ISBN</InputLabel>
                   <Input
-                    value={no_isbn}
-                    onChange={(e) => setIsbn(e.target.value)}
+                    value={data.no_isbn}
+                    //onChange={(e) => setIsbn(e.target.value)}
+                    onChange={(e) => handleForm(e, "no_isbn")}
                     placeholder=""
                   />
                 </FormControl>
@@ -227,8 +234,9 @@ const Books = (props) => {
                 <FormControl fullWidth margin="normal">
                   <InputLabel shrink>Berat</InputLabel>
                   <Input
-                    value={berat}
-                    onChange={(e) => setBerat(e.target.value)}
+                    value={data.berat}
+                    //onChange={(e) => setBerat(e.target.value)}
+                    onChange={(e) => handleForm(e, "berat")}
                     type="number"
                     endAdornment={
                       <InputAdornment position="end">gr</InputAdornment>
@@ -244,8 +252,9 @@ const Books = (props) => {
                 <FormControl fullWidth margin="normal">
                   <InputLabel shrink>Synopsis</InputLabel>
                   <Input
-                    value={synopsis}
-                    onChange={(e) => setSynopsis(e.target.value)}
+                    value={data.synopsis}
+                    //onChange={(e) => setSynopsis(e.target.value)}
+                    onChange={(e) => handleForm(e, "synopsis")}
                     multiline
                     placeholder=""
                   />
@@ -258,15 +267,16 @@ const Books = (props) => {
             <Button
               onClick={() => {
                 handleClose();
-                setEdit(false);
-                setKategori(listData.kategori_id);
-                setTitle(listData.title);
-                setHarga(listData.harga);
-                setAuthor(listData.author);
+                setData({
+                  kategori_id: listData.kategori_id,
+                  title: listData.title,
+                  harga: listData.harga,
+                  author: listData.author,
+                  no_isbn: listData.no_isbn,
+                  berat: listData.berat,
+                  synopsis: listData.synopsis,
+                });
                 setImage(listData.image_url);
-                setIsbn(listData.no_isbn);
-                setBerat(listData.berat);
-                setSynopsis(listData.synopsis);
               }}
             >
               Cancel

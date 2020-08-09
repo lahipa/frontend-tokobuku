@@ -1,121 +1,167 @@
 import * as actionsTypes from "./actionTypes";
 import axios from "axios";
-import { ENDPOINT } from "../../../utils/globals";
+import { ENDPOINT, dataLogin } from "../../../utils/globals";
 
-export const getListUser = () => {
-  const request = axios.get(`${ENDPOINT}/users`);
+export const getListUser = (params) => {
+  //console.log(params, "ini params");
+  const request = axios.get(`${ENDPOINT}/users`, {
+    params,
+    headers: {
+      Authorization: dataLogin.token,
+    },
+  });
 
   return (dispatch) => {
-    request.then((response) => {
-      return dispatch({
-        type: actionsTypes.GET_USER,
-        payload: response.data,
+    request
+      .then((response) => {
+        return dispatch({
+          type: actionsTypes.GET_USER,
+          payload: response.data.data,
+        });
+      })
+      .catch((err) => {
+        console.log(err.response);
+        return err.response;
       });
-    });
   };
 };
 
 export const getUserById = (id) => {
-  const request = axios.get(`${ENDPOINT}/users/${id}`);
+  const request = axios.get(`${ENDPOINT}/users/${id}`, {
+    headers: {
+      Authorization: dataLogin.token,
+    },
+  });
 
   return (dispatch) => {
-    request.then((response) => {
-      return dispatch({
-        type: actionsTypes.GET_USER_BY_ID,
-        payload: response.data,
+    request
+      .then((response) => {
+        return dispatch({
+          type: actionsTypes.GET_USER_BY_ID,
+          payload: response.data.data,
+        });
+      })
+      .catch((err) => {
+        console.log(err.response);
+        return err.response;
       });
-    });
   };
 };
 
 export const updateUser = (id, data) => {
-  const request = axios.put(`${ENDPOINT}/users/${id}`, data);
+  const request = axios.put(`${ENDPOINT}/users/${id}`, data, {
+    headers: {
+      Authorization: dataLogin.token,
+    },
+  });
 
   return (dispatch) => {
-    request.then((response) => {
-      dispatch({
-        type: actionsTypes.UPDATE_USER,
-        payload: response.data,
-      });
+    request
+      .then((response) => {
+        dispatch({
+          type: actionsTypes.UPDATE_USER,
+          payload: response.data.data,
+        });
 
-      return dispatch(getListUser());
-    });
+        return dispatch(getListUser());
+      })
+      .catch((err) => {
+        console.log(err.response);
+        return err.response;
+      });
   };
 };
 
-/* export const deleteUser = (id) => {
-  const request = axios.delete(`${ENDPOINT}/users/${id}`);
-
-  return (dispatch) => {
-    request.then((response) => {
-      dispatch({
-        type: actionsTypes.GET_USER_BY_ID,
-        payload: response.data,
-      });
-      return dispatch(getListUser());
-    });
-  };
-}; */
-
-export const registerUser = (data) => {
-  return async (dispatch) => {
-    try {
-      const request = await axios.post(`${ENDPOINT}/users/register`, data);
-
-      return dispatch({
-        type: actionsTypes.ADD_USER,
-        payload: request.data.data,
-      });
-    } catch (err) {
-      console.log(err.response.data.message);
-      return err.response.data.message;
-    }
-  };
-};
-
-// Promise Aproach
-// export const loginUser = (data) => {
-//   const request = axios.post(`${ENDPOINT}/users/login`, data);
+// export const deleteUser = (id) => {
+//   const request = axios.delete(`${ENDPOINT}/users/${id}`, {
+//     headers: {
+//       Authorization: dataLogin.token,
+//     },
+//   });
 
 //   return (dispatch) => {
-//     request.then((response) => {
-
-//       dispatch({
-//         type: actionsTypes.LOGIN_USER,
-//         payload: response.data,
-
+//     request
+//       .then((response) => {
+//         dispatch({
+//           type: actionsTypes.DELETE_USER,
+//           payload: response.data,
+//         });
+//         return dispatch(getListUser());
+//       })
+//       .catch((err) => {
+//         console.log(err.response);
+//         return err.response;
 //       });
-
-//       window.localStorage.setItem(
-//         "userData",
-//         JSON.stringify(response.data.data)
-//       );
-//     });
 //   };
 // };
 
-// Async Await Aproach
-export const loginUser = (data) => {
-  return async (dispatch) => {
-    try {
-      //console.log(data, "ini data dari user login");
-      const request = await axios.post(`${ENDPOINT}/users/login`, data);
+export const registerUser = (data) => {
+  const request = axios.post(`${ENDPOINT}/users/register`, data);
 
-      return dispatch(
-        {
-          type: actionsTypes.LOGIN_USER,
-          payload: request.data.data,
-          isLogin: true,
-        },
-
-        //console.log(request.data.data, "data user")
-        window.localStorage.setItem(
-          "dataLogin",
-          JSON.stringify(request.data.data)
-        )
-      );
-    } catch (err) {
-      return err.response;
-    }
+  return (dispatch) => {
+    request
+      .then((response) => {
+        return dispatch({
+          type: actionsTypes.ADD_USER,
+          payload: response.data.data,
+        });
+      })
+      .catch((err) => {
+        console.log(err.response);
+        return err.response;
+      });
   };
 };
+
+export const loginUser = (data) => {
+  const request = axios.post(`${ENDPOINT}/users/login`, data);
+
+  return (dispatch) => {
+    request
+      .then((response) => {
+        return dispatch(
+          {
+            type: actionsTypes.LOGIN_USER,
+            payload: response.data.data,
+            isLogin: true,
+          },
+
+          window.localStorage.setItem(
+            "dataLogin",
+            JSON.stringify(response.data.data)
+          )
+        );
+      })
+      .catch((err) => {
+        console.log(err.response);
+        return err.response;
+      });
+  };
+};
+
+// Async Await Approach
+// --
+// export const loginUser = (data) => {
+//   return async (dispatch) => {
+//     try {
+//       //console.log(data, "ini data dari user login");
+//       const request = await axios.post(`${ENDPOINT}/users/login`, data);
+
+//       return dispatch(
+//         {
+//           type: actionsTypes.LOGIN_USER,
+//           payload: request.data.data,
+//           isLogin: true,
+//         },
+
+//         //console.log(request.data.data, "data user")
+//         window.localStorage.setItem(
+//           "dataLogin",
+//           JSON.stringify(request.data.data)
+//         )
+//       );
+//     } catch (err) {
+//       return err.response;
+//     }
+//   };
+// };

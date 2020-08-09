@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "../../../templates/layout/adminlayout";
 import { makeStyles } from "@material-ui/core/styles";
@@ -65,6 +64,8 @@ const mapDispatchToProps = (dispatch) => {
 const Category = (props) => {
   const [open, setOpen] = useState(false);
   const {
+    match,
+    history,
     categories,
     getKategori,
     updateKategori,
@@ -74,11 +75,13 @@ const Category = (props) => {
   const classes = useStyles();
 
   useEffect(() => {
-    getKategori();
-  }, []);
+    if (match) {
+      getKategori();
+    }
+  }, [match]);
 
   if (!dataLogin || dataLogin.user.role !== "admin") {
-    return <Redirect to="/imcoolmaster" />;
+    history.push("/imcoolmaster");
   }
 
   const handleSubmit = (data) => {

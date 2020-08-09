@@ -17,8 +17,8 @@ import AdminBookList from "./admin/views/books";
 //import AdminBookListAdd from "./admin/views/books/addBooks";
 import AdminBookCategory from "./admin/views/categories";
 import AdminListOrders from "./admin/views/orders";
-import Customers from "./admin/views/usersCustomers";
-import Admins from "./admin/views/usersAdmins";
+import Customers from "./admin/views/userCustomer";
+import Admins from "./admin/views/userAdmin";
 
 class App extends Component {
   render() {

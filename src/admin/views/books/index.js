@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "../../../templates/layout/adminlayout";
 import { makeStyles } from "@material-ui/core/styles";
@@ -64,15 +63,25 @@ const mapDispatchToProps = (dispatch) => {
 
 const Books = (props) => {
   const [open, setOpen] = useState(false);
-  const { books, getBook, addBook, updateBook, deleteBook } = props;
+  const {
+    match,
+    history,
+    books,
+    getBook,
+    addBook,
+    updateBook,
+    deleteBook,
+  } = props;
   const classes = useStyles();
 
   useEffect(() => {
-    getBook();
-  }, []);
+    if (match) {
+      getBook();
+    }
+  }, [match]);
 
   if (!dataLogin || dataLogin.user.role !== "admin") {
-    return <Redirect to="/imcoolmaster" />;
+    history.push("/imcoolmaster");
   }
 
   const handleSubmit = (data) => {

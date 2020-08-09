@@ -128,12 +128,12 @@ const Checkout = (props) => {
       orders_detail: dataOrderDetails,
     };
 
-    createOrder(dataLogin.user.uid, dataOrder);
-    if (carts) {
-      removeCartBulk();
-    }
+    //createOrder(dataLogin.user.uid, dataOrder);
+    // if (carts) {
+    //   removeCartBulk();
+    // }
 
-    //console.log(dataOrder, "data order detail");
+    console.log(dataOrder, "data order detail");
   };
 
   return (

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "../../../templates/layout/adminlayout";
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,9 +16,9 @@ import {
   Typography,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import TableDataShow from "./components/listItemOrder";
+import TableDataShow from "./components/listItemUserCustomer";
 import { dataLogin } from "../../../utils/globals";
-import { getAllListOrder, getOrderById } from "../../../store/actions/orders";
+import { getListUser } from "../../../store/actions/users";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -43,23 +42,23 @@ const useStyles = makeStyles((theme) => ({
 
 const mapStateToProps = (state) => {
   return {
-    orders: state.orderReducer.orders,
+    users: state.userReducer.users,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getListOrder: () => dispatch(getAllListOrder()),
+    getListUser: (params) => dispatch(getListUser(params)),
   };
 };
 
-const Orders = (props) => {
-  const { match, history, orders, getListOrder } = props;
+const UserCustomers = (props) => {
+  const { match, history, users, getListUser } = props;
   const classes = useStyles();
 
   useEffect(() => {
     if (match) {
-      getListOrder();
+      getListUser({ role: 2 }); // role is role_id, 1: admin, 2: member
     }
 
     //console.log(orders, "data orders");
@@ -73,9 +72,9 @@ const Orders = (props) => {
   return (
     <Layout>
       <Box mb={4}>
-        <Typography variant="h5">Orders</Typography>
+        <Typography variant="h5">Data Customer</Typography>
         <Typography variant="subtitle">
-          Check and update orders data.{" "}
+          Check and update on customer data.{" "}
         </Typography>
       </Box>
       <Grid container spacing={3}>
@@ -85,20 +84,14 @@ const Orders = (props) => {
               <TableHead>
                 <TableRow>
                   <TableCell>No.</TableCell>
-                  <TableCell>Userame</TableCell>
-                  <TableCell>Customer Name</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Username</TableCell>
                   <TableCell>Email</TableCell>
-                  <TableCell align="center">Qty</TableCell>
-                  <TableCell align="right">Price</TableCell>
-                  <TableCell align="right">Disc</TableCell>
-                  <TableCell align="right">Summary</TableCell>
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
-              {console.log(orders, "cek ada ga?")}
-
               <TableBody>
-                {orders.rows && orders.rows.length === 0 ? (
+                {users.rows && users.rows.length === 0 ? (
                   <TableRow>
                     <TableCell align="center" colspan="7">
                       <h5 style={{ fontSize: "16px", color: "#888" }}>
@@ -107,8 +100,8 @@ const Orders = (props) => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  orders.rows &&
-                  orders.rows.map((val) => {
+                  users.rows &&
+                  users.rows.map((val) => {
                     return (
                       <TableDataShow
                         no={i++}
@@ -129,4 +122,4 @@ const Orders = (props) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Orders);
+export default connect(mapStateToProps, mapDispatchToProps)(UserCustomers);

@@ -1,8 +1,8 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, Component } from "react";
 import { connect } from "react-redux";
 import { dataLogin } from "../../utils/globals";
 import { Link } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import {
   Container,
   Toolbar,
@@ -36,7 +36,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
   root: {
     flexGrow: 1,
   },
@@ -70,145 +70,154 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
     backgroundColor: "#fff",
   },
-}));
+});
 
-const Header = (props) => {
-  const [open, setOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [authType, setAuthType] = useState("register");
-  const { carts, getListCart } = props;
-  const classes = useStyles();
+class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      anchorEl: null,
+      authType: "register",
+    };
+  }
 
-  useEffect(() => {
+  componentDidMount() {
+    const { match, getListCart } = this.props;
     if (dataLogin) {
       getListCart(dataLogin.user.uid);
-      console.log("trigger");
     }
-  }, []);
+  }
 
-  const handleMenu = (e) => {
-    setAnchorEl(e.currentTarget);
-  };
+  render() {
+    const { carts, classes, theme } = this.props;
+    const { open, anchorEl, authType } = this.state;
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+    const handleMenu = (e) => {
+      this.setState({ anchorEl: e.currentTarget });
+    };
 
-  const handleDialogOpen = (authType) => () => {
-    setOpen(true);
-    setAuthType(authType);
-  };
+    const handleClose = () => {
+      this.setState({ anchorEl: null });
+    };
 
-  const handleDialogClose = () => {
-    setOpen(false);
-  };
+    const handleDialogOpen = (tipe) => () => {
+      this.setState({ open: true });
+      this.setState({ authType: tipe });
+    };
 
-  let total = carts.reduce(
-    (prevValue, currentValue) => prevValue + currentValue.qty,
-    0
-  );
+    const handleDialogClose = () => {
+      this.setState({ open: false });
+    };
 
-  return (
-    <Fragment>
-      <Toolbar className={classes.toolbar}>
-        <Container className={classes.container}>
-          <Toolbar className={classes.toolbarLogo}>
-            <Link to="/">
-              <img src="/asset/310-bbc.png" />
-            </Link>
-          </Toolbar>
-          <Toolbar className={classes.toolbarButton}>
-            <div className={classes.margin}>
-              <Link to={!dataLogin ? "#" : "/checkout"}>
-                <IconButton
-                  onClick={!dataLogin ? handleDialogOpen("login") : ""}
-                >
-                  {carts.length ? (
-                    <Badge badgeContent={total} color="secondary">
-                      <LocalMall fontSize="" />
-                    </Badge>
-                  ) : (
-                    <LocalMall fontSize="" />
-                  )}
-                </IconButton>
+    let total = carts.reduce(
+      (prevValue, currentValue) => prevValue + currentValue.qty,
+      0
+    );
+
+    return (
+      <Fragment>
+        <Toolbar className={classes.toolbar}>
+          <Container className={classes.container}>
+            <Toolbar className={classes.toolbarLogo}>
+              <Link to="/">
+                <img src="/asset/310-bbc.png" />
               </Link>
-            </div>
-            {dataLogin ? (
-              <>
-                <div className={classes.marginRight}>
-                  <IconButton>
-                    <Badge color="secondary">
-                      <NotificationsIcon fontSize="" />
-                    </Badge>
-                  </IconButton>
-                </div>
-                <Divider orientation="vertical" flexItem />
-                <div className={classes.margin}>
-                  <a onClick={handleMenu} style={{ cursor: "pointer" }}>
-                    <IconButton>
-                      <AccountCircle fontSize="" />
-                    </IconButton>
-                    <span>hi, {dataLogin.user.name.substring(0, 5)}</span>
-                  </a>
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
+            </Toolbar>
+            <Toolbar className={classes.toolbarButton}>
+              <div className={classes.margin}>
+                <Link to={!dataLogin ? "#" : "/checkout"}>
+                  <IconButton
+                    onClick={!dataLogin ? handleDialogOpen("login") : null}
                   >
-                    <MenuItem onClick={handleClose}>My account</MenuItem>
-                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                  </Menu>
-                </div>
-              </>
-            ) : (
-              <div>
-                <Button
-                  size="small"
-                  className={classes.margin}
-                  aria-label="login"
-                  onClick={handleDialogOpen("login")}
-                >
-                  Login
-                </Button>
-                <Button
-                  size="small"
-                  className={classes.margin}
-                  aria-label="register"
-                  onClick={handleDialogOpen("register")}
-                >
-                  Daftar
-                </Button>
+                    {carts.length ? (
+                      <Badge badgeContent={total} color="secondary">
+                        <LocalMall fontSize="" />
+                      </Badge>
+                    ) : (
+                      <LocalMall fontSize="" />
+                    )}
+                  </IconButton>
+                </Link>
               </div>
-            )}
-          </Toolbar>
-        </Container>
-      </Toolbar>
-      <MenuNavigation />
+              {dataLogin ? (
+                <>
+                  <div className={classes.marginRight}>
+                    <IconButton>
+                      <Badge color="secondary">
+                        <NotificationsIcon fontSize="" />
+                      </Badge>
+                    </IconButton>
+                  </div>
+                  <Divider orientation="vertical" flexItem />
+                  <div className={classes.margin}>
+                    <a onClick={handleMenu} style={{ cursor: "pointer" }}>
+                      <IconButton>
+                        <AccountCircle fontSize="" />
+                      </IconButton>
+                      <span>hi, {dataLogin.user.name.substring(0, 5)}</span>
+                    </a>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleClose}
+                    >
+                      <MenuItem onClick={handleClose}>My account</MenuItem>
+                      <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                    </Menu>
+                  </div>
+                </>
+              ) : (
+                <div>
+                  <Button
+                    size="small"
+                    className={classes.margin}
+                    aria-label="login"
+                    onClick={handleDialogOpen("login")}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    size="small"
+                    className={classes.margin}
+                    aria-label="register"
+                    onClick={handleDialogOpen("register")}
+                  >
+                    Daftar
+                  </Button>
+                </div>
+              )}
+            </Toolbar>
+          </Container>
+        </Toolbar>
+        <MenuNavigation />
 
-      <Dialog
-        fullWidth
-        maxWidth={authType === "login" ? "xs" : "xs"}
-        open={open}
-        onClose={handleDialogClose}
-      >
-        {authType === "login" ? (
-          <>
-            <FormLogin
-              handleOpen={handleDialogOpen}
-              handleClose={handleDialogClose}
-            />
-          </>
-        ) : (
-          <>
-            <FormRegister
-              handleOpen={handleDialogOpen}
-              handleClose={handleDialogClose}
-            />
-          </>
-        )}
-      </Dialog>
-    </Fragment>
-  );
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+        <Dialog
+          fullWidth
+          maxWidth={authType === "login" ? "xs" : "xs"}
+          open={open}
+          onClose={handleDialogClose}
+        >
+          {authType === "login" ? (
+            <>
+              <FormLogin
+                handleOpen={handleDialogOpen}
+                handleClose={handleDialogClose}
+              />
+            </>
+          ) : (
+            <>
+              <FormRegister
+                handleOpen={handleDialogOpen}
+                handleClose={handleDialogClose}
+              />
+            </>
+          )}
+        </Dialog>
+      </Fragment>
+    );
+  }
+}
+export default withStyles(styles, { withTheme: true })(
+  connect(mapStateToProps, mapDispatchToProps)(Header)
+);

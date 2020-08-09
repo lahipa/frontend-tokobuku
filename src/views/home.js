@@ -114,18 +114,20 @@ const Home = (props) => {
           </Box>
           <Box pb={20}>
             <Grid container spacing={3}>
-              {books.rows &&
-                books.rows.slice(0, 8).map((val) => {
-                  return (
-                    <Grid item lg={3} key={val.id}>
-                      <CardBuku
-                        dataCard={val}
-                        doAddToCart={handleAddCart}
-                        dataLogin={dataLogin}
-                      />
-                    </Grid>
-                  );
-                })}
+              {books
+                ? books.rows &&
+                  books.rows.slice(0, 8).map((val) => {
+                    return (
+                      <Grid item lg={3} key={val.id}>
+                        <CardBuku
+                          dataCard={val}
+                          doAddToCart={handleAddCart}
+                          dataLogin={dataLogin}
+                        />
+                      </Grid>
+                    );
+                  })
+                : ""}
             </Grid>
           </Box>
         </Container>

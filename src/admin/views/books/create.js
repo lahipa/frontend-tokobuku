@@ -20,15 +20,16 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import SaveIcon from "@material-ui/icons/Save";
 
 const AddBooks = (props) => {
+  const [data, setData] = useState({});
   const [categories, setCategories] = useState([]);
-  const [kategori_id, setKategori] = useState("");
-  const [title, setTitle] = useState("");
-  const [harga, setHarga] = useState("");
-  const [author, setAuthor] = useState("");
   const [image_url, setImage] = useState("");
-  const [no_isbn, setIsbn] = useState("");
-  const [berat, setBerat] = useState("");
-  const [synopsis, setSynopsis] = useState("");
+  // const [kategori_id, setKategori] = useState("");
+  // const [title, setTitle] = useState("");
+  // const [harga, setHarga] = useState("");
+  // const [author, setAuthor] = useState("");
+  // const [no_isbn, setIsbn] = useState("");
+  // const [berat, setBerat] = useState("");
+  // const [synopsis, setSynopsis] = useState("");
 
   const { endpoint, classes, doAdd, open, handleClose } = props;
 
@@ -49,28 +50,26 @@ const AddBooks = (props) => {
   }, []);
 
   const handleSubmit = async (e) => {
-    //e.preventDefault();
+    e.preventDefault();
 
     const formData = new FormData();
-    formData.append("kategori_id", kategori_id);
-    formData.append("title", title);
-    formData.append("harga", harga);
-    formData.append("author", author);
+    formData.append("kategori_id", data.kategori_id);
+    formData.append("title", data.title);
+    formData.append("harga", data.harga);
+    formData.append("author", data.author);
     formData.append("image_url", image_url);
-    formData.append("no_isbn", no_isbn);
-    formData.append("berat", berat);
-    formData.append("synopsis", synopsis);
+    formData.append("no_isbn", data.no_isbn);
+    formData.append("berat", data.berat);
+    formData.append("synopsis", data.synopsis);
 
     handleClose();
     doAdd(formData);
   };
 
-  // const handleForm = (e, formName) => {
-  //   setData({ ...data, [formName]: e.target.value });
-  //   console.log(data, "From dashboard");
-  // };
-  //
-  // onChange={(e) => handleForm(e, "synopsis")}
+  const handleForm = (e, formName) => {
+    setData({ ...data, [formName]: e.target.value });
+    // console.log(data, "From dashboard");
+  };
 
   return (
     <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
@@ -87,7 +86,8 @@ const AddBooks = (props) => {
                   labelId="select-category"
                   id="demo-simple-select"
                   displayEmpty
-                  onChange={(e) => setKategori(e.target.value)}
+                  //onChange={(e) => setKategori(e.target.value)}
+                  onChange={(e) => handleForm(e, "kategori_id")}
                 >
                   <MenuItem>Pilih</MenuItem>
                   {categories.rows &&
@@ -113,7 +113,8 @@ const AddBooks = (props) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                onChange={(e) => setTitle(e.target.value)}
+                //onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => handleForm(e, "title")}
               />
             </Grid>
             <Grid item md={2} lg={2}>
@@ -151,7 +152,8 @@ const AddBooks = (props) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                onChange={(e) => setHarga(e.target.value)}
+                //onChange={(e) => setHarga(e.target.value)}
+                onChange={(e) => handleForm(e, "harga")}
               />
             </Grid>
             <Grid item md>
@@ -163,7 +165,8 @@ const AddBooks = (props) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                onChange={(e) => setAuthor(e.target.value)}
+                //onChange={(e) => setAuthor(e.target.value)}
+                onChange={(e) => handleForm(e, "author")}
               />
             </Grid>
             <Grid item md>
@@ -176,7 +179,8 @@ const AddBooks = (props) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                onChange={(e) => setIsbn(e.target.value)}
+                //onChange={(e) => setIsbn(e.target.value)}
+                onChange={(e) => handleForm(e, "no_isbn")}
               />
             </Grid>
             <Grid item md>
@@ -192,7 +196,8 @@ const AddBooks = (props) => {
                   ),
                 }}
                 className={classes.withoutLabel}
-                onChange={(e) => setBerat(e.target.value)}
+                //onChange={(e) => setBerat(e.target.value)}
+                onChange={(e) => handleForm(e, "berat")}
               />
             </Grid>
           </Grid>
@@ -208,7 +213,8 @@ const AddBooks = (props) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                onChange={(e) => setSynopsis(e.target.value)}
+                //onChange={(e) => setSynopsis(e.target.value)}
+                onChange={(e) => handleForm(e, "synopsis")}
               />
             </Grid>
           </Grid>

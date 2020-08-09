@@ -1,6 +1,5 @@
 import React from "react";
 import clsx from "clsx";
-import { Redirect } from "react-router-dom";
 import { dataLogin } from "../../utils/globals";
 import Layout from "../../templates/layout/adminlayout";
 import { makeStyles } from "@material-ui/core/styles";
@@ -19,12 +18,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Dashboard = () => {
+const Dashboard = (props) => {
+  //console.log(props.history, "history");
+  const { history } = props;
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   if (!dataLogin || dataLogin.user.role !== "admin") {
-    return <Redirect to="/imcoolmaster" />;
+    history.push("/imcoolmaster");
   }
 
   return (

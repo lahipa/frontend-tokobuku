@@ -103,19 +103,15 @@ export default function CardBuku(props) {
             <Button>Detail</Button>
           </Link>
           {dataLogin ? (
-            <Button
-              color="secondary"
-              onClick={() => {
-                handleAddToCart();
-              }}
-            >
+            <Button color="secondary" onClick={handleAddToCart}>
               Add to cart
             </Button>
           ) : (
             <>
               <Button
                 color="secondary"
-                onClick={!dataLogin ? handleDialogOpen("login") : ""}
+                onClick={handleDialogOpen("login")}
+                //onClick={!dataLogin ? handleDialogOpen("login") : ""}
               >
                 Add to cart
               </Button>

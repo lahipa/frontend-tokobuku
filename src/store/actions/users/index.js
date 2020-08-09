@@ -1,7 +1,7 @@
 export {
   getListUser,
   getUserById,
-  registerUser,
   updateUser,
+  registerUser,
   loginUser, //deleteUser,
 } from "./user";

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
 import axios from "axios";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -9,7 +8,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
@@ -69,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 const AdminLogin = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  //const { user, isLogin } = props;
+  const { history } = props;
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -96,10 +94,11 @@ const AdminLogin = (props) => {
           JSON.stringify(request.data.data)
         );
 
+        enqueueSnackbar(request.data.message, { variant: "success" });
         setTimeout(function () {
-          enqueueSnackbar(request.data.message, { variant: "success" });
           window.location.href = "/imcoolmaster/dashboard";
-        }, 500);
+          //history.push("/imcoolmaster/dashboard");
+        }, 1200);
       } else {
         //toast.error(request.data.message, {position: toast.POSITION.TOP_CENTER});
         enqueueSnackbar(request.data.message, { variant: "error" });
@@ -112,7 +111,7 @@ const AdminLogin = (props) => {
   return (
     <>
       {dataLogin && dataLogin.user.role === "admin" ? (
-        <Redirect to="/imcoolmaster/dashboard" />
+        history.push("/imcoolmaster/dashboard")
       ) : (
         <Grid container component="main" className={classes.root}>
           <CssBaseline />
