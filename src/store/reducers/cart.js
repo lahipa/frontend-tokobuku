@@ -24,7 +24,7 @@ const cart = (state = initialState, action) => {
         ...state,
       };
     default:
-      return initialState;
+      return state;
   }
 };
 

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useHistory, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import Layout from "../../templates/layout";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -12,24 +14,9 @@ import {
 } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import CardBuku from "../../components/card/cardBuku";
-import axios from "axios";
-import { connect } from "react-redux";
 import { addToCart } from "../../store/actions/cart";
-//import { getListBook } from "../../store/actions/books";
-import { ENDPOINT, dataLogin } from "../../utils/globals";
-
-// const mapStateToProps = (state) => {
-//   return {
-//     books: state.bookReducer.books,
-//   };
-// };
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    //getBook: () => dispatch(getListBook()),
-    addToCart: (data) => dispatch(addToCart(data)),
-  };
-};
+import { getListBook } from "../../store/actions/books";
+import { dataLogin } from "../../utils/globals";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,32 +25,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AllBook = (props) => {
-  const [books, setBooks] = useState({});
-  const { addToCart } = props;
-
+  const { match, books, addToCart, getBook } = props;
+  const history = useHistory();
   const classes = useStyles();
-
-  const getBook = async () => {
-    try {
-      const request = await axios.get(`${ENDPOINT}/books`);
-
-      if (request) {
-        setBooks(request.data.data);
-      }
-    } catch (err) {
-      console.log(err.response.data.message);
-      //return err.response.data.message;
-    }
-  };
 
   const handleAddCart = (data) => {
     addToCart(data);
   };
 
   useEffect(() => {
-    //props.getBook();
-    getBook();
-  }, []);
+    if (match) {
+      getBook();
+    }
+  }, [match]);
 
   return (
     <Layout>
@@ -111,4 +85,19 @@ const AllBook = (props) => {
   );
 };
 
-export default connect(null, mapDispatchToProps)(AllBook);
+const mapStateToProps = (state) => {
+  return {
+    books: state.bookReducer.books,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getBook: () => dispatch(getListBook()),
+    addToCart: (data) => dispatch(addToCart(data)),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AllBook)
+);

@@ -1,21 +1,10 @@
 import React, { useEffect, Component } from "react";
+import { useHistory, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import { Container, Button } from "@material-ui/core";
 import Layout from "../../templates/layout";
 import numeral from "numeral";
-import { connect } from "react-redux";
 import { getBookById } from "../../store/actions/books";
-
-const mapStateToProps = (state) => {
-  return {
-    book: state.bookReducer.book,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getBookId: (id) => dispatch(getBookById(id)),
-  };
-};
 
 class DetailBook extends Component {
   constructor(props) {
@@ -77,4 +66,18 @@ class DetailBook extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailBook);
+const mapStateToProps = (state) => {
+  return {
+    book: state.bookReducer.book,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getBookId: (id) => dispatch(getBookById(id)),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(DetailBook)
+);

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { history, withRouter, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "../../../templates/layout/adminlayout";
 import { makeStyles } from "@material-ui/core/styles";
@@ -46,32 +47,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const mapStateToProps = (state) => {
-  return {
-    categories: state.categoryReducer.categories,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getKategori: () => dispatch(getListKategori()),
-    updateKategori: (id, data) => dispatch(updateKategori(id, data)),
-    deleteKategori: (id) => dispatch(deleteKategori(id)),
-    addKategori: (data) => dispatch(addKategori(data)),
-  };
-};
-
 const Category = (props) => {
   const [open, setOpen] = useState(false);
   const {
     match,
-    history,
     categories,
     getKategori,
     updateKategori,
     deleteKategori,
     addKategori,
   } = props;
+  const history = useHistory();
   const classes = useStyles();
 
   useEffect(() => {
@@ -172,4 +158,21 @@ const Category = (props) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Category);
+const mapStateToProps = (state) => {
+  return {
+    categories: state.categoryReducer.categories,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getKategori: () => dispatch(getListKategori()),
+    updateKategori: (id, data) => dispatch(updateKategori(id, data)),
+    deleteKategori: (id) => dispatch(deleteKategori(id)),
+    addKategori: (data) => dispatch(addKategori(data)),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(Category)
+);

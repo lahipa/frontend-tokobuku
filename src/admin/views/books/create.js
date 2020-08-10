@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
 import {
   Grid,
   MenuItem,
@@ -18,10 +18,10 @@ import {
 } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import SaveIcon from "@material-ui/icons/Save";
+import { getListKategori } from "../../../store/actions/categories";
 
 const AddBooks = (props) => {
   const [data, setData] = useState({});
-  const [categories, setCategories] = useState([]);
   const [image_url, setImage] = useState("");
   // const [kategori_id, setKategori] = useState("");
   // const [title, setTitle] = useState("");
@@ -31,23 +31,13 @@ const AddBooks = (props) => {
   // const [berat, setBerat] = useState("");
   // const [synopsis, setSynopsis] = useState("");
 
-  const { endpoint, classes, doAdd, open, handleClose } = props;
-
-  const getCategory = async () => {
-    try {
-      const request = await axios.get(`${endpoint}/kategori`);
-
-      if (request) {
-        setCategories(request.data.data);
-      }
-    } catch (err) {
-      console.log(err.response.data.message);
-    }
-  };
+  const { classes, doAdd, open, handleClose, categories, getKategori } = props;
 
   useEffect(() => {
-    getCategory();
-  }, []);
+    if (open) {
+      getKategori();
+    }
+  }, [open]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -232,4 +222,18 @@ const AddBooks = (props) => {
   );
 };
 
-export default withRouter(AddBooks);
+const mapStateToProps = (state) => {
+  return {
+    categories: state.categoryReducer.categories,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getKategori: () => dispatch(getListKategori()),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AddBooks)
+);

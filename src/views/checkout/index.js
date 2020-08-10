@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { useHistory, Link, withRouter } from "react-router-dom";
 import Layout from "../../templates/layout";
-import { dataLogin } from "../../utils/globals";
+import { ENDPOINT, dataLogin } from "../../utils/globals";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Container,
@@ -26,6 +26,7 @@ import { createOrder } from "../../store/actions/orders";
 import { connect } from "react-redux";
 import ListCart from "./components/cartListItem";
 import numeral from "numeral";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,37 +47,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const mapStateToProps = (state) => {
-  return {
-    carts: state.cartReducer.carts,
-    isOrdered: state.orderReducer.isOrdered,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    removeFromCart: (id, uid) => dispatch(removeFromCart(id, uid)),
-    substractFromCart: (id, data) => dispatch(substractFromCart(id, data)),
-    addToCart: (data) => dispatch(addToCart(data)),
-    createOrder: (uid, data) => dispatch(createOrder(uid, data)),
-  };
-};
-
 const Checkout = (props) => {
+  //const [dataOrder, setDataOrder] = useState({});
+  const [isOrdered, setIsOrdered] = useState(false);
+  const [transactionId, setTransactionId] = useState("");
   const {
+    match,
     carts,
     addToCart,
     substractFromCart,
     removeFromCart,
     createOrder,
-    isOrdered,
   } = props;
-
+  const { enqueueSnackbar } = useSnackbar();
+  const history = useHistory();
   const classes = useStyles();
 
-  // useEffect(() => {
-  //   getListCart(dataLogin.user.uid);
-  // }, []);
+  useEffect(() => {
+    //getListCart(dataLogin.user.uid);
+    setTransactionId(generateTransactionId());
+  }, []);
 
   const handleAdd = (data) => {
     addToCart(data);
@@ -90,7 +80,7 @@ const Checkout = (props) => {
     removeFromCart(id, dataLogin.user.uid);
   };
 
-  const id = () => {
+  const generateTransactionId = () => {
     // ramdom unique id
     return "_" + Math.random().toString(36).substr(2, 9);
   };
@@ -107,7 +97,6 @@ const Checkout = (props) => {
 
   const handleSubmitOrder = async () => {
     let obj = {};
-
     const dataOrderDetails =
       carts &&
       carts.map(
@@ -123,23 +112,23 @@ const Checkout = (props) => {
 
     const dataOrder = {
       user_id: dataLogin.user.uid,
+      transaction_id: transactionId,
       total: totalQty,
       total_price: grandTotalHarga,
       orders_detail: dataOrderDetails,
     };
 
-    //createOrder(dataLogin.user.uid, dataOrder);
-    // if (carts) {
-    //   removeCartBulk();
-    // }
-
-    console.log(dataOrder, "data order detail");
+    createOrder(dataOrder);
+    if (carts) {
+      removeCartBulk();
+      setIsOrdered(true);
+    }
   };
 
   return (
     <>
       {!dataLogin ? (
-        <Redirect to="/login" />
+        history.push("/login")
       ) : (
         <Layout>
           <section className={classes.root}>
@@ -147,10 +136,10 @@ const Checkout = (props) => {
               {isOrdered ? (
                 <Grid container spacing={3}>
                   <Grid item md={8}>
-                    <Alert severity="info">
+                    <Alert severity="info" style={{ marginBottom: "10px" }}>
                       <AlertTitle>Order berhasil dilakukan</AlertTitle>
-                      No traksaksi anda: {"331"}, silahkan cek halaman status
-                      pemesanan Anda.
+                      No traksaksi anda: {transactionId}, silahkan cek halaman
+                      status pemesanan Anda.
                     </Alert>
                     <Alert severity="warning">
                       Ingin berbelanja lagi? silahakan ke halaman pilih buku
@@ -287,4 +276,21 @@ const Checkout = (props) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Checkout);
+const mapStateToProps = (state) => {
+  return {
+    carts: state.cartReducer.carts,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    removeFromCart: (id, uid) => dispatch(removeFromCart(id, uid)),
+    substractFromCart: (id, data) => dispatch(substractFromCart(id, data)),
+    addToCart: (data) => dispatch(addToCart(data)),
+    createOrder: (data) => dispatch(createOrder(data)),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(Checkout)
+);

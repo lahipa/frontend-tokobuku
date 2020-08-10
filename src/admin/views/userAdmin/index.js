@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
+import { useHistory, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "../../../templates/layout/adminlayout";
 import { makeStyles } from "@material-ui/core/styles";
@@ -41,28 +41,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const mapStateToProps = (state) => {
-  return {
-    users: state.userReducer.users,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getListUser: (params) => dispatch(getListUser(params)),
-  };
-};
-
 const UserAdmins = (props) => {
-  const { match, history, users, getListUser } = props;
+  const { match, users, getListUser } = props;
+  const history = useHistory();
   const classes = useStyles();
 
   useEffect(() => {
     if (match) {
       getListUser({ role: 1 }); // role is role_id, 1: admin, 2: member
     }
-
-    //console.log(orders, "data orders");
   }, [match]);
 
   if (!dataLogin || dataLogin.user.role !== "admin") {
@@ -123,4 +110,18 @@ const UserAdmins = (props) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserAdmins);
+const mapStateToProps = (state) => {
+  return {
+    users: state.userReducer.users,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getListUser: (params) => dispatch(getListUser(params)),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(UserAdmins)
+);

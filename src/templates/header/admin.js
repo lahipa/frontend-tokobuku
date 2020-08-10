@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -23,6 +25,7 @@ import {
   secondNavigationItems,
 } from "../../admin/components/navigation";
 import { handleLogout } from "../../admin/auth/logout";
+import { getAllListOrder } from "../../store/actions/orders";
 
 const drawerWidth = 240;
 
@@ -86,10 +89,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AdminHeader = () => {
-  const classes = useStyles();
+const AdminHeader = (props) => {
+  const { match, orders, getListOrder } = props;
   const [open, setOpen] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const classes = useStyles();
+
+  useEffect(() => {
+    if (match) {
+      getListOrder();
+    }
+  }, [match]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -126,11 +137,23 @@ const AdminHeader = () => {
             <MenuIcon />
           </IconButton>
           <Box className={classes.title}>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            <Link
+              to={orders ? "/imcoolmaster/orders" : "#"}
+              style={{ color: "#fff" }}
+            >
+              <IconButton color="inherit">
+                {orders ? (
+                  <Badge
+                    badgeContent={orders.rows && orders.rows.length}
+                    color="secondary"
+                  >
+                    <NotificationsIcon />
+                  </Badge>
+                ) : (
+                  <NotificationsIcon />
+                )}
+              </IconButton>
+            </Link>
           </Box>
 
           <div>
@@ -169,4 +192,18 @@ const AdminHeader = () => {
   );
 };
 
-export default AdminHeader;
+const mapStateToProps = (state) => {
+  return {
+    orders: state.orderReducer.orders,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getListOrder: () => dispatch(getAllListOrder()),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AdminHeader)
+);

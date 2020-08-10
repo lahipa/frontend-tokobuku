@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useHistory, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "../../../templates/layout/adminlayout";
 import { makeStyles } from "@material-ui/core/styles";
@@ -19,7 +19,7 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import TableDataShow from "./components/listItemOrder";
 import { dataLogin } from "../../../utils/globals";
-import { getAllListOrder, getOrderById } from "../../../store/actions/orders";
+import { getOrderById } from "../../../store/actions/orders";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -41,29 +41,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const mapStateToProps = (state) => {
-  return {
-    orders: state.orderReducer.orders,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getListOrder: () => dispatch(getAllListOrder()),
-  };
-};
-
 const Orders = (props) => {
-  const { match, history, orders, getListOrder } = props;
+  const { orders } = props;
+  const history = useHistory();
   const classes = useStyles();
 
-  useEffect(() => {
-    if (match) {
-      getListOrder();
-    }
-
-    //console.log(orders, "data orders");
-  }, [match]);
+  // useEffect(() => {
+  // }, []);
 
   if (!dataLogin || dataLogin.user.role !== "admin") {
     history.push("/imcoolmaster");
@@ -95,18 +79,8 @@ const Orders = (props) => {
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
-              {console.log(orders, "cek ada ga?")}
-
               <TableBody>
-                {orders.rows && orders.rows.length === 0 ? (
-                  <TableRow>
-                    <TableCell align="center" colspan="7">
-                      <h5 style={{ fontSize: "16px", color: "#888" }}>
-                        <i>Belum ada data tersimpan!</i>
-                      </h5>
-                    </TableCell>
-                  </TableRow>
-                ) : (
+                {orders ? (
                   orders.rows &&
                   orders.rows.map((val) => {
                     return (
@@ -119,6 +93,14 @@ const Orders = (props) => {
                       />
                     );
                   })
+                ) : (
+                  <TableRow>
+                    <TableCell align="center" colspan="9">
+                      <h5 style={{ fontSize: "16px", color: "#888" }}>
+                        <i>Belum ada data tersimpan!</i>
+                      </h5>
+                    </TableCell>
+                  </TableRow>
                 )}
               </TableBody>
             </Table>
@@ -129,4 +111,16 @@ const Orders = (props) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Orders);
+const mapStateToProps = (state) => {
+  return {
+    orders: state.orderReducer.orders,
+  };
+};
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     getListOrder: () => dispatch(getAllListOrder()),
+//   };
+// };
+
+export default withRouter(connect(mapStateToProps, null)(Orders));

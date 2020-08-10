@@ -68,7 +68,7 @@ export const getOrderById = (id) => {
   };
 };
 
-export const createOrder = (uid, data) => {
+export const createOrder = (data) => {
   const request = axios.post(`${ENDPOINT}/orders/`, data, {
     headers: {
       Authorization: dataLogin.token,
@@ -81,7 +81,6 @@ export const createOrder = (uid, data) => {
         return dispatch({
           type: actionsTypes.CREATE_ORDER,
           payload: response.data.data,
-          isOrdered: true,
         });
       })
       .catch((err) => {

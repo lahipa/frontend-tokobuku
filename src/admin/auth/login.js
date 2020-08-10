@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -67,8 +68,8 @@ const useStyles = makeStyles((theme) => ({
 const AdminLogin = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { history } = props;
 
+  const history = useHistory();
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -95,6 +96,7 @@ const AdminLogin = (props) => {
         );
 
         enqueueSnackbar(request.data.message, { variant: "success" });
+
         setTimeout(function () {
           window.location.href = "/imcoolmaster/dashboard";
           //history.push("/imcoolmaster/dashboard");

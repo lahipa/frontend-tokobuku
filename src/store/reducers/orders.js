@@ -1,7 +1,6 @@
 import * as actionsTypes from "../actions/orders/actionTypes";
 
 const initialState = {
-  isOrdered: false,
   orders: [],
   order: {},
 };
@@ -30,10 +29,9 @@ const orders = (state = initialState, action) => {
     case actionsTypes.CREATE_ORDER:
       return {
         ...state,
-        isOrdered: action.isOrdered,
       };
     default:
-      return initialState;
+      return state;
   }
 };
 

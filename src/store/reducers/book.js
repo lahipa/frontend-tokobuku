@@ -26,7 +26,7 @@ const books = (state = initialState, action) => {
         ...state,
       };
     default:
-      return initialState;
+      return state;
   }
 };
 

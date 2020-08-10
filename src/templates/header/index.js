@@ -24,18 +24,6 @@ import FormRegister from "../../auth/register";
 import { handleLogout } from "../../auth/logout";
 import { getListCart } from "../../store/actions/cart";
 
-const mapStateToProps = (state) => {
-  return {
-    carts: state.cartReducer.carts,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getListCart: (uid) => dispatch(getListCart(uid)),
-  };
-};
-
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
@@ -218,6 +206,19 @@ class Header extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    carts: state.cartReducer.carts,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getListCart: (uid) => dispatch(getListCart(uid)),
+  };
+};
+
 export default withStyles(styles, { withTheme: true })(
   connect(mapStateToProps, mapDispatchToProps)(Header)
 );

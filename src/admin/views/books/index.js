@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { useHistory, withRouter } from "react-router-dom";
 import Layout from "../../../templates/layout/adminlayout";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -18,7 +19,7 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import AddBook from "./create";
 import TableDataShow from "./components/listItemBooks";
-import { ENDPOINT, dataLogin } from "../../../utils/globals";
+import { dataLogin } from "../../../utils/globals";
 import {
   getListBook,
   addBook,
@@ -46,32 +47,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const mapStateToProps = (state) => {
-  return {
-    books: state.bookReducer.books,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getBook: () => dispatch(getListBook()),
-    addBook: (data) => dispatch(addBook(data)),
-    updateBook: (id, data) => dispatch(updateBook(id, data)),
-    deleteBook: (id) => dispatch(deleteBook(id)),
-  };
-};
-
 const Books = (props) => {
   const [open, setOpen] = useState(false);
-  const {
-    match,
-    history,
-    books,
-    getBook,
-    addBook,
-    updateBook,
-    deleteBook,
-  } = props;
+  const { match, books, getBook, addBook, updateBook, deleteBook } = props;
+
+  const history = useHistory();
   const classes = useStyles();
 
   useEffect(() => {
@@ -168,7 +148,6 @@ const Books = (props) => {
       </Fab>
 
       <AddBook
-        endpoint={ENDPOINT}
         classes={classes}
         doAdd={handleSubmit}
         open={open}
@@ -178,4 +157,19 @@ const Books = (props) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Books);
+const mapStateToProps = (state) => {
+  return {
+    books: state.bookReducer.books,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getBook: () => dispatch(getListBook()),
+    addBook: (data) => dispatch(addBook(data)),
+    updateBook: (id, data) => dispatch(updateBook(id, data)),
+    deleteBook: (id) => dispatch(deleteBook(id)),
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Books));

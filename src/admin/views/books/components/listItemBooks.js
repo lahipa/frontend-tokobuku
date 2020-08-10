@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
+import { connect } from "react-redux";
 import {
   Grid,
   MenuItem,
@@ -23,9 +23,9 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import SaveIcon from "@material-ui/icons/Save";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditRounded from "@material-ui/icons/EditRounded";
+import { getListKategori } from "../../../../store/actions/categories";
 
 const Books = (props) => {
-  const [categories, setCategories] = useState([]);
   const [data, setData] = useState({});
   const [image_url, setImage] = useState("");
   // const [kategori_id, setKategori] = useState("");
@@ -38,12 +38,16 @@ const Books = (props) => {
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
 
-  const { no, key, listData, doUpdate, doDelete, classes } = props;
-
-  const getCategory = async () => {
-    const request = await axios.get("http://localhost:4000/kategori");
-    setCategories(request.data.data);
-  };
+  const {
+    no,
+    key,
+    listData,
+    doUpdate,
+    doDelete,
+    classes,
+    categories,
+    getKategori,
+  } = props;
 
   useEffect(() => {
     if (listData) {
@@ -58,9 +62,13 @@ const Books = (props) => {
       });
       setImage(listData.image_url);
     }
-
-    getCategory();
   }, [listData]);
+
+  useEffect(() => {
+    if (open) {
+      getKategori();
+    }
+  }, [open]);
 
   const handleUpdate = (id) => {
     //e.preventDefault();
@@ -297,4 +305,17 @@ const Books = (props) => {
     </Fragment>
   );
 };
-export default withRouter(Books);
+
+const mapStateToProps = (state) => {
+  return {
+    categories: state.categoryReducer.categories,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getKategori: () => dispatch(getListKategori()),
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Books));

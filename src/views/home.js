@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useHistory, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import Layout from "../templates/layout";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -10,19 +12,12 @@ import {
   Typography,
   Icon,
 } from "@material-ui/core";
+import { Alert, AlertTitle } from "@material-ui/lab";
 import { styled } from "@material-ui/core/styles";
-import CardBuku from "../components/card/cardBuku";
-import axios from "axios";
-import { connect } from "react-redux";
+import { dataLogin } from "../utils/globals";
+import { getListBook } from "../store/actions/books";
 import { addToCart } from "../store/actions/cart";
-
-import { ENDPOINT, dataLogin } from "../utils/globals";
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    addToCart: (data) => dispatch(addToCart(data)),
-  };
-};
+import CardBuku from "../components/card/cardBuku";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,31 +56,19 @@ const Caurosel = styled(Box)({
 });
 
 const Home = (props) => {
-  const [books, setBooks] = useState({});
-  const { addToCart } = props;
-
+  const { match, addToCart, books, getBook } = props;
+  const history = useHistory();
   const classes = useStyles();
-
-  const getBook = async () => {
-    try {
-      const request = await axios.get(`${ENDPOINT}/books`);
-
-      if (request) {
-        setBooks(request.data.data);
-      }
-    } catch (err) {
-      console.log(err.response.data.message);
-      return err.response.data.message;
-    }
-  };
 
   const handleAddCart = (data) => {
     addToCart(data);
   };
 
   useEffect(() => {
-    getBook();
-  }, []);
+    if (match) {
+      getBook();
+    }
+  }, [match]);
 
   return (
     <Layout>
@@ -114,20 +97,26 @@ const Home = (props) => {
           </Box>
           <Box pb={20}>
             <Grid container spacing={3}>
-              {books
-                ? books.rows &&
-                  books.rows.slice(0, 8).map((val) => {
-                    return (
-                      <Grid item lg={3} key={val.id}>
-                        <CardBuku
-                          dataCard={val}
-                          doAddToCart={handleAddCart}
-                          dataLogin={dataLogin}
-                        />
-                      </Grid>
-                    );
-                  })
-                : ""}
+              {books ? (
+                books.rows &&
+                books.rows.slice(0, 8).map((val) => {
+                  return (
+                    <Grid item lg={3} key={val.id}>
+                      <CardBuku
+                        dataCard={val}
+                        doAddToCart={handleAddCart}
+                        dataLogin={dataLogin}
+                      />
+                    </Grid>
+                  );
+                })
+              ) : (
+                <Alert severity="warning">
+                  <AlertTitle>Tidak ada data buku!</AlertTitle>
+                  Data tidak tersedia di database atau tidak terload dengan
+                  benar
+                </Alert>
+              )}
             </Grid>
           </Box>
         </Container>
@@ -136,4 +125,17 @@ const Home = (props) => {
   );
 };
 
-export default connect(null, mapDispatchToProps)(Home);
+const mapStateToProps = (state) => {
+  return {
+    books: state.bookReducer.books,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addToCart: (data) => dispatch(addToCart(data)),
+    getBook: () => dispatch(getListBook()),
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));

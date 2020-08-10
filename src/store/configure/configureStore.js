@@ -9,9 +9,14 @@ const configureStore = (preloadedState) => {
   const middlewareEnhancer = applyMiddleware(...middlewares);
 
   const enhancers = [middlewareEnhancer, monitorReducer];
-  const composedEnhancers = compose(...enhancers);
+  const composedEnhancers =
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-  const store = createStore(rootReducer, preloadedState, composedEnhancers);
+  const store = createStore(
+    rootReducer,
+    preloadedState,
+    composedEnhancers(...enhancers)
+  );
 
   if (process.env.NODE_ENV !== "production" && module.hot) {
     module.hot.accept("../reducers", () => store.replaceReducer(rootReducer));
