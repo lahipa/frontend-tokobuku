@@ -103,22 +103,14 @@ const Books = (props) => {
                   <TableCell>Book Title</TableCell>
                   <TableCell>Author</TableCell>
                   <TableCell>Category</TableCell>
-                  <TableCell align="right">No. ISBN</TableCell>
-                  <TableCell align="right">Weight</TableCell>
+                  <TableCell align="center">No. ISBN</TableCell>
+                  <TableCell align="center">Stock</TableCell>
                   <TableCell align="right">Price</TableCell>
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {books.rows && books.rows.length === 0 ? (
-                  <TableRow>
-                    <TableCell align="center" colspan="7">
-                      <h5 style={{ fontSize: "16px", color: "#888" }}>
-                        <i>Belum ada data tersimpan!</i>
-                      </h5>
-                    </TableCell>
-                  </TableRow>
-                ) : (
+                {books ? (
                   books.rows &&
                   books.rows.map((val) => {
                     return (
@@ -132,6 +124,14 @@ const Books = (props) => {
                       />
                     );
                   })
+                ) : (
+                  <TableRow>
+                    <TableCell align="center" colspan="8">
+                      <h5 style={{ fontSize: "16px", color: "#888" }}>
+                        <i>Belum ada data tersimpan!</i>
+                      </h5>
+                    </TableCell>
+                  </TableRow>
                 )}
               </TableBody>
             </Table>

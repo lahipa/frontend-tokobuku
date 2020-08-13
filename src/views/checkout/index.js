@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, Link, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import Layout from "../../templates/layout";
 import { ENDPOINT, dataLogin } from "../../utils/globals";
 import { makeStyles } from "@material-ui/core/styles";
@@ -23,7 +24,7 @@ import {
   addToCart,
 } from "../../store/actions/cart";
 import { createOrder } from "../../store/actions/orders";
-import { connect } from "react-redux";
+import { getBookById, updateBook } from "../../store/actions/books";
 import ListCart from "./components/cartListItem";
 import { convertToIdr } from "../../components/functions/convert";
 import { useSnackbar } from "notistack";
@@ -58,6 +59,9 @@ const Checkout = (props) => {
     substractFromCart,
     removeFromCart,
     createOrder,
+    book,
+    getBookById,
+    updateBook,
   } = props;
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
@@ -117,6 +121,19 @@ const Checkout = (props) => {
       total_price: grandTotalHarga,
       orders_detail: dataOrderDetails,
     };
+
+    carts &&
+      carts.map((val) => {
+        getBookById(val.buku_id);
+        if (val.qty > book.stok) {
+          enqueueSnackbar("Terjadi kesalahan! stok tidak mencukupi", {
+            variant: "error",
+          });
+        } else {
+          let dataNewStok = { stok: book.stok - val.qty };
+          updateBook(val.buku_id, dataNewStok);
+        }
+      });
 
     createOrder(dataOrder);
     if (carts) {
@@ -277,6 +294,7 @@ const Checkout = (props) => {
 const mapStateToProps = (state) => {
   return {
     carts: state.cartReducer.carts,
+    book: state.bookReducer.book,
   };
 };
 
@@ -286,6 +304,8 @@ const mapDispatchToProps = (dispatch) => {
     substractFromCart: (id, data) => dispatch(substractFromCart(id, data)),
     addToCart: (data) => dispatch(addToCart(data)),
     createOrder: (data) => dispatch(createOrder(data)),
+    getBookById: (id) => dispatch(getBookById(id)),
+    updateBook: (id, data) => dispatch(updateBook(id, data)),
   };
 };
 

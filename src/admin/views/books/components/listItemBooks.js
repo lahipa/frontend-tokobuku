@@ -59,6 +59,7 @@ const ListComponent = (props) => {
         author: listData.author,
         no_isbn: listData.no_isbn,
         berat: listData.berat,
+        stok: listData.stok,
         synopsis: listData.synopsis,
       });
       setImage(listData.image_url);
@@ -81,6 +82,7 @@ const ListComponent = (props) => {
     formData.append("image_url", image_url);
     formData.append("no_isbn", data.no_isbn);
     formData.append("berat", data.berat);
+    formData.append("stok", data.stok);
     formData.append("synopsis", data.synopsis);
 
     handleClose();
@@ -111,8 +113,9 @@ const ListComponent = (props) => {
         <TableCell>{listData.title}</TableCell>
         <TableCell>{listData.author}</TableCell>
         <TableCell>{listData.kategori && listData.kategori.name}</TableCell>
-        <TableCell align="right">{listData.no_isbn}</TableCell>
-        <TableCell align="right">{`${listData.berat} gram`}</TableCell>
+        <TableCell align="center">{listData.no_isbn}</TableCell>
+        {/* <TableCell align="right">{`${listData.berat} gram`}</TableCell> */}
+        <TableCell align="center">{listData.stok}</TableCell>
         <TableCell align="right">{convertToIdr(listData.harga)}</TableCell>
         <TableCell align="center">
           <IconButton
@@ -164,7 +167,7 @@ const ListComponent = (props) => {
                   <FormHelperText>Pengelompokan buku</FormHelperText>
                 </FormControl>
               </Grid>
-              <Grid item md={6} lg={7}>
+              <Grid item md lg>
                 <FormControl fullWidth margin="normal">
                   <InputLabel shrink>Title</InputLabel>
                   <Input
@@ -175,29 +178,6 @@ const ListComponent = (props) => {
                   />
                   <FormHelperText>Maksimum karakter 255</FormHelperText>
                 </FormControl>
-              </Grid>
-              <Grid item md={2} lg={2}>
-                <div className={classes.withoutLabel}>
-                  <input
-                    type="file"
-                    id="upload-file"
-                    accept="image/*"
-                    multiple
-                    className={classes.inputFile}
-                    value=""
-                    onChange={(event) => setImage(event.target.files[0])}
-                  />
-                  <label htmlFor="upload-file">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      component="span"
-                      startIcon={<CloudUploadIcon />}
-                    >
-                      Cover
-                    </Button>
-                  </label>
-                </div>
               </Grid>
             </Grid>
             <Grid container spacing={3}>
@@ -211,7 +191,7 @@ const ListComponent = (props) => {
                     type="number"
                     placeholder=""
                     startAdornment={
-                      <InputAdornment position="start">Rp</InputAdornment>
+                      <InputAdornment position="start">IDR</InputAdornment>
                     }
                   />
                   <FormHelperText>Only number!</FormHelperText>
@@ -254,6 +234,43 @@ const ListComponent = (props) => {
                   />
                   <FormHelperText>Berat buku</FormHelperText>
                 </FormControl>
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item md={2}>
+                <FormControl fullWidth margin="normal">
+                  <InputLabel shrink>Stok</InputLabel>
+                  <Input
+                    value={data.stok}
+                    onChange={(e) => handleForm(e, "stok")}
+                    type="number"
+                    placeholder=""
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item md={2} lg={2}>
+                <div className={classes.withoutLabel}>
+                  <input
+                    type="file"
+                    id="upload-file"
+                    accept="image/*"
+                    multiple
+                    className={classes.inputFile}
+                    value=""
+                    onChange={(event) => setImage(event.target.files[0])}
+                  />
+                  <label htmlFor="upload-file">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      component="span"
+                      fullWidth
+                      startIcon={<CloudUploadIcon />}
+                    >
+                      Cover
+                    </Button>
+                  </label>
+                </div>
               </Grid>
             </Grid>
             <Grid container spacing={3}>

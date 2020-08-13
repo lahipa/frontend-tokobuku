@@ -50,6 +50,7 @@ const AddBooks = (props) => {
     formData.append("image_url", image_url);
     formData.append("no_isbn", data.no_isbn);
     formData.append("berat", data.berat);
+    formData.append("stok", data.stok);
     formData.append("synopsis", data.synopsis);
 
     handleClose();
@@ -92,7 +93,7 @@ const AddBooks = (props) => {
                 <FormHelperText>Pengelompokan buku</FormHelperText>
               </FormControl>
             </Grid>
-            <Grid item md={6} lg={7}>
+            <Grid item md lg>
               <TextField
                 required
                 label="Title"
@@ -107,28 +108,6 @@ const AddBooks = (props) => {
                 onChange={(e) => handleForm(e, "title")}
               />
             </Grid>
-            <Grid item md={2} lg={2}>
-              <div className={classes.withoutLabel}>
-                <input
-                  type="file"
-                  id="upload-file"
-                  accept="image/*"
-                  multiple
-                  className={classes.inputFile}
-                  onChange={(event) => setImage(event.target.files[0])}
-                />
-                <label htmlFor="upload-file">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    component="span"
-                    startIcon={<CloudUploadIcon />}
-                  >
-                    Cover
-                  </Button>
-                </label>
-              </div>
-            </Grid>
           </Grid>
           <Grid container spacing={3}>
             <Grid item md>
@@ -141,6 +120,11 @@ const AddBooks = (props) => {
                 margin="normal"
                 InputLabelProps={{
                   shrink: true,
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">IDR</InputAdornment>
+                  ),
                 }}
                 //onChange={(e) => setHarga(e.target.value)}
                 onChange={(e) => handleForm(e, "harga")}
@@ -189,6 +173,44 @@ const AddBooks = (props) => {
                 //onChange={(e) => setBerat(e.target.value)}
                 onChange={(e) => handleForm(e, "berat")}
               />
+            </Grid>
+          </Grid>
+          <Grid container spacing={3}>
+            <Grid item md={2}>
+              <TextField
+                label="Stok"
+                type="number"
+                fullWidth
+                margin="normal"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                //onChange={(e) => setHarga(e.target.value)}
+                onChange={(e) => handleForm(e, "stok")}
+              />
+            </Grid>
+            <Grid item md={3} lg={2}>
+              <div className={classes.withoutLabel}>
+                <input
+                  type="file"
+                  id="upload-file"
+                  accept="image/*"
+                  multiple
+                  className={classes.inputFile}
+                  onChange={(event) => setImage(event.target.files[0])}
+                />
+                <label htmlFor="upload-file">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    component="span"
+                    fullWidth
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    Cover
+                  </Button>
+                </label>
+              </div>
             </Grid>
           </Grid>
           <Grid container spacing={3}>
