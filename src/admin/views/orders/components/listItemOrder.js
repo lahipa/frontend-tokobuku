@@ -1,10 +1,10 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { withRouter } from "react-router-dom";
+import React, { Fragment } from "react";
+import { withRouter, Link } from "react-router-dom";
 import { TableCell, TableRow, IconButton } from "@material-ui/core";
 import EditRounded from "@material-ui/icons/EditRounded";
-import numeral from "numeral";
+import { convertToIdr } from "../../../../components/functions/convert";
 
-const Orders = (props) => {
+const ListComponent = (props) => {
   const { no, key, listData } = props;
 
   let discount = 0;
@@ -14,30 +14,25 @@ const Orders = (props) => {
       <TableRow key={key}>
         <TableCell>{no}</TableCell>
         <TableCell component="th" scope="row">
-          {listData.customers_detail.username}
-        </TableCell>
-        <TableCell component="th" scope="row">
           {listData.customers_detail.name}
         </TableCell>
         <TableCell>{listData.customers_detail.email}</TableCell>
         <TableCell align="center">{listData.total}</TableCell>
-        <TableCell align="right">{`IDR ${numeral(listData.total_price).format(
-          "0,0"
-        )}`}</TableCell>
-        <TableCell align="right">{`IDR ${numeral(discount).format(
-          "0,0"
-        )}`}</TableCell>
-        <TableCell align="right">{`IDR ${numeral(purchasedPrice).format(
-          "0,0"
-        )}`}</TableCell>
+        <TableCell align="right">
+          {convertToIdr(listData.total_price)}
+        </TableCell>
+        <TableCell align="right">{convertToIdr(discount)}</TableCell>
+        <TableCell align="right">{convertToIdr(purchasedPrice)}</TableCell>
         <TableCell align="center">
-          <IconButton color="primary" aria-label="edit">
-            <EditRounded />
-          </IconButton>
+          <Link to={`/imcoolmaster/orders/${listData.id}`}>
+            <IconButton color="primary" aria-label="edit">
+              <EditRounded />
+            </IconButton>
+          </Link>
         </TableCell>
       </TableRow>
     </Fragment>
   );
 };
 
-export default withRouter(Orders);
+export default withRouter(ListComponent);

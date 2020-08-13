@@ -3,7 +3,15 @@ import { useHistory, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "../../templates/layout";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box, Container, Grid, Typography } from "@material-ui/core";
+import {
+  Box,
+  Container,
+  Grid,
+  Paper,
+  Button,
+  Typography,
+  Icon,
+} from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import CardBuku from "../../components/card/cardBuku";
 import { addToCart } from "../../store/actions/cart";
@@ -16,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NewBook = (props) => {
+const ImportBook = (props) => {
   const { match, books, addToCart, getBook } = props;
   const history = useHistory();
   const classes = useStyles();
@@ -27,7 +35,7 @@ const NewBook = (props) => {
 
   useEffect(() => {
     if (match) {
-      getBook({ catid: 1 });
+      getBook({ catid: 3 });
     }
   }, [match]);
 
@@ -36,10 +44,10 @@ const NewBook = (props) => {
       <Container>
         <Box pt={5} pb={6} className={classes.sectionTitle}>
           <Typography variant="h5" center component="h3">
-            Koleksi Buku Baru
+            Buku Import
           </Typography>
           <Typography component="subtitle1" color="textSecondary">
-            Harga terbaik untuk Buku terbitan terbaru
+            Cari buku import berkualitas? disini tempatnya.
           </Typography>
         </Box>
         <Box pb={20}>
@@ -91,5 +99,5 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(NewBook)
+  connect(mapStateToProps, mapDispatchToProps)(ImportBook)
 );

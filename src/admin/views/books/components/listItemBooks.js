@@ -24,8 +24,9 @@ import SaveIcon from "@material-ui/icons/Save";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditRounded from "@material-ui/icons/EditRounded";
 import { getListKategori } from "../../../../store/actions/categories";
+import { convertToIdr } from "../../../../components/functions/convert";
 
-const Books = (props) => {
+const ListComponent = (props) => {
   const [data, setData] = useState({});
   const [image_url, setImage] = useState("");
   // const [kategori_id, setKategori] = useState("");
@@ -112,7 +113,7 @@ const Books = (props) => {
         <TableCell>{listData.kategori && listData.kategori.name}</TableCell>
         <TableCell align="right">{listData.no_isbn}</TableCell>
         <TableCell align="right">{`${listData.berat} gram`}</TableCell>
-        <TableCell align="right">{listData.harga}</TableCell>
+        <TableCell align="right">{convertToIdr(listData.harga)}</TableCell>
         <TableCell align="center">
           <IconButton
             color="primary"
@@ -318,4 +319,6 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Books));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ListComponent)
+);

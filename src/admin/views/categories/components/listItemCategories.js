@@ -19,7 +19,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditRounded from "@material-ui/icons/EditRounded";
 
-const Categories = (props) => {
+const ListComponent = (props) => {
   const [data, setData] = useState({});
   const [edit, setEdit] = useState(false);
   const [open, setOpen] = useState(false);
@@ -130,4 +130,4 @@ const Categories = (props) => {
   );
 };
 
-export default withRouter(Categories);
+export default withRouter(ListComponent);

@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NewBook = (props) => {
+const BestSeller = (props) => {
   const { match, books, addToCart, getBook } = props;
   const history = useHistory();
   const classes = useStyles();
@@ -27,7 +27,7 @@ const NewBook = (props) => {
 
   useEffect(() => {
     if (match) {
-      getBook({ catid: 1 });
+      getBook({ catid: 2 });
     }
   }, [match]);
 
@@ -36,10 +36,10 @@ const NewBook = (props) => {
       <Container>
         <Box pt={5} pb={6} className={classes.sectionTitle}>
           <Typography variant="h5" center component="h3">
-            Koleksi Buku Baru
+            Our Best Seller
           </Typography>
           <Typography component="subtitle1" color="textSecondary">
-            Harga terbaik untuk Buku terbitan terbaru
+            Buku-buku best seler, viral layak untuk kamu miliki
           </Typography>
         </Box>
         <Box pb={20}>
@@ -91,5 +91,5 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(NewBook)
+  connect(mapStateToProps, mapDispatchToProps)(BestSeller)
 );

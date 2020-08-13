@@ -25,7 +25,7 @@ import {
 import { createOrder } from "../../store/actions/orders";
 import { connect } from "react-redux";
 import ListCart from "./components/cartListItem";
-import numeral from "numeral";
+import { convertToIdr } from "../../components/functions/convert";
 import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
@@ -242,9 +242,7 @@ const Checkout = (props) => {
                                 variant="h6"
                                 color="textSecondary"
                               >
-                                {`IDR ${numeral(grandTotalHarga).format(
-                                  "0,0"
-                                )}`}
+                                {convertToIdr(grandTotalHarga)}
                               </Typography>
                             </TableCell>
                           </TableRow>

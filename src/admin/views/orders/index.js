@@ -19,7 +19,7 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import TableDataShow from "./components/listItemOrder";
 import { dataLogin } from "../../../utils/globals";
-import { getOrderById } from "../../../store/actions/orders";
+import { getAllListOrder } from "../../../store/actions/orders";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -42,12 +42,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Orders = (props) => {
-  const { orders } = props;
+  const { match, orders, getListOrder } = props;
   const history = useHistory();
   const classes = useStyles();
 
-  // useEffect(() => {
-  // }, []);
+  useEffect(() => {
+    if (match) {
+      getListOrder();
+    }
+  }, [match]);
 
   if (!dataLogin || dataLogin.user.role !== "admin") {
     history.push("/imcoolmaster");
@@ -69,7 +72,6 @@ const Orders = (props) => {
               <TableHead>
                 <TableRow>
                   <TableCell>No.</TableCell>
-                  <TableCell>Userame</TableCell>
                   <TableCell>Customer Name</TableCell>
                   <TableCell>Email</TableCell>
                   <TableCell align="center">Qty</TableCell>
@@ -95,7 +97,7 @@ const Orders = (props) => {
                   })
                 ) : (
                   <TableRow>
-                    <TableCell align="center" colspan="9">
+                    <TableCell align="center" colspan="8">
                       <h5 style={{ fontSize: "16px", color: "#888" }}>
                         <i>Belum ada data tersimpan!</i>
                       </h5>
@@ -117,10 +119,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     getListOrder: () => dispatch(getAllListOrder()),
-//   };
-// };
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getListOrder: () => dispatch(getAllListOrder()),
+  };
+};
 
-export default withRouter(connect(mapStateToProps, null)(Orders));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Orders));

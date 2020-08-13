@@ -2,8 +2,8 @@ import * as actionsTypes from "./actionTypes";
 import axios from "axios";
 import { ENDPOINT, dataLogin } from "../../../utils/globals";
 
-export const getListBook = () => {
-  const request = axios.get(`${ENDPOINT}/books`);
+export const getListBook = (params) => {
+  const request = axios.get(`${ENDPOINT}/books`, { params });
 
   return (dispatch) => {
     request.then((response) => {

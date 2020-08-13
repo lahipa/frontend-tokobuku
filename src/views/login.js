@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 import axios from "axios";
 import { ENDPOINT, dataLogin } from "../utils/globals";
 import Layout from "../templates/layout";
@@ -150,4 +150,4 @@ const PageLogin = (props) => {
   );
 };
 
-export default PageLogin;
+export default withRouter(PageLogin);

@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 import { dataLogin } from "../utils/globals";
 import Layout from "../templates/layout";
 import Avatar from "@material-ui/core/Avatar";
@@ -164,4 +164,4 @@ const PageRegister = (props) => {
   );
 };
 
-export default connect(null, mapDispatchToProps)(PageRegister);
+export default withRouter(connect(null, mapDispatchToProps)(PageRegister));

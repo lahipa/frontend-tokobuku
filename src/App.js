@@ -8,6 +8,9 @@ import Login from "./views/login";
 import Register from "./views/register";
 import SemuaBuku from "./views/allbook";
 import BukuBaru from "./views/newbook";
+import BestSeller from "./views/bestseller";
+import ImportBook from "./views/importbook";
+import CookingBook from "./views/cookingbook";
 import DetailBuku from "./views/book";
 import Checkout from "./views/checkout";
 
@@ -16,7 +19,8 @@ import AdminDashboard from "./admin/views/dashboard";
 import AdminBookList from "./admin/views/books";
 //import AdminBookListAdd from "./admin/views/books/addBooks";
 import AdminBookCategory from "./admin/views/categories";
-import AdminListOrders from "./admin/views/orders";
+import AdminListOrder from "./admin/views/orders";
+import AdminOrderDetail from "./admin/views/orders/detail";
 import Customers from "./admin/views/userCustomer";
 import Admins from "./admin/views/userAdmin";
 
@@ -29,6 +33,9 @@ class App extends Component {
           <Route exact path="/semua-buku" component={SemuaBuku} />
           <Route exact path="/rincian-buku/:id" component={DetailBuku} />
           <Route path="/buku-baru" component={BukuBaru} />
+          <Route path="/best-seller" component={BestSeller} />
+          <Route path="/buku-import" component={ImportBook} />
+          <Route path="/buku-memasak" component={CookingBook} />
           <Route path="/register" component={Register} />
           <Route path="/login" component={Login} />
 
@@ -45,7 +52,12 @@ class App extends Component {
             path="/imcoolmaster/books-category"
             component={AdminBookCategory}
           />
-          <Route path="/imcoolmaster/orders" component={AdminListOrders} />
+          <Route exact path="/imcoolmaster/orders" component={AdminListOrder} />
+          <Route
+            exact
+            path="/imcoolmaster/orders/:id"
+            component={AdminOrderDetail}
+          />
           <Route path="/imcoolmaster/customers" component={Customers} />
           <Route path="/imcoolmaster/admins" component={Admins} />
 

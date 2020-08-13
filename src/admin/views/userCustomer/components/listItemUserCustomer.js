@@ -19,7 +19,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditRounded from "@material-ui/icons/EditRounded";
 
-const UserCustomer = (props) => {
+const ListComponent = (props) => {
   const [data, setData] = useState({});
   const [edit, setEdit] = useState(false);
   const [open, setOpen] = useState(false);
@@ -68,7 +68,7 @@ const UserCustomer = (props) => {
           {listData.email}
         </TableCell>
         <TableCell align="center">
-          <IconButton
+          {/* <IconButton
             color="primary"
             aria-label="edit"
             onClick={() => {
@@ -78,7 +78,7 @@ const UserCustomer = (props) => {
           >
             <EditRounded />
           </IconButton>
-          {/* <IconButton
+          <IconButton
             aria-label="delete"
             onClick={() => handleDelete(listData.id)}
           >
@@ -134,4 +134,4 @@ const UserCustomer = (props) => {
   );
 };
 
-export default withRouter(UserCustomer);
+export default withRouter(ListComponent);

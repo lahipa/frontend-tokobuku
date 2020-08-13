@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useHistory, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "../../templates/layout";
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NewBook = (props) => {
+const CookingBook = (props) => {
   const { match, books, addToCart, getBook } = props;
   const history = useHistory();
   const classes = useStyles();
@@ -27,7 +27,7 @@ const NewBook = (props) => {
 
   useEffect(() => {
     if (match) {
-      getBook({ catid: 1 });
+      getBook({ catid: 4 });
     }
   }, [match]);
 
@@ -36,10 +36,10 @@ const NewBook = (props) => {
       <Container>
         <Box pt={5} pb={6} className={classes.sectionTitle}>
           <Typography variant="h5" center component="h3">
-            Koleksi Buku Baru
+            Cooking Book
           </Typography>
           <Typography component="subtitle1" color="textSecondary">
-            Harga terbaik untuk Buku terbitan terbaru
+            Menambah pengetahuan dan meningkatkan keterampilan memasak
           </Typography>
         </Box>
         <Box pb={20}>
@@ -91,5 +91,5 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(NewBook)
+  connect(mapStateToProps, mapDispatchToProps)(CookingBook)
 );

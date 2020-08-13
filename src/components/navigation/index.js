@@ -50,21 +50,21 @@ const MainMenu = () => {
             </Link>
             <Link
               className={`MuiButtonBase-root MuiButton-root MuiButton-text `}
-              to="/buku-pilihan"
+              to="/best-seller"
             >
-              Buku Pilihan
-            </Link>
-            <Link
-              className={`MuiButtonBase-root MuiButton-root MuiButton-text `}
-              to="/buku-best-seller"
-            >
-              National Beset Seller
+              Beset Seller
             </Link>
             <Link
               className={`MuiButtonBase-root MuiButton-root MuiButton-text `}
               to="/buku-import"
             >
               Buku Import
+            </Link>
+            <Link
+              className={`MuiButtonBase-root MuiButton-root MuiButton-text `}
+              to="/buku-memasak"
+            >
+              Memasak
             </Link>
           </Toolbar>
         </Container>

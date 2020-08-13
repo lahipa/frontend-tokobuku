@@ -2,8 +2,9 @@ import * as actionsTypes from "./actionTypes";
 import axios from "axios";
 import { ENDPOINT, dataLogin } from "../../../utils/globals";
 
-export const getAllListOrder = () => {
+export const getAllListOrder = (params) => {
   const request = axios.get(`${ENDPOINT}/orders`, {
+    params,
     headers: {
       Authorization: dataLogin.token,
     },
@@ -24,8 +25,9 @@ export const getAllListOrder = () => {
   };
 };
 
-export const getAllListOrderByUid = (uid) => {
-  const request = axios.get(`${ENDPOINT}/orders?uid=${uid}`, {
+export const getNotification = (params) => {
+  const request = axios.get(`${ENDPOINT}/orders`, {
+    params,
     headers: {
       Authorization: dataLogin.token,
     },
@@ -35,8 +37,8 @@ export const getAllListOrderByUid = (uid) => {
     request
       .then((response) => {
         return dispatch({
-          type: actionsTypes.GET_LIST_ORDER_BY_UID,
-          payload: response.data.data,
+          type: actionsTypes.GET_NOTIF,
+          payload: response.data.data.rows,
         });
       })
       .catch((err) => {
@@ -60,6 +62,30 @@ export const getOrderById = (id) => {
           type: actionsTypes.GET_ORDER_BY_ID,
           payload: response.data.data,
         });
+      })
+      .catch((err) => {
+        console.log(err.response);
+        return err.response;
+      });
+  };
+};
+
+export const updateOrder = (id, data) => {
+  const request = axios.put(`${ENDPOINT}/orders/${id}`, data, {
+    headers: {
+      Authorization: dataLogin.token,
+    },
+  });
+
+  return (dispatch) => {
+    request
+      .then((response) => {
+        dispatch({
+          type: actionsTypes.UPDATE_ORDER,
+          payload: response.data.data,
+        });
+
+        return dispatch(getOrderById(id));
       })
       .catch((err) => {
         console.log(err.response);

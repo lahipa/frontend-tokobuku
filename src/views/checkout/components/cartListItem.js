@@ -11,7 +11,7 @@ import {
 import DeleteSweep from "@material-ui/icons/DeleteSweep";
 import RemoveCircle from "@material-ui/icons/RemoveCircle";
 import AddCircle from "@material-ui/icons/AddCircle";
-import numeral from "numeral";
+import { convertToIdr } from "../../../components/functions/convert";
 import { ENDPOINT } from "../../../utils/globals";
 
 const useStyles = makeStyles((theme) => ({
@@ -103,7 +103,7 @@ const ListCart = (props) => {
             {listData.books.author}
           </Typography>
           <Typography className={classes.price} component="h6" variant="h6">
-            {`IDR ${numeral(listData.books.harga).format("0,0")}`}
+            {convertToIdr(listData.books.harga)}
           </Typography>
         </CardContent>
         <div className={classes.sideColums}>
@@ -113,7 +113,7 @@ const ListCart = (props) => {
             variant="h6"
             color="textSecondary"
           >
-            {`IDR ${numeral(sumPrice).format("0,0")}`}
+            {convertToIdr(sumPrice)}
           </Typography>
           <div className={classes.controls}>
             <IconButton

@@ -25,7 +25,7 @@ import {
   secondNavigationItems,
 } from "../../admin/components/navigation";
 import { handleLogout } from "../../admin/auth/logout";
-import { getAllListOrder } from "../../store/actions/orders";
+import { getNotification } from "../../store/actions/orders";
 
 const drawerWidth = 240;
 
@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AdminHeader = (props) => {
-  const { match, orders, getListOrder } = props;
+  const { match, notif, getNotification } = props;
   const [open, setOpen] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -98,7 +98,10 @@ const AdminHeader = (props) => {
 
   useEffect(() => {
     if (match) {
-      getListOrder();
+      getNotification({ proceed: 0 });
+      setInterval(async () => {
+        getNotification({ proceed: 0 });
+      }, 30000);
     }
   }, [match]);
 
@@ -138,15 +141,12 @@ const AdminHeader = (props) => {
           </IconButton>
           <Box className={classes.title}>
             <Link
-              to={orders ? "/imcoolmaster/orders" : "#"}
+              to={notif ? "/imcoolmaster/orders" : "#"}
               style={{ color: "#fff" }}
             >
               <IconButton color="inherit">
-                {orders ? (
-                  <Badge
-                    badgeContent={orders.rows && orders.rows.length}
-                    color="secondary"
-                  >
+                {notif ? (
+                  <Badge badgeContent={notif} color="secondary">
                     <NotificationsIcon />
                   </Badge>
                 ) : (
@@ -194,13 +194,13 @@ const AdminHeader = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    orders: state.orderReducer.orders,
+    notif: state.orderReducer.notif,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getListOrder: () => dispatch(getAllListOrder()),
+    getNotification: (params) => dispatch(getNotification(params)),
   };
 };
 

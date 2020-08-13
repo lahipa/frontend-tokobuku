@@ -52,19 +52,7 @@ const AllBook = (props) => {
         </Box>
         <Box pb={20}>
           <Grid container spacing={3}>
-            {books.length === 0 ? (
-              <Box>
-                <Alert severity="info">
-                  <AlertTitle>Barang kosong?</AlertTitle>
-                  <p style={{ lineHeight: "1.5" }}>
-                    Maaf sekali jika kamu melihat halaman ini tidak ada buku
-                    yang tertampil, hal ini bukan karena kesalahan sistem hanya
-                    saja mungkin stok barang untuk penjualan online sedang
-                    kosong. Kunjungi kembali situs kami dilain waktu.
-                  </p>
-                </Alert>
-              </Box>
-            ) : (
+            {books ? (
               books.rows &&
               books.rows.slice(0, 8).map((val) => {
                 return (
@@ -77,6 +65,18 @@ const AllBook = (props) => {
                   </Grid>
                 );
               })
+            ) : (
+              <Box>
+                <Alert severity="info">
+                  <AlertTitle>Barang kosong?</AlertTitle>
+                  <p style={{ lineHeight: "1.5" }}>
+                    Maaf sekali jika kamu melihat halaman ini tidak ada buku
+                    yang tertampil, hal ini bukan karena kesalahan sistem hanya
+                    saja mungkin stok barang untuk penjualan online sedang
+                    kosong. Kunjungi kembali situs kami dilain waktu.
+                  </p>
+                </Alert>
+              </Box>
             )}
           </Grid>
         </Box>
@@ -93,7 +93,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getBook: () => dispatch(getListBook()),
+    getBook: (params) => dispatch(getListBook(params)),
     addToCart: (data) => dispatch(addToCart(data)),
   };
 };

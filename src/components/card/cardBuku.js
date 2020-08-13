@@ -17,7 +17,7 @@ import {
   Button,
   IconButton,
 } from "@material-ui/core";
-
+import { convertToIdr } from "../functions/convert";
 import FormLogin from "../../auth/login";
 import FormRegister from "../../auth/register";
 
@@ -90,9 +90,7 @@ export default function CardBuku(props) {
             <Typography variant="body2" color="textSecondary" component="p">
               <b>{dataCard.author}</b>, {content}
             </Typography>
-            <Typography>{`IDR ${numeral(dataCard.harga).format(
-              "0,0"
-            )}`}</Typography>
+            <Typography>{convertToIdr(dataCard.harga)}</Typography>
           </CardContent>
         </CardActionArea>
         <CardActions>

@@ -79,15 +79,7 @@ const UserCustomers = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.rows && users.rows.length === 0 ? (
-                  <TableRow>
-                    <TableCell align="center" colspan="7">
-                      <h5 style={{ fontSize: "16px", color: "#888" }}>
-                        <i>Belum ada data tersimpan!</i>
-                      </h5>
-                    </TableCell>
-                  </TableRow>
-                ) : (
+                {users ? (
                   users.rows &&
                   users.rows.map((val) => {
                     return (
@@ -100,6 +92,14 @@ const UserCustomers = (props) => {
                       />
                     );
                   })
+                ) : (
+                  <TableRow>
+                    <TableCell align="center" colspan="5">
+                      <h5 style={{ fontSize: "16px", color: "#888" }}>
+                        <i>Belum ada data tersimpan!</i>
+                      </h5>
+                    </TableCell>
+                  </TableRow>
                 )}
               </TableBody>
             </Table>
