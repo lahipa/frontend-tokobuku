@@ -13,9 +13,13 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TableSortLabel,
   Fab,
   Typography,
+  MenuItem,
+  TextField,
 } from "@material-ui/core";
+import { Pagination } from "@material-ui/lab";
 import AddIcon from "@material-ui/icons/Add";
 import AddCategory from "./create";
 import TableDataShow from "./components/listItemCategories";
@@ -28,26 +32,26 @@ import {
 } from "../../../store/actions/categories";
 
 const useStyles = makeStyles((theme) => ({
-  margin: {
-    margin: theme.spacing(1),
-  },
-  withoutLabel: {
-    marginTop: theme.spacing(4),
-  },
-  inputFile: {
-    display: "none",
-  },
-  dialogContent: {
-    overflowY: "hidden",
-  },
   fab: {
     position: "absolute",
     bottom: theme.spacing(4),
     right: theme.spacing(4),
   },
+  underline: {
+    "&&&:before": {
+      borderBottom: "none",
+    },
+    "&&:after": {
+      borderBottom: "none",
+    },
+  },
 }));
 
 const Category = (props) => {
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState("created_at");
+  const [sortType, setSortType] = useState("DESC");
   const [open, setOpen] = useState(false);
   const {
     match,
@@ -62,9 +66,14 @@ const Category = (props) => {
 
   useEffect(() => {
     if (match) {
-      getKategori();
+      getKategori({
+        limit: limit,
+        page: page,
+        sort_by: sortBy,
+        sort_type: sortType,
+      });
     }
-  }, [match]);
+  }, [match, limit, page, sortBy, sortType]);
 
   if (!dataLogin || dataLogin.user.role !== "admin") {
     history.push("/imcoolmaster");
@@ -91,7 +100,20 @@ const Category = (props) => {
     setOpen(false);
   };
 
+  const jmlPage = Math.ceil(categories.count / categories.limit);
   let i = 1;
+
+  const handleChangePage = (e, val) => {
+    setPage(val);
+  };
+
+  const handleSort = (val) => {
+    const isAsc = sortBy === val && sortType === "ASC";
+
+    setSortType(isAsc ? "DESC" : "ASC");
+    setSortBy(val);
+  };
+
   return (
     <Layout>
       <Box mb={4}>
@@ -106,8 +128,30 @@ const Category = (props) => {
             <Table aria-label="data table">
               <TableHead>
                 <TableRow>
-                  <TableCell>No.</TableCell>
-                  <TableCell>Category Name</TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={sortBy === "created_at"}
+                      direction={sortType.toLowerCase()}
+                      onClick={() => {
+                        handleSort("created_at");
+                      }}
+                    >
+                      Date
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={sortBy === "name"}
+                      direction={
+                        sortBy === "name" ? sortType.toLowerCase() : "asc"
+                      }
+                      onClick={() => {
+                        handleSort("name");
+                      }}
+                    >
+                      Name
+                    </TableSortLabel>
+                  </TableCell>
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
@@ -140,6 +184,37 @@ const Category = (props) => {
           </TableContainer>
         </Grid>
       </Grid>
+      <Box pt={5} pr={5}>
+        <Grid container spacing={3} justify="flex-end" alignItems="center">
+          <Typography>Rows per page:</Typography>
+          <Box pl={2} pr={3}>
+            <TextField
+              select
+              className={classes.select}
+              InputProps={{ classes }}
+              value={limit}
+              onChange={(e) => {
+                setLimit(e.target.value);
+              }}
+            >
+              <MenuItem value="10">10</MenuItem>
+              <MenuItem value="25">25</MenuItem>
+              <MenuItem value="50">50</MenuItem>
+              <MenuItem value="100">100</MenuItem>
+            </TextField>
+          </Box>
+
+          <Pagination
+            count={jmlPage}
+            page={page}
+            boundaryCount={3}
+            onChange={handleChangePage}
+            showFirstButton
+            showLastButton
+          />
+        </Grid>
+      </Box>
+
       <Fab
         color="secondary"
         className={classes.fab}
@@ -166,7 +241,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getKategori: () => dispatch(getListKategori()),
+    getKategori: (params) => dispatch(getListKategori(params)),
     updateKategori: (id, data) => dispatch(updateKategori(id, data)),
     deleteKategori: (id) => dispatch(deleteKategori(id)),
     addKategori: (data) => dispatch(addKategori(data)),

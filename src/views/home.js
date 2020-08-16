@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useHistory, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "../templates/layout";
@@ -18,6 +18,10 @@ import { dataLogin } from "../utils/globals";
 import { getListBook } from "../store/actions/books";
 import { addToCart } from "../store/actions/cart";
 import CardBuku from "../components/card/cardBuku";
+
+//Carousel
+import AliceCarousel from "react-alice-carousel";
+import "react-alice-carousel/lib/scss/alice-carousel.scss";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,16 +49,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Caurosel = styled(Box)({
-  backgroundColor: "#f5f6f8",
-  width: "100%",
-  height: "630px",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  color: "#ccc",
-});
-
 const Home = (props) => {
   const { match, addToCart, books, getBook } = props;
   const history = useHistory();
@@ -70,6 +64,8 @@ const Home = (props) => {
     }
   }, [match]);
 
+  const handleOnDragStart = (e) => e.preventDefault();
+
   return (
     <Layout>
       <Toolbar className={classes.containerTagline}>
@@ -81,9 +77,29 @@ const Home = (props) => {
           </Toolbar>
         </Container>
       </Toolbar>
-      <Caurosel>
-        <h5>Slider Homes</h5>
-      </Caurosel>
+
+      <AliceCarousel
+        autoPlay
+        autoPlayInterval="3000"
+        mouseTrackingEnabled
+        buttonsDisabled
+      >
+        <img
+          src="../../asset/slider/bbc-slider-1.png"
+          onDragStart={handleOnDragStart}
+          className="sliderimg"
+        />
+        <img
+          src="../../asset/slider/bbc-slider-2.jpg"
+          onDragStart={handleOnDragStart}
+          className="sliderimg"
+        />
+        <img
+          src="../../asset/slider/bbc-slider-3.jpg"
+          onDragStart={handleOnDragStart}
+          className="sliderimg"
+        />
+      </AliceCarousel>
 
       <Box>
         <Container>

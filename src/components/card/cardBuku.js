@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from "react";
-import { Link } from "react-router-dom";
-import numeral from "numeral";
+import { useHistory } from "react-router-dom";
+import { connect } from "react-redux";
 import { ENDPOINT } from "../../utils/globals";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -20,26 +20,26 @@ import {
 import { convertToIdr } from "../functions/convert";
 import FormLogin from "../../auth/login";
 import FormRegister from "../../auth/register";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9
   },
-  buttonLink: {
-    display: "flex",
-    flexDirection: "column",
-    textDecoration: "none",
+  outOfStock: {
+    textDecoration: "line-through",
+    color: "rgba(0, 0, 0, 0.26)",
   },
 }));
 
-export default function CardBuku(props) {
+const CardBuku = (props) => {
   const [open, setOpen] = useState(false);
   const [authType, setAuthType] = useState("register");
-  const { dataCard, doAddToCart, dataLogin } = props;
-  //console.log(dataCardContent);
-
+  const { dataCard, doAddToCart, dataLogin, carts } = props;
+  const history = useHistory();
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleDialogOpen = (authType) => () => {
     setOpen(true);
@@ -57,7 +57,16 @@ export default function CardBuku(props) {
       qty: 1,
     };
 
-    doAddToCart(obj);
+    let itemsCart = carts.find((x) => x.buku_id === dataCard.id);
+    let qtyOnCart = itemsCart && itemsCart.qty;
+    //console.log(itemsCart.qty, "item carts");
+    if (itemsCart && qtyOnCart === dataCard.stok) {
+      enqueueSnackbar("Maaf, stok buku tidak mencukupi", {
+        variant: "error",
+      });
+    } else {
+      doAddToCart(obj);
+    }
   };
 
   let imageUrl = dataCard.image_url.replace("public/", "");
@@ -90,29 +99,50 @@ export default function CardBuku(props) {
             <Typography variant="body2" color="textSecondary" component="p">
               <b>{dataCard.author}</b>, {content}
             </Typography>
-            <Typography>{convertToIdr(dataCard.harga)}</Typography>
+            <Typography>
+              <span className={dataCard.stok === 0 ? classes.outOfStock : ""}>
+                {convertToIdr(dataCard.harga)}
+              </span>{" "}
+              <small style={{ color: "red" }}>
+                {dataCard.stok === 0 ? "out of stock" : ""}
+              </small>
+            </Typography>
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Link
-            className={classes.buttonLink}
-            to={`/rincian-buku/${dataCard.id}`}
+          <Button
+            onClick={() => {
+              history.push(`/rincian-buku/${dataCard.id}`);
+            }}
           >
-            <Button>Detail</Button>
-          </Link>
+            Detail
+          </Button>
           {dataLogin ? (
-            <Button color="secondary" onClick={handleAddToCart}>
-              Add to cart
-            </Button>
-          ) : (
-            <>
-              <Button
-                color="secondary"
-                onClick={handleDialogOpen("login")}
-                //onClick={!dataLogin ? handleDialogOpen("login") : ""}
-              >
+            dataCard.stok === 0 ? (
+              <Button color="secondary" disabled>
                 Add to cart
               </Button>
+            ) : (
+              <Button color="secondary" onClick={handleAddToCart}>
+                Add to cart
+              </Button>
+            )
+          ) : (
+            <>
+              {dataCard.stok === 0 ? (
+                <Button color="secondary" disabled>
+                  Add to cart
+                </Button>
+              ) : (
+                <Button
+                  color="secondary"
+                  onClick={handleDialogOpen("login")}
+                  //onClick={!dataLogin ? handleDialogOpen("login") : ""}
+                >
+                  Add to cart
+                </Button>
+              )}
+
               <Dialog
                 fullWidth
                 maxWidth={authType === "login" ? "xs" : "xs"}
@@ -141,4 +171,12 @@ export default function CardBuku(props) {
       </Card>
     </Fragment>
   );
-}
+};
+
+const mapStateToProps = (state) => {
+  return {
+    carts: state.cartReducer.carts,
+  };
+};
+
+export default connect(mapStateToProps, null)(CardBuku);

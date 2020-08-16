@@ -52,7 +52,7 @@ const MainMenu = () => {
               className={`MuiButtonBase-root MuiButton-root MuiButton-text `}
               to="/best-seller"
             >
-              Beset Seller
+              Best Seller
             </Link>
             <Link
               className={`MuiButtonBase-root MuiButton-root MuiButton-text `}

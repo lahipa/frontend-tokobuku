@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
   MenuItem,
@@ -24,7 +25,25 @@ import SaveIcon from "@material-ui/icons/Save";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditRounded from "@material-ui/icons/EditRounded";
 import { getListKategori } from "../../../../store/actions/categories";
-import { convertToIdr } from "../../../../components/functions/convert";
+import {
+  getMonthFormatSmall,
+  convertToIdr,
+} from "../../../../components/functions/convert";
+
+const useStyles = makeStyles((theme) => ({
+  margin: {
+    margin: theme.spacing(1),
+  },
+  withoutLabel: {
+    marginTop: theme.spacing(4),
+  },
+  inputFile: {
+    display: "none",
+  },
+  dialogContent: {
+    overflowY: "hidden",
+  },
+}));
 
 const ListComponent = (props) => {
   const [data, setData] = useState({});
@@ -38,17 +57,17 @@ const ListComponent = (props) => {
   // const [synopsis, setSynopsis] = useState("");
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
-
   const {
     no,
     key,
     listData,
     doUpdate,
     doDelete,
-    classes,
     categories,
     getKategori,
   } = props;
+
+  const classes = useStyles();
 
   useEffect(() => {
     if (listData) {
@@ -62,7 +81,6 @@ const ListComponent = (props) => {
         stok: listData.stok,
         synopsis: listData.synopsis,
       });
-      setImage(listData.image_url);
     }
   }, [listData]);
 
@@ -106,16 +124,22 @@ const ListComponent = (props) => {
     setData({ ...data, [formName]: e.target.value });
   };
 
+  let createdTime = new Date(listData.created_at);
+
   return (
     <Fragment>
       <TableRow key={key}>
-        <TableCell>{no}</TableCell>
+        <TableCell>
+          {createdTime.getDate()}-{getMonthFormatSmall(createdTime.getMonth())}-
+          {createdTime.getFullYear()},{" "}
+          {`${createdTime.getHours()}:${createdTime.getMinutes()}`}
+        </TableCell>
         <TableCell>{listData.title}</TableCell>
         <TableCell>{listData.author}</TableCell>
         <TableCell>{listData.kategori && listData.kategori.name}</TableCell>
-        <TableCell align="center">{listData.no_isbn}</TableCell>
+        {/* <TableCell align="center">{listData.no_isbn}</TableCell> */}
         {/* <TableCell align="right">{`${listData.berat} gram`}</TableCell> */}
-        <TableCell align="center">{listData.stok}</TableCell>
+        <TableCell align="right">{listData.stok}</TableCell>
         <TableCell align="right">{convertToIdr(listData.harga)}</TableCell>
         <TableCell align="center">
           <IconButton
@@ -138,7 +162,7 @@ const ListComponent = (props) => {
       </TableRow>
 
       {edit ? (
-        <Dialog fullWidth maxWidth="md" open={open} onClose={handleOpen}>
+        <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
           <DialogTitle>Edit Buku</DialogTitle>
           <DialogContent className={classes.dialogContent}>
             <Grid container spacing={3}>
@@ -272,6 +296,11 @@ const ListComponent = (props) => {
                   </label>
                 </div>
               </Grid>
+              <Grid item md lg>
+                <span>
+                  {image_url ? image_url.name : listData.image_url.substr(21)}
+                </span>
+              </Grid>
             </Grid>
             <Grid container spacing={3}>
               <Grid item md={12}>
@@ -301,8 +330,9 @@ const ListComponent = (props) => {
                   no_isbn: listData.no_isbn,
                   berat: listData.berat,
                   synopsis: listData.synopsis,
+                  stok: listData.stok,
                 });
-                setImage(listData.image_url);
+                //setImage(listData.image_url);
               }}
             >
               Cancel

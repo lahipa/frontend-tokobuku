@@ -20,5 +20,11 @@ export const GlobalStyle = createGlobalStyle`
         font-weight: 400; 
         line-height: 1;
         color: #242424;
-    } 
+    }
+
+    .sliderimg {
+        width: 100%;
+        height: 630px;
+        object-fit: cover
+    }
 `;

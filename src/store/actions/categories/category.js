@@ -2,10 +2,10 @@ import * as actionsTypes from "./actionTypes";
 import axios from "axios";
 import { ENDPOINT, dataLogin } from "../../../utils/globals";
 
-export const getListKategori = () => {
+export const getListKategori = (params) => {
   return async (dispatch) => {
     try {
-      const request = await axios.get(`${ENDPOINT}/kategori`);
+      const request = await axios.get(`${ENDPOINT}/kategori`, { params });
 
       return dispatch({
         type: actionsTypes.GET_LIST_KATEGORI,

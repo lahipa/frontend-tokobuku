@@ -100,19 +100,15 @@ const Checkout = (props) => {
   let discount = 0;
 
   const handleSubmitOrder = async () => {
-    let obj = {};
     const dataOrderDetails =
       carts &&
-      carts.map(
-        (val) =>
-          (obj = {
-            buku_id: val.buku_id,
-            title: val.books.title,
-            quantity: val.qty,
-            price: val.books.harga,
-            total: val.books.harga * val.qty,
-          })
-      );
+      carts.map((val) => ({
+        buku_id: val.buku_id,
+        title: val.books.title,
+        quantity: val.qty,
+        price: val.books.harga,
+        total: val.books.harga * val.qty,
+      }));
 
     const dataOrder = {
       user_id: dataLogin.user.uid,
@@ -125,14 +121,16 @@ const Checkout = (props) => {
     carts &&
       carts.map((val) => {
         getBookById(val.buku_id);
+
         if (val.qty > book.stok) {
-          enqueueSnackbar("Terjadi kesalahan! stok tidak mencukupi", {
+          enqueueSnackbar(`Terjadi kesalahan! stok buku tidak mencukupi`, {
             variant: "error",
           });
-        } else {
-          let dataNewStok = { stok: book.stok - val.qty };
-          updateBook(val.buku_id, dataNewStok);
         }
+
+        let dataNewStok = { stok: book.stok - val.qty };
+        //console.log(dataNewStok, "stok");
+        updateBook(val.buku_id, dataNewStok);
       });
 
     createOrder(dataOrder);
@@ -267,9 +265,14 @@ const Checkout = (props) => {
                       </Table>
                     </TableContainer>
                     <Box pt={3} className={classes.actionCheckout}>
-                      <Link className={classes.buttonLink} to="/semua-buku">
-                        <Button size="large">Kembali Belanja</Button>
-                      </Link>
+                      <Button
+                        size="large"
+                        onClick={() => {
+                          history.push("/semua-buku");
+                        }}
+                      >
+                        Kembali Belanja
+                      </Button>
                       <Button
                         variant="contained"
                         color="secondary"

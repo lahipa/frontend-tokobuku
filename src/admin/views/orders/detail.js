@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { useHistory, withRouter, Link } from "react-router-dom";
+import { useHistory, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "../../../templates/layout/adminlayout";
 import { makeStyles } from "@material-ui/core/styles";
@@ -36,16 +36,11 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
-  buttonLink: {
-    display: "flex",
-    flexDirection: "column",
-    textDecoration: "none",
-  },
 }));
 
 const OrderDetail = (props) => {
   const [data, setData] = useState("");
-  const { match, order, getOrderById, updateOrder } = props;
+  const { match, order, getOrderById, updateOrder, getNotification } = props;
   const history = useHistory();
   const classes = useStyles();
 
@@ -69,6 +64,7 @@ const OrderDetail = (props) => {
 
   const handleUpdate = () => {
     updateOrder(match.params.id, data);
+    getNotification({ proceed: 0 });
   };
 
   let dataTime = new Date(order.created_at);
@@ -204,9 +200,14 @@ const OrderDetail = (props) => {
             )}
           </Card>
           <Box mt={1}>
-            <Link className={classes.buttonLink} to="/imcoolmaster/orders">
-              <Button fullWidth>Kembali</Button>
-            </Link>
+            <Button
+              fullWidth
+              onClick={() => {
+                history.push("/imcoolmaster/orders");
+              }}
+            >
+              Kembali
+            </Button>
           </Box>
         </Grid>
       </Grid>
@@ -224,6 +225,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getOrderById: (id) => dispatch(getOrderById(id)),
     updateOrder: (id, data) => dispatch(updateOrder(id, data)),
+    getNotification: (params) => dispatch(getNotification(params)),
   };
 };
 

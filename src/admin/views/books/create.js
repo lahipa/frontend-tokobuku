@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
   MenuItem,
@@ -20,6 +21,21 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import SaveIcon from "@material-ui/icons/Save";
 import { getListKategori } from "../../../store/actions/categories";
 
+const useStyles = makeStyles((theme) => ({
+  margin: {
+    margin: theme.spacing(1),
+  },
+  withoutLabel: {
+    marginTop: theme.spacing(4),
+  },
+  inputFile: {
+    display: "none",
+  },
+  dialogContent: {
+    overflowY: "hidden",
+  },
+}));
+
 const AddBooks = (props) => {
   const [data, setData] = useState({});
   const [image_url, setImage] = useState("");
@@ -30,8 +46,9 @@ const AddBooks = (props) => {
   // const [no_isbn, setIsbn] = useState("");
   // const [berat, setBerat] = useState("");
   // const [synopsis, setSynopsis] = useState("");
+  const { doAdd, open, handleClose, categories, getKategori } = props;
 
-  const { classes, doAdd, open, handleClose, categories, getKategori } = props;
+  const classes = useStyles();
 
   useEffect(() => {
     if (open) {
@@ -211,6 +228,9 @@ const AddBooks = (props) => {
                   </Button>
                 </label>
               </div>
+            </Grid>
+            <Grid item md lg>
+              <span>{image_url.name}</span>
             </Grid>
           </Grid>
           <Grid container spacing={3}>

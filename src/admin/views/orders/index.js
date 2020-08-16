@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "../../../templates/layout/adminlayout";
@@ -13,50 +13,69 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Fab,
+  TableSortLabel,
   Typography,
+  TextField,
+  MenuItem,
 } from "@material-ui/core";
+import Pagination from "@material-ui/lab/Pagination";
 import AddIcon from "@material-ui/icons/Add";
 import TableDataShow from "./components/listItemOrder";
 import { dataLogin } from "../../../utils/globals";
 import { getAllListOrder } from "../../../store/actions/orders";
 
 const useStyles = makeStyles((theme) => ({
-  margin: {
-    margin: theme.spacing(1),
-  },
-  withoutLabel: {
-    marginTop: theme.spacing(4),
-  },
-  inputFile: {
-    display: "none",
-  },
-  dialogContent: {
-    overflowY: "hidden",
-  },
-  fab: {
-    position: "absolute",
-    bottom: theme.spacing(4),
-    right: theme.spacing(4),
+  underline: {
+    "&&&:before": {
+      borderBottom: "none",
+    },
+    "&&:after": {
+      borderBottom: "none",
+    },
   },
 }));
 
 const Orders = (props) => {
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState("created_at");
+  const [sortType, setSortType] = useState("DESC");
+  const [relate, setRelate] = useState("");
   const { match, orders, getListOrder } = props;
   const history = useHistory();
   const classes = useStyles();
 
   useEffect(() => {
     if (match) {
-      getListOrder();
+      getListOrder({
+        limit: limit,
+        page: page,
+        sort_by: sortBy,
+        sort_type: sortType,
+        relate: relate,
+      });
     }
-  }, [match]);
+  }, [match, limit, page, sortBy, sortType, relate]);
 
   if (!dataLogin || dataLogin.user.role !== "admin") {
     history.push("/imcoolmaster");
   }
 
+  const jmlPage = Math.ceil(orders.count / orders.limit);
   let i = 1;
+
+  const handleChangePage = (e, val) => {
+    setPage(val);
+  };
+
+  const handleSort = (val, relate) => {
+    const isAsc = sortBy === val && sortType === "ASC";
+
+    setSortType(isAsc ? "DESC" : "ASC");
+    setSortBy(val);
+    setRelate(relate);
+  };
+
   return (
     <Layout>
       <Box mb={4}>
@@ -71,13 +90,84 @@ const Orders = (props) => {
             <Table aria-label="data table">
               <TableHead>
                 <TableRow>
-                  <TableCell>No.</TableCell>
-                  <TableCell>Customer Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell align="center">Qty</TableCell>
-                  <TableCell align="right">Price</TableCell>
-                  <TableCell align="right">Disc</TableCell>
-                  <TableCell align="right">Summary</TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={sortBy === "created_at"}
+                      direction={sortType.toLowerCase()}
+                      onClick={() => {
+                        handleSort("created_at");
+                      }}
+                    >
+                      Date
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={sortBy === "name"}
+                      direction={
+                        sortBy === "name" ? sortType.toLowerCase() : "asc"
+                      }
+                      onClick={() => {
+                        handleSort("name", "customers_detail");
+                      }}
+                    >
+                      Cust. Name
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={sortBy === "email"}
+                      direction={
+                        sortBy === "email" ? sortType.toLowerCase() : "asc"
+                      }
+                      onClick={() => {
+                        handleSort("email", "customers_detail");
+                      }}
+                    >
+                      Email
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      active={sortBy === "total"}
+                      direction={
+                        sortBy === "total" ? sortType.toLowerCase() : "asc"
+                      }
+                      onClick={() => {
+                        handleSort("total");
+                      }}
+                    >
+                      Qty
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="center">
+                    <TableSortLabel
+                      active={sortBy === "proceed"}
+                      direction={
+                        sortBy === "proceed" ? sortType.toLowerCase() : "asc"
+                      }
+                      onClick={() => {
+                        handleSort("proceed");
+                      }}
+                    >
+                      Status
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      active={sortBy === "total_price"}
+                      direction={
+                        sortBy === "total_price"
+                          ? sortType.toLowerCase()
+                          : "asc"
+                      }
+                      onClick={() => {
+                        handleSort("total_price");
+                      }}
+                    >
+                      Price
+                    </TableSortLabel>
+                  </TableCell>
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
@@ -109,6 +199,36 @@ const Orders = (props) => {
           </TableContainer>
         </Grid>
       </Grid>
+      <Box pt={5} pr={5}>
+        <Grid container spacing={3} justify="flex-end" alignItems="center">
+          <Typography>Rows per page:</Typography>
+          <Box pl={2} pr={3}>
+            <TextField
+              select
+              className={classes.select}
+              InputProps={{ classes }}
+              value={limit}
+              onChange={(e) => {
+                setLimit(e.target.value);
+              }}
+            >
+              <MenuItem value="10">10</MenuItem>
+              <MenuItem value="25">25</MenuItem>
+              <MenuItem value="50">50</MenuItem>
+              <MenuItem value="100">100</MenuItem>
+            </TextField>
+          </Box>
+
+          <Pagination
+            count={jmlPage}
+            page={page}
+            boundaryCount={3}
+            onChange={handleChangePage}
+            showFirstButton
+            showLastButton
+          />
+        </Grid>
+      </Box>
     </Layout>
   );
 };
@@ -121,7 +241,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getListOrder: () => dispatch(getAllListOrder()),
+    getListOrder: (params) => dispatch(getAllListOrder(params)),
   };
 };
 

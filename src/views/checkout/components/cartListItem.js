@@ -1,5 +1,6 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
@@ -13,6 +14,8 @@ import RemoveCircle from "@material-ui/icons/RemoveCircle";
 import AddCircle from "@material-ui/icons/AddCircle";
 import { convertToIdr } from "../../../components/functions/convert";
 import { ENDPOINT } from "../../../utils/globals";
+import { getBookById } from "../../../store/actions/books";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,9 +63,16 @@ const useStyles = makeStyles((theme) => ({
 
 const ListCart = (props) => {
   //const [data, setData] = useState({});
-  const { listData, doAdd, doSubstract, doRemove } = props;
+  const { listData, doAdd, doSubstract, doRemove, book, getBook } = props;
 
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    if (listData) {
+      getBook(listData.buku_id);
+    }
+  }, [listData]);
 
   let obj = {
     user_id: listData.user_id,
@@ -72,7 +82,13 @@ const ListCart = (props) => {
 
   const handleAdd = () => {
     //console.log(data, "data add");
-    doAdd(obj);
+    if (listData.qty === book.stok) {
+      enqueueSnackbar("Maaf, stok buku tidak mencukupi", {
+        variant: "error",
+      });
+    } else {
+      doAdd(obj);
+    }
   };
 
   const handleSubtract = (id) => {
@@ -141,4 +157,18 @@ const ListCart = (props) => {
   );
 };
 
-export default withRouter(ListCart);
+const mapStateToProps = (state) => {
+  return {
+    book: state.bookReducer.book,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getBook: (id) => dispatch(getBookById(id)),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ListCart)
+);

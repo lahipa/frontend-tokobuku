@@ -1,9 +1,11 @@
 import React, { useEffect, Component } from "react";
 import { useHistory, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { Container, Button } from "@material-ui/core";
+import { Container, Button, Typography, Box, Grid } from "@material-ui/core";
 import Layout from "../../templates/layout";
 import numeral from "numeral";
+import { ENDPOINT } from "../../utils/globals";
+import { convertToIdr } from "../../components/functions/convert";
 import { getBookById } from "../../store/actions/books";
 
 class DetailBook extends Component {
@@ -26,40 +28,43 @@ class DetailBook extends Component {
     //   }
     // }, [match, getBookId]);
 
+    let imageUrl = book.image_url && book.image_url.replace("public/", "");
+
     return (
       <Layout>
         <Container>
-          <div>
-            <h4>{book.title}</h4>
-          </div>
-          <div className="row">
-            <div className="col-md-8">
-              <img
-                className="img-fluid"
-                variant="top"
-                alt=""
-                //src={book.imageUrl}
-                src="https://ashmagautam.files.wordpress.com/2013/11/mcj038257400001.jpg"
-                width={450}
-              />
-            </div>
-            <div className="col-md-4">
-              <h4
-                className="my-2 font-weight-bold"
-                style={{ color: "#8052ff" }}
-              >
-                {`Rp ${numeral(book.harga).format("0,0")}`}
-              </h4>
-              <h5 className="my-3 text-dark text-left">
-                Author: {book.author}
-              </h5>
-              <p className="text-black-50 text-justify">
-                {book.kategori && book.kategori.name}
-              </p>
-              <h6 className="text-left">Book Synopsis :</h6>
-              <p className="text-black-50 text-justify">{book.synopsis}</p>
-            </div>
-          </div>
+          <Box mt={5} mb={18}>
+            <Grid container spacing={3}>
+              <Grid item md={2}>
+                <img
+                  style={{ width: "100%", height: "auto" }}
+                  alt=""
+                  src={`${ENDPOINT}/${imageUrl}`}
+                />
+              </Grid>
+              <Grid item md={8}>
+                <Box mb={2}>
+                  <Typography component="h5" variant="h5">
+                    {book.title}
+                  </Typography>
+                  <Typography component="subtitle1" color="textSecondary">
+                    Author: {book.author} || Kategori:{" "}
+                    {book.kategori && book.kategori.name}
+                  </Typography>
+                </Box>
+                <Box mb={2}>
+                  <Typography component="h6" variant="h6">
+                    {convertToIdr(book.harga)}
+                  </Typography>
+                  <Typography></Typography>
+                </Box>
+                <Typography component="subtitle1" color="textSecondary">
+                  Synopsis :
+                </Typography>
+                <Typography>{book.synopsis}</Typography>
+              </Grid>
+            </Grid>
+          </Box>
         </Container>
       </Layout>
     );

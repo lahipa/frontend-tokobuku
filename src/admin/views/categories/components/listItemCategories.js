@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { withRouter } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
   Dialog,
@@ -18,19 +19,38 @@ import {
 import SaveIcon from "@material-ui/icons/Save";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditRounded from "@material-ui/icons/EditRounded";
+import { getMonthFormatSmall } from "../../../../components/functions/convert";
+
+const useStyles = makeStyles((theme) => ({
+  margin: {
+    margin: theme.spacing(1),
+  },
+  withoutLabel: {
+    marginTop: theme.spacing(4),
+  },
+  inputFile: {
+    display: "none",
+  },
+  dialogContent: {
+    overflowY: "hidden",
+  },
+}));
 
 const ListComponent = (props) => {
   const [data, setData] = useState({});
   const [edit, setEdit] = useState(false);
   const [open, setOpen] = useState(false);
+  const { no, key, listData, doUpdate, doDelete } = props;
 
-  const { no, key, listData, doUpdate, doDelete, classes } = props;
+  const classes = useStyles();
 
   useEffect(() => {
-    setData({
-      name: listData.name,
-    });
-  }, []);
+    if (listData) {
+      setData({
+        name: listData.name,
+      });
+    }
+  }, [listData]);
 
   const handleUpdate = (id) => {
     console.log(data, "data");
@@ -56,10 +76,16 @@ const ListComponent = (props) => {
     console.log(data, "data kategori");
   };
 
+  let createdTime = new Date(listData.created_at);
+
   return (
     <Fragment>
       <TableRow key={key}>
-        <TableCell>{no}</TableCell>
+        <TableCell>
+          {createdTime.getDate()}-{getMonthFormatSmall(createdTime.getMonth())}-
+          {createdTime.getFullYear()},{" "}
+          {`${createdTime.getHours()}:${createdTime.getMinutes()}`}
+        </TableCell>
         <TableCell component="th" scope="row">
           {listData.name}
         </TableCell>
@@ -84,7 +110,7 @@ const ListComponent = (props) => {
       </TableRow>
 
       {edit ? (
-        <Dialog fullWidth maxWidth="md" open={open} onClose={handleOpen}>
+        <Dialog fullWidth maxWidth="sm" open={open} onClose={handleClose}>
           <DialogTitle>Edit Buku</DialogTitle>
           <DialogContent className={classes.dialogContent}>
             <Grid container spacing={3}>

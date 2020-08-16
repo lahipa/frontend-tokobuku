@@ -13,9 +13,13 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TableSortLabel,
   Fab,
   Typography,
+  MenuItem,
+  TextField,
 } from "@material-ui/core";
+import { Pagination } from "@material-ui/lab";
 import AddIcon from "@material-ui/icons/Add";
 import AddBook from "./create";
 import TableDataShow from "./components/listItemBooks";
@@ -28,26 +32,27 @@ import {
 } from "../../../store/actions/books";
 
 const useStyles = makeStyles((theme) => ({
-  margin: {
-    margin: theme.spacing(1),
-  },
-  withoutLabel: {
-    marginTop: theme.spacing(4),
-  },
-  inputFile: {
-    display: "none",
-  },
-  dialogContent: {
-    overflowY: "hidden",
-  },
   fab: {
     position: "absolute",
     bottom: theme.spacing(4),
     right: theme.spacing(4),
   },
+  underline: {
+    "&&&:before": {
+      borderBottom: "none",
+    },
+    "&&:after": {
+      borderBottom: "none",
+    },
+  },
 }));
 
 const Books = (props) => {
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState("created_at");
+  const [sortType, setSortType] = useState("DESC");
+  const [relate, setRelate] = useState("");
   const [open, setOpen] = useState(false);
   const { match, books, getBook, addBook, updateBook, deleteBook } = props;
 
@@ -56,9 +61,15 @@ const Books = (props) => {
 
   useEffect(() => {
     if (match) {
-      getBook();
+      getBook({
+        limit: limit,
+        page: page,
+        sort_by: sortBy,
+        sort_type: sortType,
+        relate: relate,
+      });
     }
-  }, [match]);
+  }, [match, limit, page, sortBy, sortType, relate]);
 
   if (!dataLogin || dataLogin.user.role !== "admin") {
     history.push("/imcoolmaster");
@@ -84,11 +95,25 @@ const Books = (props) => {
     setOpen(false);
   };
 
+  const jmlPage = Math.ceil(books.count / books.limit);
   let i = 1;
+
+  const handleChangePage = (e, val) => {
+    setPage(val);
+  };
+
+  const handleSort = (val, relate) => {
+    const isAsc = sortBy === val && sortType === "ASC";
+
+    setSortType(isAsc ? "DESC" : "ASC");
+    setSortBy(val);
+    setRelate(relate);
+  };
+
   return (
     <Layout>
       <Box mb={4}>
-        <Typography variant="h5">Dashboard</Typography>
+        <Typography variant="h5">Books</Typography>
         <Typography variant="subtitle">
           Create, update, delete books data.{" "}
         </Typography>
@@ -99,13 +124,82 @@ const Books = (props) => {
             <Table aria-label="data table">
               <TableHead>
                 <TableRow>
-                  <TableCell>No.</TableCell>
-                  <TableCell>Book Title</TableCell>
-                  <TableCell>Author</TableCell>
-                  <TableCell>Category</TableCell>
-                  <TableCell align="center">No. ISBN</TableCell>
-                  <TableCell align="center">Stock</TableCell>
-                  <TableCell align="right">Price</TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={sortBy === "created_at"}
+                      direction={sortType.toLowerCase()}
+                      onClick={() => {
+                        handleSort("created_at");
+                      }}
+                    >
+                      Date
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={sortBy === "title"}
+                      direction={
+                        sortBy === "title" ? sortType.toLowerCase() : "asc"
+                      }
+                      onClick={() => {
+                        handleSort("title");
+                      }}
+                    >
+                      Title
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={sortBy === "author"}
+                      direction={
+                        sortBy === "author" ? sortType.toLowerCase() : "asc"
+                      }
+                      onClick={() => {
+                        handleSort("author");
+                      }}
+                    >
+                      Author
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={sortBy === "name"}
+                      direction={
+                        sortBy === "name" ? sortType.toLowerCase() : "asc"
+                      }
+                      onClick={() => {
+                        handleSort("name", "kategori");
+                      }}
+                    >
+                      Category
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      active={sortBy === "stock"}
+                      direction={
+                        sortBy === "stock" ? sortType.toLowerCase() : "asc"
+                      }
+                      onClick={() => {
+                        handleSort("stock");
+                      }}
+                    >
+                      Stock
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      active={sortBy === "harga"}
+                      direction={
+                        sortBy === "harga" ? sortType.toLowerCase() : "asc"
+                      }
+                      onClick={() => {
+                        handleSort("harga");
+                      }}
+                    >
+                      Price
+                    </TableSortLabel>
+                  </TableCell>
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
@@ -138,6 +232,37 @@ const Books = (props) => {
           </TableContainer>
         </Grid>
       </Grid>
+      <Box pt={5} pr={5}>
+        <Grid container spacing={3} justify="flex-end" alignItems="center">
+          <Typography>Rows per page:</Typography>
+          <Box pl={2} pr={3}>
+            <TextField
+              select
+              className={classes.select}
+              InputProps={{ classes }}
+              value={limit}
+              onChange={(e) => {
+                setLimit(e.target.value);
+              }}
+            >
+              <MenuItem value="10">10</MenuItem>
+              <MenuItem value="25">25</MenuItem>
+              <MenuItem value="50">50</MenuItem>
+              <MenuItem value="100">100</MenuItem>
+            </TextField>
+          </Box>
+
+          <Pagination
+            count={jmlPage}
+            page={page}
+            boundaryCount={3}
+            onChange={handleChangePage}
+            showFirstButton
+            showLastButton
+          />
+        </Grid>
+      </Box>
+
       <Fab
         color="secondary"
         className={classes.fab}
@@ -165,7 +290,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getBook: () => dispatch(getListBook()),
+    getBook: (params) => dispatch(getListBook(params)),
     addBook: (data) => dispatch(addBook(data)),
     updateBook: (id, data) => dispatch(updateBook(id, data)),
     deleteBook: (id) => dispatch(deleteBook(id)),
