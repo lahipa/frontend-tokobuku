@@ -122,7 +122,7 @@ export const loginUser = (data) => {
         return dispatch(
           {
             type: actionsTypes.LOGIN_USER,
-            payload: response.data.data,
+            payload: response.data,
             isLogin: true,
           },
 
@@ -134,7 +134,6 @@ export const loginUser = (data) => {
       })
       .catch((err) => {
         console.log(err.response);
-        return err.response;
       });
   };
 };

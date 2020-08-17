@@ -16,7 +16,6 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import { styled } from "@material-ui/core/styles";
 import { dataLogin } from "../utils/globals";
 import { getListBook } from "../store/actions/books";
-import { addToCart } from "../store/actions/cart";
 import CardBuku from "../components/card/cardBuku";
 
 //Carousel
@@ -50,13 +49,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Home = (props) => {
-  const { match, addToCart, books, getBook } = props;
+  const { match, books, getBook } = props;
   const history = useHistory();
   const classes = useStyles();
-
-  const handleAddCart = (data) => {
-    addToCart(data);
-  };
 
   useEffect(() => {
     if (match) {
@@ -118,11 +113,7 @@ const Home = (props) => {
                 books.rows.slice(0, 8).map((val) => {
                   return (
                     <Grid item lg={3} key={val.id}>
-                      <CardBuku
-                        dataCard={val}
-                        doAddToCart={handleAddCart}
-                        dataLogin={dataLogin}
-                      />
+                      <CardBuku dataCard={val} dataLogin={dataLogin} />
                     </Grid>
                   );
                 })
@@ -149,7 +140,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addToCart: (data) => dispatch(addToCart(data)),
     getBook: () => dispatch(getListBook()),
   };
 };

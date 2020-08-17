@@ -53,8 +53,9 @@ const Checkout = (props) => {
   const [isOrdered, setIsOrdered] = useState(false);
   const [transactionId, setTransactionId] = useState("");
   const {
-    match,
+    user,
     carts,
+    isLogin,
     addToCart,
     substractFromCart,
     removeFromCart,
@@ -72,16 +73,23 @@ const Checkout = (props) => {
     setTransactionId(generateTransactionId());
   }, []);
 
+  const userData = user.data ? user.data : "";
+  const uid = dataLogin
+    ? dataLogin.user.uid
+    : userData
+    ? userData.user.uid
+    : "";
+
   const handleAdd = (data) => {
-    addToCart(data);
+    addToCart(data, userData.token);
   };
 
   const handleSubtract = (id, data) => {
-    substractFromCart(id, data);
+    substractFromCart(id, data, userData.token);
   };
 
   const handleRemove = (id) => {
-    removeFromCart(id, dataLogin.user.uid);
+    removeFromCart(id, uid, userData.token);
   };
 
   const generateTransactionId = () => {
@@ -90,7 +98,7 @@ const Checkout = (props) => {
   };
 
   const removeCartBulk = () => {
-    carts && carts.map((val) => removeFromCart(val.id, dataLogin.user.uid));
+    carts && carts.map((val) => removeFromCart(val.id, uid));
   };
 
   let arrayTotalHarga = carts && carts.map((val) => val.books.harga * val.qty);
@@ -111,7 +119,7 @@ const Checkout = (props) => {
       }));
 
     const dataOrder = {
-      user_id: dataLogin.user.uid,
+      user_id: uid,
       transaction_id: transactionId,
       total: totalQty,
       total_price: grandTotalHarga,
@@ -142,9 +150,7 @@ const Checkout = (props) => {
 
   return (
     <>
-      {!dataLogin ? (
-        history.push("/login")
-      ) : (
+      {dataLogin || isLogin ? (
         <Layout>
           <section className={classes.root}>
             <Container>
@@ -289,6 +295,8 @@ const Checkout = (props) => {
             </Container>
           </section>
         </Layout>
+      ) : (
+        history.push("/login")
       )}
     </>
   );
@@ -298,14 +306,18 @@ const mapStateToProps = (state) => {
   return {
     carts: state.cartReducer.carts,
     book: state.bookReducer.book,
+    user: state.userReducer.user,
+    isLogin: state.userReducer.isLogin,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    removeFromCart: (id, uid) => dispatch(removeFromCart(id, uid)),
-    substractFromCart: (id, data) => dispatch(substractFromCart(id, data)),
-    addToCart: (data) => dispatch(addToCart(data)),
+    removeFromCart: (id, uid, token) =>
+      dispatch(removeFromCart(id, uid, token)),
+    substractFromCart: (id, data, token) =>
+      dispatch(substractFromCart(id, data, token)),
+    addToCart: (data, token) => dispatch(addToCart(data, token)),
     createOrder: (data) => dispatch(createOrder(data)),
     getBookById: (id) => dispatch(getBookById(id)),
     updateBook: (id, data) => dispatch(updateBook(id, data)),

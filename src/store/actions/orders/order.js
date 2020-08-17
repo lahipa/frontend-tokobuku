@@ -2,11 +2,11 @@ import * as actionsTypes from "./actionTypes";
 import axios from "axios";
 import { ENDPOINT, dataLogin } from "../../../utils/globals";
 
-export const getAllListOrder = (params) => {
+export const getAllListOrder = (params, token = "") => {
   const request = axios.get(`${ENDPOINT}/orders`, {
     params,
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -25,11 +25,11 @@ export const getAllListOrder = (params) => {
   };
 };
 
-export const getNotification = (params) => {
+export const getNotification = (params, token = "") => {
   const request = axios.get(`${ENDPOINT}/orders`, {
     params,
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -48,10 +48,10 @@ export const getNotification = (params) => {
   };
 };
 
-export const getOrderById = (id) => {
+export const getOrderById = (id, token = "") => {
   const request = axios.get(`${ENDPOINT}/orders/${id}`, {
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -70,10 +70,10 @@ export const getOrderById = (id) => {
   };
 };
 
-export const updateOrder = (id, data) => {
+export const updateOrder = (id, data, token = "") => {
   const request = axios.put(`${ENDPOINT}/orders/${id}`, data, {
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -85,7 +85,7 @@ export const updateOrder = (id, data) => {
           payload: response.data.data,
         });
 
-        return dispatch(getOrderById(id));
+        return dispatch(getOrderById(id, token));
       })
       .catch((err) => {
         console.log(err.response);
@@ -94,10 +94,10 @@ export const updateOrder = (id, data) => {
   };
 };
 
-export const createOrder = (data) => {
+export const createOrder = (data, token = "") => {
   const request = axios.post(`${ENDPOINT}/orders/`, data, {
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 

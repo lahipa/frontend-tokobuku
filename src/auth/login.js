@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { withRouter, Link, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 import axios from "axios";
 import { ENDPOINT } from "../utils/globals";
 import { makeStyles } from "@material-ui/core/styles";
@@ -13,9 +14,14 @@ import {
   Checkbox,
   Button,
   Avatar,
+  Box,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { useSnackbar } from "notistack";
+//import { loginUser } from "../store/actions/users";
+import { getListCart } from "../store/actions/cart";
+import { dataLogin } from "../utils/globals";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,47 +42,57 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  box: {
+    width: "100%",
+  },
 }));
 
 const Login = (props) => {
   const [data, setData] = useState({});
-  const { handleOpen, handleClose } = props;
+  const {
+    user,
+    isLogin,
+    handleOpen,
+    handleClose,
+    loginUser,
+    getListCart,
+  } = props;
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    console.log("component did mount");
-  }, []);
+    if (user && isLogin) {
+      const userData = user ? user.data : "";
+      getListCart(userData.user.uid, userData.token);
+    }
+  }, [user]);
 
   const onSubmitLogin = async (e) => {
     e.preventDefault();
+
     try {
       const request = await axios.post(`${ENDPOINT}/users/login`, data);
 
-      if (request.data.isLogin) {
-        window.localStorage.setItem(
-          "dataLogin",
-          JSON.stringify(request.data.data)
-        );
+      loginUser({ data: request.data, isLogin: true });
 
-        handleClose();
-        enqueueSnackbar(request.data.message, { variant: "success" });
+      window.localStorage.setItem(
+        "dataLogin",
+        JSON.stringify(request.data.data)
+      );
 
-        setTimeout(function () {
-          window.location.reload();
-        }, 700);
-      } else {
-        enqueueSnackbar(request.data.message, { variant: "error" });
-      }
+      handleClose();
+      enqueueSnackbar(request.data.message, { variant: "success" });
     } catch (err) {
-      return enqueueSnackbar(err.response.data.message, { variant: "error" });
+      console.log(err.response);
+      enqueueSnackbar(err.response && err.response.data.message, {
+        variant: "error",
+      });
     }
   };
 
   const handleForm = (e, formName) => {
     setData({ ...data, [formName]: e.target.value });
-    //console.log(data, "Data input from login");
   };
 
   return (
@@ -87,6 +103,13 @@ const Login = (props) => {
       <Typography component="h1" variant="h5">
         Sign in
       </Typography>
+      {/* {user.status ? (
+        <Box className={classes.box} mt={2}>
+          <Alert severity="error">Username / Password tidak sama</Alert>
+        </Box>
+      ) : (
+        ""
+      )} */}
       <form
         className={classes.form}
         onSubmit={(e) => onSubmitLogin(e)}
@@ -145,4 +168,20 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+    isLogin: state.userReducer.isLogin,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginUser: ({ data, isLogin }) =>
+      dispatch({ type: "LOGIN", data, isLogin }),
+    //loginUser: (data) => dispatch(loginUser(data)),
+    getListCart: (id, token) => dispatch(getListCart(id, token)),
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));

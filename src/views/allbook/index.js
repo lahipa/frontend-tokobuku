@@ -14,7 +14,6 @@ import {
 } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import CardBuku from "../../components/card/cardBuku";
-import { addToCart } from "../../store/actions/cart";
 import { getListBook } from "../../store/actions/books";
 import { dataLogin } from "../../utils/globals";
 
@@ -25,13 +24,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AllBook = (props) => {
-  const { match, books, addToCart, getBook } = props;
+  const { match, books, getBook } = props;
   const history = useHistory();
   const classes = useStyles();
-
-  const handleAddCart = (data) => {
-    addToCart(data);
-  };
 
   useEffect(() => {
     if (match) {
@@ -52,16 +47,12 @@ const AllBook = (props) => {
         </Box>
         <Box pb={20}>
           <Grid container spacing={3}>
-            {books ? (
+            {books && books.rows.length !== 0 ? (
               books.rows &&
               books.rows.slice(0, 8).map((val) => {
                 return (
                   <Grid item lg={3} key={val.id}>
-                    <CardBuku
-                      dataCard={val}
-                      doAddToCart={handleAddCart}
-                      dataLogin={dataLogin}
-                    />
+                    <CardBuku dataCard={val} dataLogin={dataLogin} />
                   </Grid>
                 );
               })
@@ -94,7 +85,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getBook: (params) => dispatch(getListBook(params)),
-    addToCart: (data) => dispatch(addToCart(data)),
   };
 };
 

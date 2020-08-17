@@ -86,9 +86,9 @@ const AdminLogin = (props) => {
         password,
       });
 
-      if (request.data.role !== "admin") {
+      if (request.data.rlid !== 1) {
         enqueueSnackbar("Akun belum terdaftar", { variant: "error" });
-      } else if (request.data.isLogin) {
+      } else if (request.data.status) {
         //toast.success(request.data.message, {position: toast.POSITION.TOP_CENTER});
         window.localStorage.setItem(
           "dataLogin",

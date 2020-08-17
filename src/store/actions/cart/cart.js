@@ -2,10 +2,10 @@ import * as actionsTypes from "./actionTypes";
 import axios from "axios";
 import { ENDPOINT, dataLogin } from "../../../utils/globals";
 
-export const getListCart = (uid) => {
+export const getListCart = (uid, token = "") => {
   const request = axios.get(`${ENDPOINT}/cart?uid=${uid}`, {
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -24,10 +24,10 @@ export const getListCart = (uid) => {
   };
 };
 
-export const substractFromCart = (id, data) => {
+export const substractFromCart = (id, data, token = "") => {
   const request = axios.put(`${ENDPOINT}/cart/${id}`, data, {
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -39,7 +39,7 @@ export const substractFromCart = (id, data) => {
           payload: response.data.data,
         });
 
-        return dispatch(getListCart(data.user_id));
+        return dispatch(getListCart(data.user_id, token));
       })
       .catch((err) => {
         console.log(err.response.message);
@@ -48,10 +48,10 @@ export const substractFromCart = (id, data) => {
   };
 };
 
-export const removeFromCart = (id, uid) => {
+export const removeFromCart = (id, uid, token = "") => {
   const request = axios.delete(`${ENDPOINT}/cart/${id}`, {
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -63,7 +63,7 @@ export const removeFromCart = (id, uid) => {
           payload: response.data.data,
         });
 
-        return dispatch(getListCart(uid));
+        return dispatch(getListCart(uid, token));
       })
       .catch((err) => {
         console.log(err.response.message);
@@ -72,10 +72,10 @@ export const removeFromCart = (id, uid) => {
   };
 };
 
-export const addToCart = (data) => {
+export const addToCart = (data, token = "") => {
   const request = axios.post(`${ENDPOINT}/cart/`, data, {
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -87,7 +87,7 @@ export const addToCart = (data) => {
           payload: response.data.data,
         });
 
-        return dispatch(getListCart(data.user_id));
+        return dispatch(getListCart(data.user_id, token));
       })
       .catch((err) => {
         console.log(err.response.message);
@@ -98,14 +98,14 @@ export const addToCart = (data) => {
 
 // Async Await Approach
 // --
-// export const addToCart = (data) => {
+// export const addToCart = (data, token) => {
 //   console.log(data, "data from add action");
 
 //   return async (dispatch) => {
 //     try {
 //       const request = await axios.post(`${ENDPOINT}/cart/`, data, {
 //         headers: {
-//           Authorization: dataLogin.token,
+//           Authorization: dataLogin ? dataLogin.token : token,
 //         },
 //       });
 

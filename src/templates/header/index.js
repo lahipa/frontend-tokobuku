@@ -1,6 +1,6 @@
 import React, { Fragment, Component } from "react";
 import { connect } from "react-redux";
-import { dataLogin } from "../../utils/globals";
+import { dataLogin, getDataLogin } from "../../utils/globals";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import {
@@ -71,14 +71,22 @@ class Header extends Component {
   }
 
   componentDidMount() {
-    const { match, getListCart } = this.props;
-    if (dataLogin) {
-      getListCart(dataLogin.user.uid);
+    const { user, isLogin, getListCart } = this.props;
+    const userData = user.data ? user.data : "";
+
+    const uid = dataLogin
+      ? dataLogin.user.uid
+      : userData
+      ? userData.user.uid
+      : "";
+
+    if (dataLogin || isLogin) {
+      getListCart(uid, userData.token);
     }
   }
 
   render() {
-    const { carts, classes, theme } = this.props;
+    const { carts, user, isLogin, classes, theme } = this.props;
     const { open, anchorEl, authType } = this.state;
 
     const handleMenu = (e) => {
@@ -98,6 +106,8 @@ class Header extends Component {
       this.setState({ open: false });
     };
 
+    const userData = user ? user.data && user.data.user : "";
+
     let total = carts.reduce(
       (prevValue, currentValue) => prevValue + currentValue.qty,
       0
@@ -114,9 +124,11 @@ class Header extends Component {
             </Toolbar>
             <Toolbar className={classes.toolbarButton}>
               <div className={classes.margin}>
-                <Link to={!dataLogin ? "#" : "/checkout"}>
+                <Link to={dataLogin || isLogin ? "/checkout" : "#"}>
                   <IconButton
-                    onClick={!dataLogin ? handleDialogOpen("login") : null}
+                    onClick={
+                      dataLogin || isLogin ? null : handleDialogOpen("login")
+                    }
                   >
                     {carts.length ? (
                       <Badge badgeContent={total} color="secondary">
@@ -128,7 +140,7 @@ class Header extends Component {
                   </IconButton>
                 </Link>
               </div>
-              {dataLogin ? (
+              {dataLogin || isLogin ? (
                 <>
                   <div className={classes.marginRight}>
                     <IconButton>
@@ -143,7 +155,13 @@ class Header extends Component {
                       <IconButton>
                         <AccountCircle fontSize="" />
                       </IconButton>
-                      <span>hi, {dataLogin.user.name.substring(0, 5)}</span>
+                      <span>
+                        hi,{" "}
+                        {dataLogin
+                          ? dataLogin.user &&
+                            dataLogin.user.name.substring(0, 5)
+                          : userData.name.substring(0, 5)}
+                      </span>
                     </a>
                     <Menu
                       anchorEl={anchorEl}
@@ -210,12 +228,14 @@ class Header extends Component {
 const mapStateToProps = (state) => {
   return {
     carts: state.cartReducer.carts,
+    user: state.userReducer.user,
+    isLogin: state.userReducer.isLogin,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getListCart: (uid) => dispatch(getListCart(uid)),
+    getListCart: (uid, token) => dispatch(getListCart(uid, token)),
   };
 };
 

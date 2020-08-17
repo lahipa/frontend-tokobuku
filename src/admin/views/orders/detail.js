@@ -55,6 +55,7 @@ const OrderDetail = (props) => {
       setData({
         proceed: true,
       });
+      getNotification({ proceed: 0 });
     }
   }, [order]);
 
@@ -64,7 +65,6 @@ const OrderDetail = (props) => {
 
   const handleUpdate = () => {
     updateOrder(match.params.id, data);
-    getNotification({ proceed: 0 });
   };
 
   let dataTime = new Date(order.created_at);

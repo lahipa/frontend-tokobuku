@@ -20,6 +20,7 @@ import {
 import { convertToIdr } from "../functions/convert";
 import FormLogin from "../../auth/login";
 import FormRegister from "../../auth/register";
+import { addToCart } from "../../store/actions/cart";
 import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,10 +37,17 @@ const useStyles = makeStyles((theme) => ({
 const CardBuku = (props) => {
   const [open, setOpen] = useState(false);
   const [authType, setAuthType] = useState("register");
-  const { dataCard, doAddToCart, dataLogin, carts } = props;
+  const { dataCard, user, carts, addToCart, dataLogin, isLogin } = props;
   const history = useHistory();
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+
+  const userData = user.data ? user.data : "";
+  const uid = dataLogin
+    ? dataLogin.user.uid
+    : userData
+    ? userData.user.uid
+    : "";
 
   const handleDialogOpen = (authType) => () => {
     setOpen(true);
@@ -52,7 +60,7 @@ const CardBuku = (props) => {
 
   const handleAddToCart = () => {
     let obj = {
-      user_id: dataLogin.user.uid,
+      user_id: uid,
       buku_id: dataCard.id,
       qty: 1,
     };
@@ -65,7 +73,10 @@ const CardBuku = (props) => {
         variant: "error",
       });
     } else {
-      doAddToCart(obj);
+      addToCart(obj, userData.token);
+      enqueueSnackbar("Menambahkan ke keranjang", {
+        variant: "success",
+      });
     }
   };
 
@@ -117,7 +128,7 @@ const CardBuku = (props) => {
           >
             Detail
           </Button>
-          {dataLogin ? (
+          {dataLogin || isLogin ? (
             dataCard.stok === 0 ? (
               <Button color="secondary" disabled>
                 Add to cart
@@ -176,7 +187,15 @@ const CardBuku = (props) => {
 const mapStateToProps = (state) => {
   return {
     carts: state.cartReducer.carts,
+    user: state.userReducer.user,
+    isLogin: state.userReducer.isLogin,
   };
 };
 
-export default connect(mapStateToProps, null)(CardBuku);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addToCart: (data, token) => dispatch(addToCart(data, token)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CardBuku);
