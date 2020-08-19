@@ -72,16 +72,15 @@ class Header extends Component {
 
   componentDidMount() {
     const { user, isLogin, getListCart } = this.props;
-    const userData = user.data ? user.data : "";
 
     const uid = dataLogin
       ? dataLogin.user.uid
-      : userData
-      ? userData.user.uid
+      : user
+      ? user.user && user.user.uid
       : "";
 
     if (dataLogin || isLogin) {
-      getListCart(uid, userData.token);
+      getListCart(uid, user.token);
     }
   }
 
@@ -106,7 +105,7 @@ class Header extends Component {
       this.setState({ open: false });
     };
 
-    const userData = user ? user.data && user.data.user : "";
+    const userData = user ? user.user : "";
 
     let total = carts.reduce(
       (prevValue, currentValue) => prevValue + currentValue.qty,

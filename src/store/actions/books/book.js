@@ -28,10 +28,10 @@ export const getBookById = (id) => {
   };
 };
 
-export const updateBook = (id, data) => {
+export const updateBook = (id, data, token = "") => {
   const request = axios.put(`${ENDPOINT}/books/${id}`, data, {
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -52,10 +52,10 @@ export const updateBook = (id, data) => {
   };
 };
 
-export const deleteBook = (id) => {
+export const deleteBook = (id, token = "") => {
   const request = axios.delete(`${ENDPOINT}/books/${id}`, {
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -75,10 +75,10 @@ export const deleteBook = (id) => {
   };
 };
 
-export const addBook = (data) => {
+export const addBook = (data, token = "") => {
   const request = axios.post(`${ENDPOINT}/books`, data, {
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -101,12 +101,12 @@ export const addBook = (data) => {
 
 // Async Await Approach
 // --
-// export const addBook = (data) => {
+// export const addBook = (data, token = "") => {
 //   return async (dispatch) => {
 //     try {
 //       const request = await axios.post(`${ENDPOINT}/books`, data, {
 //         headers: {
-//           Authorization: dataLogin.token,
+//           Authorization: dataLogin ? dataLogin.token : token,
 //         },
 //       });
 

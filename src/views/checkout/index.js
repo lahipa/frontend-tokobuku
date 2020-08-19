@@ -3,6 +3,7 @@ import { useHistory, Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "../../templates/layout";
 import { ENDPOINT, dataLogin } from "../../utils/globals";
+import jwtDecode from "jwt-decode";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Container,
@@ -25,6 +26,7 @@ import {
 } from "../../store/actions/cart";
 import { createOrder } from "../../store/actions/orders";
 import { getBookById, updateBook } from "../../store/actions/books";
+import { getUserById } from "../../store/actions/users";
 import ListCart from "./components/cartListItem";
 import { convertToIdr } from "../../components/functions/convert";
 import { useSnackbar } from "notistack";
@@ -73,23 +75,26 @@ const Checkout = (props) => {
     setTransactionId(generateTransactionId());
   }, []);
 
-  const userData = user.data ? user.data : "";
   const uid = dataLogin
     ? dataLogin.user.uid
-    : userData
-    ? userData.user.uid
+    : user
+    ? user.user && user.user.uid
     : "";
 
+  const token = dataLogin ? dataLogin.token : user ? user.token : "";
+  const tokenDecoded = jwtDecode(token);
+  console.log(tokenDecoded);
+
   const handleAdd = (data) => {
-    addToCart(data, userData.token);
+    addToCart(data, user.token);
   };
 
   const handleSubtract = (id, data) => {
-    substractFromCart(id, data, userData.token);
+    substractFromCart(id, data, user.token);
   };
 
   const handleRemove = (id) => {
-    removeFromCart(id, uid, userData.token);
+    removeFromCart(id, uid, user.token);
   };
 
   const generateTransactionId = () => {
@@ -98,10 +103,13 @@ const Checkout = (props) => {
   };
 
   const removeCartBulk = () => {
-    carts && carts.map((val) => removeFromCart(val.id, uid));
+    carts && carts.map((val) => removeFromCart(val.id, uid, user.token));
   };
 
   let arrayTotalHarga = carts && carts.map((val) => val.books.harga * val.qty);
+
+  // arrayName.reduce((nextVal, currentVal) => nextVal + currentVal, 0)
+  // ** currentVal bernilai array dari array yg dijumlahkan, tambahkan key untuk mendapatkan value dari spesifik object
   let grandTotalHarga = arrayTotalHarga.reduce((a, b) => a + b, 0);
   let totalQty = carts.reduce((a, b) => a + b.qty, 0);
   let serviceCharge = 0;
@@ -131,17 +139,17 @@ const Checkout = (props) => {
         getBookById(val.buku_id);
 
         if (val.qty > book.stok) {
-          enqueueSnackbar(`Terjadi kesalahan! stok buku tidak mencukupi`, {
+          enqueueSnackbar(`Maaf! stok buku tidak mencukupi`, {
             variant: "error",
           });
         }
 
         let dataNewStok = { stok: book.stok - val.qty };
-        //console.log(dataNewStok, "stok");
-        updateBook(val.buku_id, dataNewStok);
+        //console.log(dataNewStok, "data new");
+        updateBook(val.buku_id, dataNewStok, user.token);
       });
 
-    createOrder(dataOrder);
+    createOrder(dataOrder, user.token);
     if (carts) {
       removeCartBulk();
       setIsOrdered(true);
@@ -150,7 +158,7 @@ const Checkout = (props) => {
 
   return (
     <>
-      {dataLogin || isLogin ? (
+      {(tokenDecoded.rli === 2 && tokenDecoded.rln === "member") || isLogin ? (
         <Layout>
           <section className={classes.root}>
             <Container>
@@ -318,9 +326,9 @@ const mapDispatchToProps = (dispatch) => {
     substractFromCart: (id, data, token) =>
       dispatch(substractFromCart(id, data, token)),
     addToCart: (data, token) => dispatch(addToCart(data, token)),
-    createOrder: (data) => dispatch(createOrder(data)),
+    createOrder: (data, token) => dispatch(createOrder(data, token)),
     getBookById: (id) => dispatch(getBookById(id)),
-    updateBook: (id, data) => dispatch(updateBook(id, data)),
+    updateBook: (id, data, token) => dispatch(updateBook(id, data, token)),
   };
 };
 

@@ -2,12 +2,12 @@ import * as actionsTypes from "./actionTypes";
 import axios from "axios";
 import { ENDPOINT, dataLogin } from "../../../utils/globals";
 
-export const getListUser = (params) => {
+export const getListUser = (params, token = "") => {
   //console.log(params, "ini params");
   const request = axios.get(`${ENDPOINT}/users`, {
     params,
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -26,10 +26,10 @@ export const getListUser = (params) => {
   };
 };
 
-export const getUserById = (id) => {
+export const getUserById = (id, token = "") => {
   const request = axios.get(`${ENDPOINT}/users/${id}`, {
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -48,10 +48,10 @@ export const getUserById = (id) => {
   };
 };
 
-export const updateUser = (id, data) => {
+export const updateUser = (id, data, token = "") => {
   const request = axios.put(`${ENDPOINT}/users/${id}`, data, {
     headers: {
-      Authorization: dataLogin.token,
+      Authorization: dataLogin ? dataLogin.token : token,
     },
   });
 
@@ -63,7 +63,7 @@ export const updateUser = (id, data) => {
           payload: response.data.data,
         });
 
-        return dispatch(getListUser());
+        return dispatch(getListUser(null, token));
       })
       .catch((err) => {
         console.log(err.response);
@@ -72,10 +72,10 @@ export const updateUser = (id, data) => {
   };
 };
 
-// export const deleteUser = (id) => {
+// export const deleteUser = (id, token = "") => {
 //   const request = axios.delete(`${ENDPOINT}/users/${id}`, {
 //     headers: {
-//       Authorization: dataLogin.token,
+//       Authorization: dataLogin ? dataLogin.token : token,
 //     },
 //   });
 
@@ -86,7 +86,7 @@ export const updateUser = (id, data) => {
 //           type: actionsTypes.DELETE_USER,
 //           payload: response.data,
 //         });
-//         return dispatch(getListUser());
+//         return dispatch(getListUser(null, token));
 //       })
 //       .catch((err) => {
 //         console.log(err.response);

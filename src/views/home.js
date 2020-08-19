@@ -100,10 +100,11 @@ const Home = (props) => {
         <Container>
           <Box pt={10} pb={6} className={classes.sectionTitle}>
             <Typography variant="h5" center component="h3">
-              Buku Terlaris 2020
+              Buku Terbaru {new Date().getFullYear()}
             </Typography>
             <Typography component="subtitle1">
-              Temukan Buku Terlaris di Tahun 2020 dengan harga Terbaik{" "}
+              Temukan Buku Terlaris di Tahun {new Date().getFullYear()} dengan
+              harga Terbaik{" "}
             </Typography>
           </Box>
           <Box pb={20}>

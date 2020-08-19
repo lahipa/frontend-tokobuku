@@ -45,8 +45,8 @@ const CardBuku = (props) => {
   const userData = user.data ? user.data : "";
   const uid = dataLogin
     ? dataLogin.user.uid
-    : userData
-    ? userData.user.uid
+    : user
+    ? user.user && user.user.uid
     : "";
 
   const handleDialogOpen = (authType) => () => {
@@ -67,13 +67,15 @@ const CardBuku = (props) => {
 
     let itemsCart = carts.find((x) => x.buku_id === dataCard.id);
     let qtyOnCart = itemsCart && itemsCart.qty;
-    //console.log(itemsCart.qty, "item carts");
+    //console.log(itemsCart, "item carts");
+
     if (itemsCart && qtyOnCart === dataCard.stok) {
       enqueueSnackbar("Maaf, stok buku tidak mencukupi", {
         variant: "error",
       });
     } else {
-      addToCart(obj, userData.token);
+      addToCart(obj, user.token);
+
       enqueueSnackbar("Menambahkan ke keranjang", {
         variant: "success",
       });

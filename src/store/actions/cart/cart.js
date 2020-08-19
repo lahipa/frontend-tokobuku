@@ -18,8 +18,7 @@ export const getListCart = (uid, token = "") => {
         });
       })
       .catch((err) => {
-        console.log(err.response.message);
-        return err.response.message;
+        console.log(err.response);
       });
   };
 };
@@ -42,8 +41,7 @@ export const substractFromCart = (id, data, token = "") => {
         return dispatch(getListCart(data.user_id, token));
       })
       .catch((err) => {
-        console.log(err.response.message);
-        return err.response.message;
+        console.log(err.response);
       });
   };
 };
@@ -66,8 +64,7 @@ export const removeFromCart = (id, uid, token = "") => {
         return dispatch(getListCart(uid, token));
       })
       .catch((err) => {
-        console.log(err.response.message);
-        return err.response.message;
+        console.log(err.response);
       });
   };
 };
@@ -90,8 +87,7 @@ export const addToCart = (data, token = "") => {
         return dispatch(getListCart(data.user_id, token));
       })
       .catch((err) => {
-        console.log(err.response.message);
-        return err.response.message;
+        console.log(err.response);
       });
   };
 };

@@ -63,8 +63,7 @@ const Login = (props) => {
 
   useEffect(() => {
     if (user && isLogin) {
-      const userData = user ? user.data : "";
-      getListCart(userData.user.uid, userData.token);
+      getListCart(user.user && user.user.uid, user.token);
     }
   }, [user]);
 
@@ -74,7 +73,7 @@ const Login = (props) => {
     try {
       const request = await axios.post(`${ENDPOINT}/users/login`, data);
 
-      loginUser({ data: request.data, isLogin: true });
+      loginUser({ data: request.data.data, isLogin: true });
 
       window.localStorage.setItem(
         "dataLogin",
@@ -82,10 +81,10 @@ const Login = (props) => {
       );
 
       handleClose();
-      enqueueSnackbar(request.data.message, { variant: "success" });
+      enqueueSnackbar("Berhasil login, mohon tunggu", { variant: "success" });
     } catch (err) {
       console.log(err.response);
-      enqueueSnackbar(err.response && err.response.data.message, {
+      enqueueSnackbar(err.response.data.status.message, {
         variant: "error",
       });
     }
